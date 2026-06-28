@@ -15,6 +15,8 @@ mongoose.connect(mongo_uri);
 
 const app: Application = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
+app.use(cors({origin: "*"}));
 
 type ExpenseSchema = {
   type: "income" | "expense";
@@ -76,9 +78,9 @@ export async function addTransaction(type:"income" | "expense", amount:number, c
 
 app.post("/api/v1/addTransaction", async function(req:Request, res:Response){
   try {
-    const {type, amount, category, description, date, created_date=Date.now()} = req.body
+    const {type, amount, category, description, date, created_date} = req.body
     await addTransaction(type, amount, category, description, date, created_date);
-    res.status(201).json({message: "Transaction added Successfully"});
+    res.status(201).json({type, amount, category, description, date, created_date});
   } catch (error) {
     console.log("Error Message:", error)
     res.status(500).json({message: "Error Occurred while adding Transaction"})
@@ -91,16 +93,16 @@ app.get("/api/v1/totalTransaction", async function(req:Request, res:Response){
     const income = await ExpenseModel.find({type:"income"})
     const Total_income = income.reduce((value, sum) => value + sum.amount, 0);
 
-    res.status(200).json(Total_income);
+    // res.status(200).json(Total_income);
     console.log(`Total income: ${Total_income}`);
     
     const expense = await ExpenseModel.find({type:"expense"})
     const Total_expense = expense.reduce((value, sum) => value + sum.amount, 0);
-    res.status(200).json(Total_expense);
+    // res.status(200).json(Total_expense);
     console.log(`Total expense: ${Total_expense}`);
     
     const NetBalance = Total_income - Total_expense;
-    res.status(200).json({message: NetBalance});
+    // res.status(200).json({message: NetBalance});
     console.log("Net Balance:", NetBalance);
 
     res.status(200).json({Total_income, Total_expense, NetBalance});
@@ -110,10 +112,33 @@ app.get("/api/v1/totalTransaction", async function(req:Request, res:Response){
   
 });
 
+// app.get("/api/v1/getPercentage", async function(req:Request, res:Response) {
+//   try{
+//     const data = await ExpenseModel.find({"category": "Bill"});
+//     const totalData = data.reduce((value, sum) => value + sum.amount, 0);
+//     res.status(200).json({totalData});
+//     console.log("total data:",totalData);
+//   } catch(error) {
+//     console.log("error:", error)
+//   }
+// })
+
+app.get("/api/v1/getPercentage", async function(req:Request, res:Response) {
+  try{
+    const food = await ExpenseModel.find({category: /Food/i});
+    const totalFood = food.reduce((value, sum) => value + sum.amount, 0);
+    res.status(200).json({totalFood});
+    console.log("total food:",totalFood);
+  } catch(error) {
+    console.log("error:", error)
+  }
+})
+
+
 app.get("/api/v1/getTransaction", async function(req:Request, res:Response){
   try{
     const allTransactions = await ExpenseModel.find();
-    res.status(200).json({message:"successfully returned all data"})
+    res.status(200).json(allTransactions)
     console.log(allTransactions)
 
   } catch(err){
@@ -122,11 +147,7 @@ app.get("/api/v1/getTransaction", async function(req:Request, res:Response){
   }
 })
 
-app.use(
-  cors({
-    origin: "*"
-  })
-)
+
 
 app.listen(PORT, () => {
   console.log(`🚀 Express server is running on http://localhost:${PORT}`);

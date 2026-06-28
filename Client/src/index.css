@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+body{
+  background:white;
+  
+}
+
+input{
+  all: revert;
+}
