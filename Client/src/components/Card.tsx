@@ -1,6 +1,6 @@
 const Card = ({type, amount, category, description, date, created_date}) => {
   return (
-    <div className="border border-black rounded-lg w-[40%]">
+    <div className="border border-black rounded-lg w-[30%]">
       <h1 className="text-center underline mb-4">{type}</h1>
       <h4>amount: {amount}</h4>
       <h3>category: {category}</h3>

@@ -13,6 +13,7 @@ type Transaction = {
 
 const AddTask = () => {
   const [transaction, setTransaction]= useState<Transaction>(null);
+
   const [allTrans, setAllTrans] = useState<Transaction[]>([])
     const Type = useRef<HTMLSelectElement>(null)
     const Amount = useRef<HTMLInputElement>(null)
@@ -74,6 +75,9 @@ const AddTask = () => {
   useEffect(() => {
     getTrans();
   }, [])
+
+  
+  // import { ExpenseAnalytics } from './components/ExpenseChart';
 
   return (
     <div>
@@ -142,7 +146,15 @@ const AddTask = () => {
         
       </div>
 
-      
+      {/* <h1>Total Income</h1>
+      <p>{incomeTrans}</p>
+
+      <h1>Expense Income</h1>
+      <p>{expenseTrans}</p>
+
+      <h1>Net Balance</h1>
+      <p>{netBalanceTrans}</p> */}
+
     </div>
   )
 }
