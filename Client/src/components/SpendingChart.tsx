@@ -23,10 +23,12 @@ const SpendingChart = () => {
       const { category, amount } = trans;
 
       acc[category] = (acc[category] || 0) + amount;
-
-      // console.log(acc[category])
       return acc;
     }, {});
+
+  const totalIncome = allTrans
+    .filter(item => item.type === "income")
+    .reduce((value, sum) => value + sum.amount, 0);
 
   // console.log(acc.amount)
   // console.log(grouped)
@@ -35,7 +37,14 @@ const SpendingChart = () => {
     category,
     amount,
     fill: CATEGORY_COLORS[category] ?? "gray",
+    percentage: (amount / totalIncome) * 100,
   }));
+
+  // const categories = chartData.map((item) => ({
+  //   ...item,
+
+  //   percentage: (item.amount / totalIncome) * 100
+  // }))
   useEffect(() => {
     getTrans();
   }, []);
@@ -64,11 +73,24 @@ const SpendingChart = () => {
             />
             <div>
               <div className="font-medium text-sm">{item.category}</div>
-              <div className="text-xs text-gray-500">${item.amount}</div>
+              <div className="text-xs text-gray-500">₦{item.amount}</div>
             </div>
           </div>
         ))}
       </div>
+
+      {/* <div className="h-3 w-full rounded-full bg-gray-200"></div> */}
+      {chartData.map(item => (
+        <div className="h-3 w-full rounded-full bg-gray-200">
+          <div
+            className="h-full rounded-full"
+            style={{
+              width: `${item.percentage}%`,
+              backgroundColor: item.fill,
+            }}
+          />
+        </div>
+      ))}
     </div>
   );
 };

@@ -10,8 +10,12 @@ const PORT = process.env.PORT || 3000;
 
 if(!mongo_uri){
   throw new Error("Can't connect to MongoDB");
-}
-mongoose.connect(mongo_uri);
+} else {
+
+  mongoose.connect(mongo_uri);
+  console.log("MongoDB connected...")
+} 
+
 
 const app: Application = express();
 app.use(express.json());
@@ -125,10 +129,16 @@ app.get("/api/v1/totalTransaction", async function(req:Request, res:Response){
 
 app.get("/api/v1/getPercentage", async function(req:Request, res:Response) {
   try{
-    const food = await ExpenseModel.find({category: /Food/i});
+    const income = await ExpenseModel.find({type:"income"});
+    const food = await ExpenseModel.find({category: /Transportation/i});
+    const Total_income = income.reduce((value, sum) => value + sum.amount, 0);
     const totalFood = food.reduce((value, sum) => value + sum.amount, 0);
-    res.status(200).json({totalFood});
+    const perTotal = totalFood / Total_income * 100
+    const total = Number(perTotal.toFixed(2));
+    res.status(200).json({total});
     console.log("total food:",totalFood);
+    console.log("total percentage:",perTotal);
+    console.log("total:",total);
   } catch(error) {
     console.log("error:", error)
   }
@@ -137,7 +147,7 @@ app.get("/api/v1/getPercentage", async function(req:Request, res:Response) {
 
 app.get("/api/v1/getTransaction", async function(req:Request, res:Response){
   try{
-    const allTransactions = await ExpenseModel.find();
+    const allTransactions = await ExpenseModel.find().sort({date: -1})
     res.status(200).json(allTransactions)
     console.log(allTransactions)
 
