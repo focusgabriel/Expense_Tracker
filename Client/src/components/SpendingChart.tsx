@@ -60,6 +60,7 @@ const SpendingChart = () => {
             innerRadius={70}
             outerRadius={100}
             paddingAngle={3}
+            // label={({value}) => `${value}`}
           />
         </PieChart>
       </ResponsiveContainer>
@@ -81,7 +82,7 @@ const SpendingChart = () => {
 
       {/* <div className="h-3 w-full rounded-full bg-gray-200"></div> */}
       {chartData.map(item => (
-        <div className="h-3 w-full rounded-full bg-gray-200">
+        <div className="h-3 w-full rounded-full mt-2">
           <div
             className="h-full rounded-full"
             style={{
