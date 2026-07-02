@@ -11,13 +11,7 @@ const PORT = process.env.PORT || 3000;
 if(!mongo_uri){
   throw new Error("Can't connect to MongoDB");
 } 
-mongoose.connect(mongo_uri).then(() => {
-  console.log("connected to MongoDB")
-}).catch(() => {
-  console.log("can't connect to MongoDB");
-})
-
-
+mongoose.connect(mongo_uri)
 
 const app: Application = express();
 app.use(express.json());
