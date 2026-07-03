@@ -24,7 +24,7 @@ const AllTrans = () => {
   }, []);
 
   return (
-    <div className="w-[35%]">
+    <div className="w-full max-w-md overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
         {trans.map((item, index) => (
           <Card
             key={index}
