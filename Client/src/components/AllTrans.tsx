@@ -24,7 +24,8 @@ const AllTrans = () => {
   }, []);
 
   return (
-    <div className="w-full max-w-md overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+    <div className="w-[33%] min-w-[220] max-w-[280] shrink-0 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+        <h2 className="border-b border-slate-100 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-black">Recent Transactions</h2>
         {trans.map((item, index) => (
           <Card
             key={index}
