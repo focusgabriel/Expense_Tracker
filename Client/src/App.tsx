@@ -5,7 +5,7 @@ import SpendingChart from "./components/SpendingChart"
 const App = () => {
   return (
     <div className="w-[70%] mx-auto">
-      {/* <AddTask /> */}
+      <AddTask />
       <AllTransaction />
       <SpendingChart />
     </div>

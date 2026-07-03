@@ -5,13 +5,16 @@ import Card from "./Card";
 // import type { Transaction } from "../constants"
 
 type Transaction = {
-  type: "income" | "expense" | string;
+  type: "expense" | "income";
   amount: number;
   category: string;
   description: string;
   date: string;
   created_date: string;
 };
+
+  const new_date = new Date()
+  let getDate = new_date.toLocaleDateString()
 
 const AddTask = () => {
   const [allTrans, setAllTrans] = useState<Transaction[]>([]);
@@ -22,33 +25,18 @@ const AddTask = () => {
   const newDate = useRef<HTMLInputElement>(null);
   const Current_date = useRef<HTMLInputElement>(null);
 
-  const getTrans = async () => {
-    try {
-      const response = await fetch("http://localhost:3000/api/v1/getTransaction");
-
-      if (!response.ok) {
-        throw new Error("Error loading transactions");
-      }
-
-      const data = await response.json();
-      setAllTrans(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const newTransaction = {
-      type: Type.current?.value.toLowerCase() ?? "",
+      type: Type.current?.value.toLowerCase(),
       amount: Number(Amount.current?.value ?? 0),
-      category: Category.current?.value.toLowerCase() ?? "",
-      description: Description.current?.value.toLowerCase() ?? "",
-      date: newDate.current?.value ?? "",
-      created_date: Current_date.current?.value ?? "",
+      category: Category.current?.value.toLowerCase(),
+      description: Description.current?.value.toLowerCase(),
+      date: newDate.current?.value,
+      created_date: Current_date.current?.value,
     };
-
+    console.log(newTransaction)
     try {
       const response = await fetch(
         "http://localhost:3000/api/v1/addTransaction",
@@ -66,22 +54,18 @@ const AddTask = () => {
         throw new Error("Error sending data");
       }
       console.log(data);
-      await getTrans();
+      // await getTrans();
     } catch (error) {
       console.log(error);
     }
+
+    Type.current.value = ""
+    Amount.current.value = ""
+    Description.current.value = ""
+    Category.current.value = ""
+    newDate.current.value = ""
+    Current_date.current.value = ""
   };
-
-  useEffect(() => {
-    getTrans();
-  }, []);
-
-  const fieldClass =
-    "min-h-14 w-full rounded-xl border border-emerald-200 bg-white px-5 py-4 text-base text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100";
-  const labelClass = "text-sm font-semibold text-slate-700";
-
-  // import { ExpenseAnalytics } from './components/ExpenseChart';
-
   return (
     <div className="mx-auto max-w-4xl rounded-3xl border border-emerald-200 bg-white/90 p-6 sm:p-8">
       <div className="mb-6 rounded-3xl bg-emerald-50 p-6 text-center">
@@ -89,7 +73,7 @@ const AddTask = () => {
           Add a Transaction
         </h2>
         <p className="mt-2 text-sm text-emerald-700">
-          Track your income and expenses with a clean green-themed form.
+          Track your income and expenses
         </p>
       </div>
 
@@ -98,14 +82,14 @@ const AddTask = () => {
         className="grid gap-7 rounded-3xl bg-white p-6 sm:grid-cols-2 sm:p-8"
       >
         <div className="flex flex-col gap-4">
-          <label htmlFor="type" className={labelClass}>
+          <label htmlFor="type" className="labelClass">
             Type
           </label>
           <select
             id="type"
             name="type"
             ref={Type}
-            className={fieldClass}
+            className="fieldClass"
           >
             <option value="income">INCOME</option>
             <option value="expense">EXPENSE</option>
@@ -113,12 +97,12 @@ const AddTask = () => {
         </div>
 
         <div className="flex flex-col gap-4">
-          <label htmlFor="amount" className={labelClass}>
+          <label htmlFor="amount" className="labelClass">
             Amount
           </label>
           <input
             id="amount"
-            className={fieldClass}
+            className="fieldClass"
             type="number"
             placeholder="Enter your amount"
             min={0}
@@ -129,12 +113,12 @@ const AddTask = () => {
         </div>
 
         <div className="flex flex-col gap-4">
-          <label htmlFor="category" className={labelClass}>
+          <label htmlFor="category" className="labelClass">
             Category
           </label>
           <input
             id="category"
-            className={fieldClass}
+            className="fieldClass"
             type="text"
             placeholder="Enter the category"
             ref={Category}
@@ -143,12 +127,12 @@ const AddTask = () => {
         </div>
 
         <div className="flex flex-col gap-4">
-          <label htmlFor="description" className={labelClass}>
+          <label htmlFor="description" className="labelClass">
             Description
           </label>
           <input
             id="description"
-            className={fieldClass}
+            className="fieldClass"
             type="text"
             placeholder="Enter the description"
             minLength={7}
@@ -158,40 +142,27 @@ const AddTask = () => {
         </div>
 
         <div className="flex flex-col gap-4">
-          <label htmlFor="date" className={labelClass}>
+          <label htmlFor="date" className="labelClass">
             Date
           </label>
           <input
             id="date"
-            className={fieldClass}
+            className="fieldClass"
             type="date"
             ref={newDate}
             name="date"
           />
         </div>
 
-        <div className="flex flex-col gap-4">
-          <label htmlFor="current_date" className={labelClass}>
-            CreatedAt
-          </label>
-          <input
-            id="current_date"
-            className={fieldClass}
-            type="date"
-            ref={Current_date}
-            name="current_date"
-          />
-        </div>
-
         <button
           type="submit"
-          className="col-span-full rounded-full bg-emerald-600 px-6 py-4 text-base font-semibold text-white transition hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-300"
+          className="col-span-full rounded-full bg-emerald-600 px-6 py-4 text-base font-semibold text-white transition hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-300 cursor-pointer"
         >
           Save Transaction
         </button>
       </form>
 
-      <div className="mt-8 grid gap-4">
+      {/* <div className="mt-8 grid gap-4">
         {allTrans.map((item, index) => (
           <Card
             key={index}
@@ -202,17 +173,8 @@ const AddTask = () => {
             date={item.date}
             created_date={item.created_date}
           />
-        ))}
-      </div>
-
-      {/* <h1>Total Income</h1>
-      <p>{incomeTrans}</p>
-
-      <h1>Expense Income</h1>
-      <p>{expenseTrans}</p>
-
-      <h1>Net Balance</h1>
-      <p>{netBalanceTrans}</p> */}
+        )).splice(0,5)}
+      </div> */}
     </div>
   );
 };

@@ -14,7 +14,7 @@ type Transaction = {
   created_date: string;
 };
 
-const AllTranscation = () => {
+const AllTrans = () => {
   const [trans, setTrans] = useState<Transaction[]>([]);
 
   useEffect(() => {
@@ -24,23 +24,20 @@ const AllTranscation = () => {
   }, []);
 
   return (
-    <div className="w-[90%] mx-auto">
-      <h1>Hello</h1>
-      <ul>
+    <div className="w-[35%]">
         {trans.map((item, index) => (
           <Card
             key={index}
             type={item.type}
             amount={item.amount}
-            description={item.description}
             category={item.category}
+            description={item.description}
             date={item.date}
             created_date={item.created_date}
           />
-        ))}
-      </ul>
-    </div>
+        )).splice(0,5)}
+      </div> 
   );
 };
 
-export default AllTranscation;
+export default AllTrans;

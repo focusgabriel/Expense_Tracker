@@ -23,7 +23,7 @@ type ExpenseSchema = {
   amount: number;
   category: string;
   description: string;
-  date: Date;
+  date: string;
   created_date: Date;
 }
 
@@ -49,7 +49,7 @@ const ExpenseProps = new mongoose.Schema<ExpenseSchema>({
   },
 
   date: {
-    type: Date,
+    type: String,
     required: true,
   },
 
@@ -59,7 +59,7 @@ const ExpenseProps = new mongoose.Schema<ExpenseSchema>({
   },
 })
 
-const ExpenseModel = mongoose.model("expenditures", ExpenseProps)
+const ExpenseModel = mongoose.model("expenditures", ExpenseProps);
 
 export async function addTransaction(type:"income" | "expense", amount:number, category:string, description:string, date:Date, created_date:Date){
     const newTransaction = new ExpenseModel({
@@ -68,17 +68,17 @@ export async function addTransaction(type:"income" | "expense", amount:number, c
     category,
     description, 
     date, 
-    created_date
+    created_date,
   })
 
   await newTransaction.save();
-  console.log(newTransaction);
+  // console.log(newTransaction);
   return newTransaction;
   }
 
 app.post("/api/v1/addTransaction", async function(req:Request, res:Response){
   try {
-    const {type, amount, category, description, date, created_date} = req.body
+    const {type, amount, category, description, date, created_date=new Date()} = req.body
     await addTransaction(type, amount, category, description, date, created_date);
     res.status(201).json({type, amount, category, description, date, created_date});
   } catch (error) {
@@ -123,27 +123,27 @@ app.get("/api/v1/totalTransaction", async function(req:Request, res:Response){
 //   }
 // })
 
-app.get("/api/v1/getPercentage", async function(req:Request, res:Response) {
-  try{
-    const income = await ExpenseModel.find({type:"income"});
-    const food = await ExpenseModel.find({category: /Transportation/i});
-    const Total_income = income.reduce((value, sum) => value + sum.amount, 0);
-    const totalFood = food.reduce((value, sum) => value + sum.amount, 0);
-    const perTotal = totalFood / Total_income * 100
-    const total = Number(perTotal.toFixed(2));
-    res.status(200).json({total});
-    console.log("total food:",totalFood);
-    console.log("total percentage:",perTotal);
-    console.log("total:",total);
-  } catch(error) {
-    console.log("error:", error)
-  }
-})
+// app.get("/api/v1/getPercentage", async function(req:Request, res:Response) {
+//   try{
+//     const income = await ExpenseModel.find({type:"income"});
+//     const food = await ExpenseModel.find({category: /Transportation/i});
+//     const Total_income = income.reduce((value, sum) => value + sum.amount, 0);
+//     const totalFood = food.reduce((value, sum) => value + sum.amount, 0);
+//     const perTotal = totalFood / Total_income * 100
+//     const total = Number(perTotal.toFixed(2));
+//     res.status(200).json({total});
+//     console.log("total food:",totalFood);
+//     console.log("total percentage:",perTotal);
+//     console.log("total:",total);
+//   } catch(error) {
+//     console.log("error:", error)
+//   }
+// })
 
 
 app.get("/api/v1/getTransaction", async function(req:Request, res:Response){
   try{
-    const allTransactions = await ExpenseModel.find().sort({date: -1})
+    const allTransactions = await ExpenseModel.find().sort({created_date: -1})
     res.status(200).json(allTransactions)
     console.log(allTransactions)
 

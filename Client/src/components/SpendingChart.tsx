@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { PieChart, Pie, ResponsiveContainer } from "recharts";
 import { CATEGORY_COLORS, type Transaction } from "../constants";
+import AllTrans from "./AllTrans";
 
 const SpendingChart = () => {
   const [allTrans, setAllTrans] = useState<Transaction[]>([]);
@@ -54,7 +55,7 @@ const SpendingChart = () => {
   return (
     <div>
       <div
-        className="w-full flex gap-5 border border-fuchsia-400 rounded-2xl overflow-hidden"
+        className="w-full flex justify-between gap-5 border border-fuchsia-400 rounded-2xl overflow-hidden m-4"
         style={{ height: 300 }}
       >
         <div className="w-[30%] relative h-full">
@@ -82,9 +83,9 @@ const SpendingChart = () => {
             </div>
           </div>
         </div>
-        <div className="w-[30%] grid gap-3rounded-2x p-4 relative">
+        <div className="w-[32%] ml-[-8%] grid gap-3rounded-2x p-4 relative">
           {chartData.map(item => (
-            <div key={item.category} className="flex items-center gap-3">
+            <div key={item.category} className="flex items-center gap-3 ">
               <span
                 className="h-3 w-3 rounded-full shrink-0"
                 style={{ backgroundColor: item.fill }}
@@ -93,7 +94,7 @@ const SpendingChart = () => {
                 <div className="font-medium text-sm text-slate-900">
                   {item.category}
                 </div>
-                <div className="text-sm absolute right-18 text-gray-500">
+                <div className="text-sm absolute right-14 text-gray-500">
                   ₦{item.amount.toLocaleString()}
                 </div>
                 <div className="text-sm absolute right-4 text-slate-700">
@@ -103,7 +104,9 @@ const SpendingChart = () => {
             </div>
           ))}
         </div>
+      <AllTrans />
       </div>
+
     </div>
   );
 };
