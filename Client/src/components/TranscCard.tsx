@@ -3,18 +3,19 @@ type transcCardProps = {
   amount: number;
   content: string;
   icon?: string;
-  alternate?: string
+  alternate?: string;
 }
+
 const TranscCard = ({title, amount, content, icon, alternate}: transcCardProps) => {
   return (
-    <div className="border border-gray-100 rounded-lg p-2 flex justify-between">
-      <div className="flex-col">
-        <h4 className="text-xs font-semibold">{title}</h4>
-        <h2 className="text-sm">₦{amount}</h2>
-        <p className="text-xs text-gray-300">{content}</p>
+    <div className="flex min-h-28 items-center justify-between gap-4 rounded-xl border border-slate-200 bg-white p-4 transition hover:border-emerald-200 hover:shadow-sm">
+      <div className="min-w-0">
+        <h4 className="text-xs font-semibold uppercase tracking-wide text-slate-500">{title}</h4>
+        <h2 className="mt-2 truncate text-2xl font-bold text-slate-900">&#8358;{amount}</h2>
+        <p className="mt-1 truncate text-sm text-slate-400">{content}</p>
       </div>
-      <div className="bg-gray-100 rounded-lg h-8">
-        <img src={icon} alt={alternate} width={30} />
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-50">
+        <img src={icon} alt={alternate} className="h-7 w-7 object-contain" />
       </div>
     </div>
   )

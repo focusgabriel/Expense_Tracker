@@ -40,23 +40,15 @@ const SpendingChart = () => {
 
   const totalExpense = chartData.reduce((sum, item) => sum + item.amount, 0);
 
-  // const categories = chartData.map((item) => ({
-  //   ...item,
-
-  //   percentage: (item.amount / totalIncome) * 100
-  // }))
   useEffect(() => {
     getTrans();
   }, []);
 
   return (
-    <div>
-      <div
-        className="w-full flex justify-between gap-5 border border-fuchsia-400 rounded-2xl overflow-hidden m-4"
-        style={{ height: 340 }}
-      >
-        <div className="w-[30%] relative h-full">
-          <h2 className="font-bold p-2">Spending Overview</h2>
+    <div className="rounded-2xl border border-emerald-100 bg-white/90 p-4 shadow-sm">
+      <div className="flex w-full flex-col gap-5 lg:h-[340px] lg:flex-row lg:items-stretch lg:justify-between lg:overflow-hidden">
+        <div className="relative h-72 w-full lg:h-full lg:w-[34%]">
+          <h2 className="p-2 font-bold text-slate-900">Spending Overview</h2>
           <div className="relative h-[calc(100%-2rem)]">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -64,8 +56,8 @@ const SpendingChart = () => {
                   data={chartData}
                   dataKey="amount"
                   nameKey="category"
-                  innerRadius={70}
-                  outerRadius={100}
+                  innerRadius="50%"
+                  outerRadius="75%"
                   paddingAngle={3}
                 />
               </PieChart>
@@ -75,35 +67,37 @@ const SpendingChart = () => {
                 Total expense
               </span>
               <span className="mt-1 text-xl font-semibold text-slate-900">
-                ₦{totalExpense.toLocaleString()}
+                &#8358;{totalExpense.toLocaleString()}
               </span>
             </div>
           </div>
         </div>
-        <div className="w-[32%] ml-[-8%] grid gap-3rounded-2x p-4 relative">
+
+        <div className="grid w-full content-center gap-3 rounded-xl border border-slate-100 bg-slate-50/60 p-4 lg:w-[30%]">
           {chartData.map(item => (
-            <div key={item.category} className="flex items-center gap-3 ">
+            <div
+              key={item.category}
+              className="grid grid-cols-[0.75rem_minmax(0,1fr)_auto_auto] items-center gap-3"
+            >
               <span
-                className="h-3 w-3 rounded-full shrink-0"
+                className="h-3 w-3 shrink-0 rounded-full"
                 style={{ backgroundColor: item.fill }}
               />
-              <div className="flex justify-between w-full gap-4">
-                <div className="font-medium text-sm text-slate-900">
-                  {item.category}
-                </div>
-                <div className="text-sm absolute right-14 text-gray-500">
-                  ₦{item.amount.toLocaleString()}
-                </div>
-                <div className="text-sm absolute right-4 text-slate-700">
-                  {item.percentage.toFixed(1)}%
-                </div>
+              <div className="truncate text-sm font-medium text-slate-900">
+                {item.category}
+              </div>
+              <div className="whitespace-nowrap text-sm text-gray-500">
+                &#8358;{item.amount.toLocaleString()}
+              </div>
+              <div className="whitespace-nowrap text-sm font-medium text-slate-700">
+                {item.percentage.toFixed(1)}%
               </div>
             </div>
           ))}
         </div>
-      <AllTrans />
-      </div>
 
+        <AllTrans />
+      </div>
     </div>
   );
 };

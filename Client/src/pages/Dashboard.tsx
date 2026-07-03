@@ -3,7 +3,7 @@ import SpendingChart from '../components/SpendingChart'
 
 const Dashboard = () => {
   return (
-    <div>
+    <div className="space-y-6">
       <AllTransaction />
       <SpendingChart />
     </div>

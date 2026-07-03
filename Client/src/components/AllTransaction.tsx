@@ -45,10 +45,12 @@ const incomeTransaction = async() => {
 
 
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div className="rounded-2xl border border-emerald-100 bg-white/90 p-4 shadow-sm">
+      <div className="grid gap-4 md:grid-cols-3">
       <TranscCard title="Total Income" amount={incomeTrans} content="from one source" icon="/wallet.png" alternate="wallet" />
       <TranscCard title="Total Expense" amount={expenseTrans} content="monthly expense roundup" icon="/expense.png" alternate="expense"  />
       <TranscCard title="Net Balance" amount={netBalanceTrans} content="available balance" icon="/bal.png" alternate="balance" />
+      </div>
     </div>
   )
 }
