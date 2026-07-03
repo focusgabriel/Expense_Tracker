@@ -16,7 +16,8 @@ type Transaction = {
 
 const AllTrans = () => {
   const [trans, setTrans] = useState<Transaction[]>([]);
-
+  
+  // getting the whole data from the database 
   useEffect(() => {
     fetch(`http://localhost:3000/api/v1/getTransaction`)
       .then(res => res.json())
@@ -37,6 +38,7 @@ const AllTrans = () => {
             created_date={item.created_date}
           />
         )).splice(0,5)}
+        {/* splice to render only the first 5 from the database making it the top five recent transaction */}
       </div> 
   );
 };

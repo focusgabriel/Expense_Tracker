@@ -18,6 +18,7 @@ const SpendingChart = () => {
     }
   };
 
+  //  filtering out the expense type and summing the category amounts specifically to get there percentages so as to represent them graphically on the pie chart.
   const grouped = allTrans
     .filter(item => item.type === "expense")
     .reduce<Record<string, number>>((acc, trans) => {
@@ -27,6 +28,7 @@ const SpendingChart = () => {
       return acc;
     }, {});
 
+  // getting the total income so that the total amount by the category would be divided by the toal income and multiply by 100 to get the percentage of each category
   const totalIncome = allTrans
     .filter(item => item.type === "income")
     .reduce((value, sum) => value + sum.amount, 0);
@@ -34,10 +36,14 @@ const SpendingChart = () => {
   const chartData = Object.entries(grouped).map(([category, amount]) => ({
     category,
     amount,
+    // here i added a fill object to hold the colors that would be used for categorical representation meaning if it is shopping the color orange would be used to represent it on the pie chart. because our pie chart would be of many colors to make visually beatiful
     fill: CATEGORY_COLORS[category] ?? "gray",
+
+    // i also added a percentage object so that i can add the calculated percentage to the array, meaning that every percentage based on the category would be referneced directly just like category and amount, directly from the array. 
     percentage: (amount / totalIncome) * 100,
   }));
 
+  // the total expense recorded or gotten from the chartData since we are only dealing with the expense in chartData now i am summing it up the whole expense gotten from each category into one variable.
   const totalExpense = chartData.reduce((sum, item) => sum + item.amount, 0);
 
   useEffect(() => {
@@ -50,6 +56,7 @@ const SpendingChart = () => {
         <div className="relative h-72 w-full lg:h-full lg:w-[34%]">
           <h2 className="p-2 font-bold text-slate-900">Spending Overview</h2>
           <div className="relative h-[calc(100%-2rem)]">
+            {/* the pie chart gotten from rechartjs for the analytical analysis of the expenses */}
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -90,6 +97,7 @@ const SpendingChart = () => {
                 &#8358;{item.amount.toLocaleString()}
               </div>
               <div className="whitespace-nowrap text-sm font-medium text-slate-700">
+                {/* now this is where i used the percentage that was externally added to the array. now each item now has a percentage of the specified category making it more understandable on what is going on */}
                 {item.percentage.toFixed(1)}%
               </div>
             </div>

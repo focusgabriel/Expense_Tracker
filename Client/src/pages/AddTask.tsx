@@ -52,8 +52,8 @@ const AddTask = () => {
     Current_date.current.value = ""
   };
   return (
-    <div className="mx-auto max-w-4xl rounded-3xl border border-emerald-200 bg-white/90 p-6 sm:p-8">
-      <div className="mb-6 rounded-3xl bg-emerald-50 p-6 text-center">
+    <div className="sm:mx-auto sm:max-w-4xl w-full rounded-3xl sm:border border border-blue-600 sm:border-emerald-200 bg-white/90 p-6 sm:p-8">
+      <div className="mb-6 rounded-3xl bg-emerald-50 p-6 text-center w-full border border-red-500">
         <h2 className="text-2xl font-bold text-emerald-900">
           Add a Transaction
         </h2>
@@ -87,7 +87,7 @@ const AddTask = () => {
           </label>
           <input
             id="amount"
-            className="fieldClass"
+          className="fieldClass"
             type="number"
             placeholder="Enter your amount"
             min={0}

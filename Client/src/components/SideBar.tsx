@@ -1,22 +1,8 @@
-import {
-  BarChart3,
-  FileText,
-  LayoutDashboard,
-  Lightbulb,
-  Settings,
-} from "lucide-react";
-
-const navItems = [
-  { name: "Overview", icon: LayoutDashboard },
-  { name: "Reports", icon: FileText },
-  { name: "Analytics", icon: BarChart3 },
-  { name: "Insights", icon: Lightbulb },
-  { name: "Settings", icon: Settings },
-];
+import { navItems } from "../constants";
 
 const SideBar = () => {
   return (
-    <aside className="flex h-screen w-16 shrink-0 flex-col border-r border-slate-200 bg-white px-2 py-4 shadow-sm transition-all duration-300 sm:w-56 sm:px-4">
+    <aside className="flex h-auto w-16 shrink-0 flex-col border-r border-slate-200 bg-white px-2 py-4 shadow-sm transition-all duration-300 sm:w-56 sm:px-4">
       <div className="mb-8 flex h-10 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700 sm:justify-start sm:px-3">
         <span className="text-lg font-bold">ET</span>
         <span className="ml-2 hidden text-sm font-semibold text-emerald-900 sm:inline">

@@ -7,9 +7,9 @@ import { Plus } from "lucide-react"
 
 const App = () => {
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex h-auto bg-slate-50 w-full">
       <SideBar />
-      <main className="min-w-0 flex-1 px-4 py-6 sm:px-6 lg:px-8">
+      <main className="w-full flex-1 px-4 py-6 sm:px-6 lg:px-8">
         <div className="mb-6 flex items-center justify-between gap-4">
           <h1 className="text-xl font-bold text-slate-900 sm:text-2xl">
             Welcome back

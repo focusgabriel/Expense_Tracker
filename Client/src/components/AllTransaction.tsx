@@ -7,6 +7,7 @@ const [incomeTrans, setIncomeTrans]= useState(null);
 const [expenseTrans, setExpenseTrans]= useState(null);
 const [netBalanceTrans, setNetBalanceTrans]= useState(null);
 
+  //  fetching the totalTransaction endpoint for total income from the backend
 const incomeTransaction = async() => {
     try{
         fetch("http://localhost:3000/api/v1/totalTransaction")
@@ -16,6 +17,8 @@ const incomeTransaction = async() => {
       console.log(error);
     }
   }
+
+  //  fetching the totalTransaction endpoint for total expense from the backend
 
   const expenseTransaction = async() => {
     try{
@@ -27,6 +30,7 @@ const incomeTransaction = async() => {
     }
   }
 
+  //  fetching the totalTransaction endpoint for net balance from the backend
   const netBalanceTransaction = async() => {
     try{
         fetch("http://localhost:3000/api/v1/totalTransaction")
@@ -43,10 +47,11 @@ const incomeTransaction = async() => {
     netBalanceTransaction()
   }, [])
 
+  // The Total Income, Total Expense and Net Balance Cards
 
   return (
     <div className="rounded-2xl border border-emerald-100 bg-white/90 p-4 shadow-sm">
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-3 ">
       <TranscCard title="Total Income" amount={incomeTrans} content="from one source" icon="/wallet.png" alternate="wallet" />
       <TranscCard title="Total Expense" amount={expenseTrans} content="monthly expense roundup" icon="/expense.png" alternate="expense"  />
       <TranscCard title="Net Balance" amount={netBalanceTrans} content="available balance" icon="/bal.png" alternate="balance" />

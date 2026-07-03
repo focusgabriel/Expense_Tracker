@@ -6,6 +6,7 @@ type transcCardProps = {
   alternate?: string;
 }
 
+// designing the total income, total expense and net balance card component for better representationing and positioning 
 const TranscCard = ({title, amount, content, icon, alternate}: transcCardProps) => {
   return (
     <div className="flex min-h-28 items-center justify-between gap-4 rounded-xl border border-slate-200 bg-white p-4 transition hover:border-emerald-200 hover:shadow-sm">
