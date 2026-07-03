@@ -56,12 +56,12 @@ const SpendingChart = () => {
     <div>
       <div
         className="w-full flex justify-between gap-5 border border-fuchsia-400 rounded-2xl overflow-hidden m-4"
-        style={{ height: 300 }}
+        style={{ height: 340 }}
       >
         <div className="w-[30%] relative h-full">
           <h2 className="font-bold p-2">Spending Overview</h2>
           <div className="relative h-[calc(100%-2rem)]">
-            <ResponsiveContainer width="100%" height="90%">
+            <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={chartData}
