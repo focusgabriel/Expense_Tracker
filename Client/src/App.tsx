@@ -1,13 +1,33 @@
-import AddTask from "./components/AddTask"
-import AllTransaction from "./components/AllTransaction"
-import SpendingChart from "./components/SpendingChart"
+import AddTask from "./pages/AddTask"
+import { Route, Routes } from "react-router-dom"
+import Dashboard from "./pages/Dashboard"
+import SideBar from "./components/SideBar"
+import { Link } from "react-router-dom"
+import { Plus } from "lucide-react"
 
 const App = () => {
   return (
-    <div className="w-[70%] mx-auto">
-      <AddTask />
-      <AllTransaction />
-      <SpendingChart />
+    <div className="flex min-h-screen bg-slate-50">
+      <SideBar />
+      <main className="min-w-0 flex-1 px-4 py-6 sm:px-6 lg:px-8">
+        <div className="mb-6 flex items-center justify-between gap-4">
+          <h1 className="text-xl font-bold text-slate-900 sm:text-2xl">
+            Welcome back
+          </h1>
+          <Link
+            to="/task"
+            className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-300"
+          >
+            <Plus size={18} />
+            <span className="hidden sm:inline">Add Transaction</span>
+          </Link>
+        </div>
+        <Routes>
+          <Route path="/task" element={<AddTask />} />
+          <Route path="/" element={<Dashboard />} />
+        </Routes>
+      </main>
+      
     </div>
   )
 }

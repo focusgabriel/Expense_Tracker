@@ -1,23 +1,8 @@
 /** @format */
 
 import { useEffect, useRef, useState } from "react";
-import Card from "./Card";
-// import type { Transaction } from "../constants"
-
-type Transaction = {
-  type: "expense" | "income";
-  amount: number;
-  category: string;
-  description: string;
-  date: string;
-  created_date: string;
-};
-
-  const new_date = new Date()
-  let getDate = new_date.toLocaleDateString()
 
 const AddTask = () => {
-  const [allTrans, setAllTrans] = useState<Transaction[]>([]);
   const Type = useRef<HTMLSelectElement>(null);
   const Amount = useRef<HTMLInputElement>(null);
   const Category = useRef<HTMLInputElement>(null);
@@ -161,20 +146,6 @@ const AddTask = () => {
           Save Transaction
         </button>
       </form>
-
-      {/* <div className="mt-8 grid gap-4">
-        {allTrans.map((item, index) => (
-          <Card
-            key={index}
-            type={item.type}
-            amount={item.amount}
-            category={item.category}
-            description={item.description}
-            date={item.date}
-            created_date={item.created_date}
-          />
-        )).splice(0,5)}
-      </div> */}
     </div>
   );
 };

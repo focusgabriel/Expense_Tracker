@@ -31,9 +31,6 @@ const SpendingChart = () => {
     .filter(item => item.type === "income")
     .reduce((value, sum) => value + sum.amount, 0);
 
-  // console.log(acc.amount)
-  // console.log(grouped)
-
   const chartData = Object.entries(grouped).map(([category, amount]) => ({
     category,
     amount,

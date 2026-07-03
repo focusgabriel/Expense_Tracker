@@ -9,10 +9,9 @@ export type Transaction = {
 
 export const CATEGORY_COLORS = {
   others: "pink",
-  Food: "darkorange",
-  Transportation: "blueviolet",
-  Shopping: "lightgreen",
-  Bill: "blue",
-  Upkeep: "crimson"
+  food: "darkorange",
+  transportation: "blueviolet",
+  shopping: "lightgreen",
+  bill: "blue",
 
 } as const;

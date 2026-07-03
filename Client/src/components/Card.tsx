@@ -1,4 +1,4 @@
-import {CarFront, Wifi, Wallet} from "lucide-react"
+import {CarFront, Wifi, Wallet, CookingPot, ShieldQuestionMark} from "lucide-react"
 
 const Card = ({type, amount, category, description, date, created_date}) => {
   const formatDate = (dateValue) => {
@@ -12,7 +12,7 @@ const Card = ({type, amount, category, description, date, created_date}) => {
     return (
       <div className="grid w-full grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-2.5 border-b border-slate-100 px-3 py-2.5 transition last:border-b-0 hover:bg-slate-50">
         <h3 className="flex h-8 w-8 items-center justify-center rounded-md bg-emerald-50 text-emerald-600">
-          {category === "Transportation" ?  <CarFront size={18} color="green" /> :  category === "Bill" ? <Wifi size={18} color="#763ef9" className="inline-block" /> : category === "salary" ? <Wallet size={18} color="green" /> : null
+          {category === "transportation" ?  <CarFront size={18} color="green" /> :  category === "bill" ? <Wifi size={18}  className="inline-block" /> : category === "salary" ? <Wallet size={18} color="green" /> :  category === "food" ? <CookingPot size={18} /> : <ShieldQuestionMark size={20} />
         }</h3>
 
         <div className="min-w-0">
