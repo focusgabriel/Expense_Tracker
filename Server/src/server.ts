@@ -92,19 +92,19 @@ app.post("/api/v1/addTransaction", async function(req:Request, res:Response){
 // console.log(getDate)
 
 // if(getDate === 5){
-  app.get("/api/v1/totalTransaction", async function(req:Request, res:Response){
-  try {
-    const Total_income =0
-    const Total_expense = 0
+//   app.get("/api/v1/totalTransaction", async function(req:Request, res:Response){
+//   try {
+//     const Total_income =0
+//     const Total_expense = 0
     
-    const NetBalance = Total_income - Total_expense;
+//     const NetBalance = Total_income - Total_expense;
 
-    res.status(200).json({Total_income, Total_expense, NetBalance});
-  } catch (error) {
-    console.log("Error:", error)
-  }
+//     res.status(200).json({Total_income, Total_expense, NetBalance});
+//   } catch (error) {
+//     console.log("Error:", error)
+//   }
   
-});
+// });
 
 // } else {
 app.get("/api/v1/totalTransaction", async function(req:Request, res:Response){
@@ -176,14 +176,14 @@ app.get("/api/v1/getTransaction", async function(req:Request, res:Response){
 
 app.get("/api/v1/getMonthlyIncome", async function(req:Request, res:Response) {
 // get the whole date first
-const lastMonth = new Date("2026-06-01")
-const newMonth = new Date("2026-07-01")
+const lastMonth = new Date("2026-07-01").toISOString().split("T")[0];
+const newMonth = new Date("2026-08-01").toISOString().split("T")[0];
 
 try {
   // const getDate = (await ExpenseModel.find()).filter((item, index) => item.date).map((item, index) => item.date)
 
 // check when it gets to a new month -> 1st of the month
-  const getMonth = await ExpenseModel.aggregate([{
+  const getMonthlyExpense = await ExpenseModel.aggregate([{
     $match: {
       type: "expense",
       date: {
@@ -193,8 +193,20 @@ try {
     }
   }])
 
-  const get_date = getMonth.map((item, index) => item.amount).reduce((value, sum) => value + sum)
-  res.status(200).json(get_date);
+  const getMonthlyIncome = await ExpenseModel.aggregate([{
+    $match: {
+      type: "income",
+      date: {
+        $gte: lastMonth,
+        $lt: newMonth
+      }
+    }
+  }])
+
+  const get_expense = getMonthlyExpense.map((item, index) => item.amount).reduce((value, sum) => value + sum)
+  const get_income = getMonthlyIncome.map((item, index) => item.amount).reduce((value, sum) => value + sum)
+  const netbalance = get_income - get_expense;
+  res.status(200).json({get_expense, get_income, netbalance});
   
 } catch (error) {
   res.status(500).json({message: "Server Error"})
