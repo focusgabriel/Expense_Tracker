@@ -87,7 +87,26 @@ app.post("/api/v1/addTransaction", async function(req:Request, res:Response){
   }
 });
 
+// const newDate = new Date();
+// let getDate = newDate.getDate();
+// console.log(getDate)
 
+// if(getDate === 5){
+  app.get("/api/v1/totalTransaction", async function(req:Request, res:Response){
+  try {
+    const Total_income =0
+    const Total_expense = 0
+    
+    const NetBalance = Total_income - Total_expense;
+
+    res.status(200).json({Total_income, Total_expense, NetBalance});
+  } catch (error) {
+    console.log("Error:", error)
+  }
+  
+});
+
+// } else {
 app.get("/api/v1/totalTransaction", async function(req:Request, res:Response){
   try {
     const income = await ExpenseModel.find({type:"income"})
@@ -111,6 +130,8 @@ app.get("/api/v1/totalTransaction", async function(req:Request, res:Response){
   }
   
 });
+
+// }
 
 // app.get("/api/v1/getPercentage", async function(req:Request, res:Response) {
 //   try{
@@ -153,10 +174,20 @@ app.get("/api/v1/getTransaction", async function(req:Request, res:Response){
   }
 })
 
-const newDate = new Date();
-const getDate = newDate.getDate();
-console.log(getDate)
+app.get("/api/v1/getMonthlyIncome", async function(req:Request, res:Response) {
+  const newDate = new Date("2026-07-04").toISOString().split("T")[0];
+  // const settingDate = newDate.setMonth(6);
+  // const getDate = newDate();
+  console.log(`new Date is: ${newDate}`)
+  try {
+    const monthlyTransaction = (await ExpenseModel.find()).filter((item, index) => item.date === newDate ? item.amount : "")
+    res.status(200).json(monthlyTransaction)
 
+  } catch (error) {
+    res.status(500).json({message: "Server Error"})
+    console.log(`Error: ${error}`)
+  }
+})
 
 app.listen(PORT, () => {
   console.log(`🚀 Express server is running on http://localhost:${PORT}`);
