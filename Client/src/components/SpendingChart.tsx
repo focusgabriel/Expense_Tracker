@@ -70,7 +70,7 @@ const SpendingChart = () => {
               </PieChart>
             </ResponsiveContainer>
             <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-xs uppercase tracking-[0.18em] text-slate-500">
+              <span className="text-xs uppercase tracking-[0.10em] text-slate-500">
                 Total expense
               </span>
               <span className="mt-1 text-xl font-semibold text-slate-900">

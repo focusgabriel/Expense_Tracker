@@ -153,6 +153,9 @@ app.get("/api/v1/getTransaction", async function(req:Request, res:Response){
   }
 })
 
+const newDate = new Date();
+const getDate = newDate.getDate();
+console.log(getDate)
 
 
 app.listen(PORT, () => {
