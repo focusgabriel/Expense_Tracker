@@ -175,17 +175,32 @@ app.get("/api/v1/getTransaction", async function(req:Request, res:Response){
 })
 
 app.get("/api/v1/getMonthlyIncome", async function(req:Request, res:Response) {
-  const newDate = new Date("2026-07-04").toISOString().split("T")[0];
-  // const settingDate = new Date().getMonth();
-  // const getDate = newDate();
-  console.log(`new Date is: ${newDate}`)
-  try {
-    const monthlyTransaction = (await ExpenseModel.find()).filter((item, index) => item.date === newDate).map((item, index) => item.amount)
-    res.status(200).json(monthlyTransaction)
-  } catch (error) {
-    res.status(500).json({message: "Server Error"})
-    console.log(`Error: ${error}`)
-  }
+// get the whole date first
+const lastMonth = new Date("2026-06-01")
+const newMonth = new Date("2026-07-01")
+
+try {
+  // const getDate = (await ExpenseModel.find()).filter((item, index) => item.date).map((item, index) => item.date)
+
+// check when it gets to a new month -> 1st of the month
+  const getMonth = await ExpenseModel.aggregate([{
+    $match: {
+      type: "expense",
+      date: {
+        $gte: lastMonth,
+        $lt: newMonth
+      }
+    }
+  }])
+
+  const get_date = getMonth.map((item, index) => item.amount).reduce((value, sum) => value + sum)
+  res.status(200).json(get_date);
+  
+} catch (error) {
+  res.status(500).json({message: "Server Error"})
+  console.log(error)
+}
+// start calculating the amount from there 
 })
 
 app.listen(PORT, () => {
