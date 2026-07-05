@@ -9,6 +9,7 @@ const SpendingChart = () => {
   const [allExpense, setAllExpense] = useState<Transaction[]>([]);
   const [allIncome, setAllIncome] = useState(null);
 
+  // getting the monthly expense and income to use it to set the pie chart, particularly the expense variable 
   const getTrans = async () => {
     try {
       fetch("http://localhost:3000/api/v1/getMonthlyIncome")
