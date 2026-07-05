@@ -10,6 +10,7 @@ const [incomeTrans, setIncomeTrans]= useState(null);
 const [monthlyExpense, setMonthlyExpense] = useState(null);
 const [monthlyIncome, setMonthlyIncome] = useState(null);
 const [monthlyBalance, setMonthlyBalance] = useState(null);
+const [prevMonth, setPrevMonth] = useState(null);
 
 
 useEffect(() => {
@@ -20,6 +21,7 @@ useEffect(() => {
           setMonthlyIncome(data.get_income);
           setMonthlyExpense(data.get_expense);
           setMonthlyBalance(data.netbalance);
+          setPrevMonth(data.lastMonthIncome);
         });
     } catch (error) {
       console.error(error);
@@ -75,7 +77,7 @@ const incomeTransaction = async() => {
   return (
     <div className="rounded-2xl border border-emerald-100 bg-white/90 p-4 shadow-sm">
       <div className="grid gap-4 md:grid-cols-4 ">
-      <TranscCard title="Total Income" amount={incomeTrans} content="from one source" icon="/wallet.png" alternate="wallet" />
+      <TranscCard title="Total Income" amount={incomeTrans} content={`last month income ${prevMonth}`} icon="/wallet.png" alternate="wallet" />
 
       <TranscCard title="Monthly Income" amount={monthlyIncome} content="from one source" icon="/wallet.png" alternate="wallet" />
 

@@ -6,20 +6,21 @@ import { CATEGORY_COLORS, type Transaction } from "../constants";
 import AllTrans from "./AllTrans";
 
 const SpendingChart = () => {
-  const [allTrans, setAllTrans] = useState<Transaction[]>([]);
+  const [allExpense, setAllExpense] = useState<Transaction[]>([]);
+  const [allIncome, setAllIncome] = useState(null);
 
   const getTrans = async () => {
     try {
-      fetch("http://localhost:3000/api/v1/getTransaction")
+      fetch("http://localhost:3000/api/v1/getMonthlyIncome")
         .then(res => res.json())
-        .then(data => setAllTrans(data));
+        .then(data => {setAllExpense(data.getMonthlyExpense); setAllIncome(data.get_income)});
     } catch (error) {
       console.log(error);
     }
   };
 
   //  filtering out the expense type and summing the category amounts specifically to get there percentages so as to represent them graphically on the pie chart.
-  const grouped = allTrans
+  const grouped = allExpense
     .filter(item => item.type === "expense")
     .reduce<Record<string, number>>((acc, trans) => {
       const { category, amount } = trans;
@@ -29,9 +30,7 @@ const SpendingChart = () => {
     }, {});
 
   // getting the total income so that the total amount by the category would be divided by the toal income and multiply by 100 to get the percentage of each category
-  const totalIncome = allTrans
-    .filter(item => item.type === "income")
-    .reduce((value, sum) => value + sum.amount, 0);
+  const totalIncome = allIncome
 
   const chartData = Object.entries(grouped).map(([category, amount]) => ({
     category,

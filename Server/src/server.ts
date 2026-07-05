@@ -87,26 +87,6 @@ app.post("/api/v1/addTransaction", async function(req:Request, res:Response){
   }
 });
 
-// const newDate = new Date();
-// let getDate = newDate.getDate();
-// console.log(getDate)
-
-// if(getDate === 5){
-//   app.get("/api/v1/totalTransaction", async function(req:Request, res:Response){
-//   try {
-//     const Total_income =0
-//     const Total_expense = 0
-    
-//     const NetBalance = Total_income - Total_expense;
-
-//     res.status(200).json({Total_income, Total_expense, NetBalance});
-//   } catch (error) {
-//     console.log("Error:", error)
-//   }
-  
-// });
-
-// } else {
 app.get("/api/v1/totalTransaction", async function(req:Request, res:Response){
   try {
     const income = await ExpenseModel.find({type:"income"})
@@ -169,6 +149,10 @@ app.get("/api/v1/getTransaction", async function(req:Request, res:Response){
 app.get("/api/v1/getMonthlyIncome", async function(req:Request, res:Response) {
 // getting the first day of the previous month and the first day of the next month
 const now = new Date()
+const startOfPrevMonth = new Date(
+  now.getFullYear(),
+  now.getMonth() - 1
+)
 const endOfLastMonth = new Date(
   now.getFullYear(),
   now.getMonth(),
@@ -200,11 +184,22 @@ try {
     }
   }])
 
+  const getPrevMonthlyIncome = await ExpenseModel.aggregate([{
+    $match: {
+      type: "income",
+      date: {
+        $gte: startOfPrevMonth,
+        $lt: endOfLastMonth
+      }
+    }
+  }])
+
+  const lastMonthIncome = getPrevMonthlyIncome.map((item, index) => item.amount).reduce((value, sum) => value + sum)
   // start calculating the amount from there 
   const get_expense = getMonthlyExpense.map((item, index) => item.amount).reduce((value, sum) => value + sum)
   const get_income = getMonthlyIncome.map((item, index) => item.amount).reduce((value, sum) => value + sum)
   const netbalance = get_income - get_expense;
-  res.status(200).json({get_expense, get_income, netbalance});
+  res.status(200).json({get_expense, get_income, netbalance, lastMonthIncome, getMonthlyExpense});
   
 } catch (error) {
   res.status(500).json({message: "Server Error"})
