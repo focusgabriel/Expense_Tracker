@@ -77,7 +77,8 @@ const incomeTransaction = async() => {
   return (
     <div className="rounded-2xl border border-emerald-100 bg-white/90 p-4 shadow-sm">
       <div className="grid gap-4 md:grid-cols-4 ">
-      <TranscCard title="Total Income" amount={incomeTrans} content={`last month income ${prevMonth}`} icon="/wallet.png" alternate="wallet" />
+      {/* <span className="text-green-600">{prevMonth}</span> */}
+      <TranscCard title="Total Income" amount={incomeTrans} content={<span>last month income <span className="text-green-500 font-bold">&#8358;{prevMonth}</span> </span>} icon="/wallet.png" alternate="wallet" />
 
       <TranscCard title="Monthly Income" amount={monthlyIncome} content="from one source" icon="/wallet.png" alternate="wallet" />
 

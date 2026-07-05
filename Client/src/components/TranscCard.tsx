@@ -1,7 +1,9 @@
+import type { JSX } from "react/jsx-runtime";
+
 type transcCardProps = {
   title: string;
   amount: number;
-  content: string;
+  content: string | JSX.Element;
   icon?: string;
   alternate?: string;
 }
