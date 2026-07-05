@@ -98,7 +98,7 @@ const SpendingChart = () => {
               </div>
               <div className="whitespace-nowrap text-sm font-medium text-slate-700">
                 {/* now this is where i used the percentage that was externally added to the array. now each item now has a percentage of the specified category making it more understandable on what is going on */}
-                {item.percentage.toFixed(1)}%
+                {item.percentage.toFixed(2)}%
               </div>
             </div>
           ))}

@@ -157,11 +157,11 @@ const endOfLastMonth = new Date(
   now.getFullYear(),
   now.getMonth(),
 )
-const startOfLastMonth = new Date(
+const startOfNextMonth = new Date(
   now.getFullYear(),
   now.getMonth() + 1,
 )
-
+// console.log("new Month:", startOfNextMonth)
 // aggregating the monthly expense based on gte and lt which would be based on the highest date(last day of the month) and the beginning of the new month.
 try {
   const getMonthlyExpense = await ExpenseModel.aggregate([{
@@ -169,17 +169,17 @@ try {
       type: "expense",
       date: {
         $gte: endOfLastMonth,
-        $lt: startOfLastMonth
+        $lt: startOfNextMonth
       }
     }
   }])
-
+  console.log()
   const getMonthlyIncome = await ExpenseModel.aggregate([{
     $match: {
       type: "income",
       date: {
         $gte: endOfLastMonth,
-        $lt: startOfLastMonth
+        $lt: startOfNextMonth
       }
     }
   }])
@@ -204,14 +204,17 @@ try {
     }
   }])
 
+  // calculating for the previous month
   const lastMonthIncome = getPrevMonthlyIncome.map((item, index) => item.amount).reduce((value, sum) => value + sum)
   const lastMonthExpense = getPrevMonthlyExpense.map((item, index) => item.amount).reduce((value, sum) => value + sum)
   const lastMonthNetBalance = lastMonthIncome - lastMonthExpense;
-  // start calculating the amount from there 
+
+  // calculating for the current month
   const get_expense = getMonthlyExpense.map((item, index) => item.amount).reduce((value, sum) => value + sum)
   const get_income = getMonthlyIncome.map((item, index) => item.amount).reduce((value, sum) => value + sum)
   const netbalance = get_income - get_expense;
-  res.status(200).json({get_expense, get_income, netbalance, lastMonthNetBalance, getMonthlyExpense});
+
+  res.status(200).json({get_expense, get_income, netbalance, lastMonthNetBalance, getMonthlyExpense, endOfLastMonth});
   
 } catch (error) {
   res.status(500).json({message: "Server Error"})
