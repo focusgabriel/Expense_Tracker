@@ -1,14 +1,18 @@
-import AddTask from "./pages/AddTask"
-import { Route, Routes } from "react-router-dom"
-import Dashboard from "./pages/Dashboard"
-import SideBar from "./components/SideBar"
-import { Link } from "react-router-dom"
-import { Plus } from "lucide-react"
+/** @format */
+
+import AddTask from "./pages/AddTask";
+import { Route, Routes } from "react-router-dom";
+import Dashboard from "./pages/Dashboard";
+import SideBar from "./components/SideBar";
+import { Link } from "react-router-dom";
+import { Plus } from "lucide-react";
 
 const App = () => {
+
   return (
     <div className="flex h-auto bg-slate-50 w-full">
       <SideBar />
+
       <main className="w-full flex-1 px-4 py-6 sm:px-6 lg:px-8">
         <div className="mb-6 flex items-center justify-between gap-4">
           <h1 className="text-xl font-bold text-slate-900 sm:text-2xl">
@@ -26,10 +30,10 @@ const App = () => {
           <Route path="/task" element={<AddTask />} />
           <Route path="/" element={<Dashboard />} />
         </Routes>
-      </main>
-      
-    </div>
-  )
-}
 
-export default App
+      </main>
+    </div>
+  );
+};
+
+export default App;

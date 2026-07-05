@@ -23,7 +23,7 @@ type ExpenseSchema = {
   amount: number;
   category: string;
   description: string;
-  date: string;
+  date: Date;
   created_date: Date;
 }
 
@@ -49,7 +49,7 @@ const ExpenseProps = new mongoose.Schema<ExpenseSchema>({
   },
 
   date: {
-    type: String,
+    type: Date,
     required: true,
   },
 
@@ -111,19 +111,11 @@ app.get("/api/v1/totalTransaction", async function(req:Request, res:Response){
   try {
     const income = await ExpenseModel.find({type:"income"})
     const Total_income = income.reduce((value, sum) => value + sum.amount, 0);
-
-    // res.status(200).json(Total_income);
-    console.log(`Total income: ${Total_income}`);
     
     const expense = await ExpenseModel.find({type:"expense"})
     const Total_expense = expense.reduce((value, sum) => value + sum.amount, 0);
-    // res.status(200).json(Total_expense);
-    console.log(`Total expense: ${Total_expense}`);
     
     const NetBalance = Total_income - Total_expense;
-    // res.status(200).json({message: NetBalance});
-    console.log("Net Balance:", NetBalance);
-
     res.status(200).json({Total_income, Total_expense, NetBalance});
   } catch (error) {
     console.log("Error:", error)
@@ -175,20 +167,25 @@ app.get("/api/v1/getTransaction", async function(req:Request, res:Response){
 })
 
 app.get("/api/v1/getMonthlyIncome", async function(req:Request, res:Response) {
-// get the whole date first
-const lastMonth = new Date("2026-07-01").toISOString().split("T")[0];
-const newMonth = new Date("2026-08-01").toISOString().split("T")[0];
+// getting the first day of the previous month and the first day of the next month
+const now = new Date()
+const endOfLastMonth = new Date(
+  now.getFullYear(),
+  now.getMonth(),
+)
+const startOfLastMonth = new Date(
+  now.getFullYear(),
+  now.getMonth() + 1,
+)
 
+// aggregating the monthly expense based on gte and lt which would be based on the highest date(last day of the month) and the beginning of the new month.
 try {
-  // const getDate = (await ExpenseModel.find()).filter((item, index) => item.date).map((item, index) => item.date)
-
-// check when it gets to a new month -> 1st of the month
   const getMonthlyExpense = await ExpenseModel.aggregate([{
     $match: {
       type: "expense",
       date: {
-        $gte: lastMonth,
-        $lt: newMonth
+        $gte: endOfLastMonth,
+        $lt: startOfLastMonth
       }
     }
   }])
@@ -197,12 +194,13 @@ try {
     $match: {
       type: "income",
       date: {
-        $gte: lastMonth,
-        $lt: newMonth
+        $gte: endOfLastMonth,
+        $lt: startOfLastMonth
       }
     }
   }])
 
+  // start calculating the amount from there 
   const get_expense = getMonthlyExpense.map((item, index) => item.amount).reduce((value, sum) => value + sum)
   const get_income = getMonthlyIncome.map((item, index) => item.amount).reduce((value, sum) => value + sum)
   const netbalance = get_income - get_expense;
@@ -212,7 +210,6 @@ try {
   res.status(500).json({message: "Server Error"})
   console.log(error)
 }
-// start calculating the amount from there 
 })
 
 app.listen(PORT, () => {

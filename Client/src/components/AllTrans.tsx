@@ -10,7 +10,7 @@ type Transaction = {
   amount: number;
   category: string;
   description: string;
-  date: string;
+  date: Date;
   created_date: string;
 };
 
