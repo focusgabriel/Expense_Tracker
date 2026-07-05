@@ -194,12 +194,24 @@ try {
     }
   }])
 
+  const getPrevMonthlyExpense = await ExpenseModel.aggregate([{
+    $match: {
+      type: "expense",
+      date: {
+        $gte: startOfPrevMonth,
+        $lt: endOfLastMonth
+      }
+    }
+  }])
+
   const lastMonthIncome = getPrevMonthlyIncome.map((item, index) => item.amount).reduce((value, sum) => value + sum)
+  const lastMonthExpense = getPrevMonthlyExpense.map((item, index) => item.amount).reduce((value, sum) => value + sum)
+  const lastMonthNetBalance = lastMonthIncome - lastMonthExpense;
   // start calculating the amount from there 
   const get_expense = getMonthlyExpense.map((item, index) => item.amount).reduce((value, sum) => value + sum)
   const get_income = getMonthlyIncome.map((item, index) => item.amount).reduce((value, sum) => value + sum)
   const netbalance = get_income - get_expense;
-  res.status(200).json({get_expense, get_income, netbalance, lastMonthIncome, getMonthlyExpense});
+  res.status(200).json({get_expense, get_income, netbalance, lastMonthNetBalance, getMonthlyExpense});
   
 } catch (error) {
   res.status(500).json({message: "Server Error"})

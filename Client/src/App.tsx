@@ -1,14 +1,14 @@
 /** @format */
 
-import AddTask from "./pages/AddTask";
+import AddTask from "./components/AddTask";
 import { Route, Routes } from "react-router-dom";
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./components/Dashboard";
 import SideBar from "./components/SideBar";
 import { Link } from "react-router-dom";
 import { Plus } from "lucide-react";
+import AllTransaction from "./components/AllTransaction";
 
 const App = () => {
-
   return (
     <div className="flex h-auto bg-slate-50 w-full">
       <SideBar />
@@ -29,8 +29,8 @@ const App = () => {
         <Routes>
           <Route path="/task" element={<AddTask />} />
           <Route path="/" element={<Dashboard />} />
+          <Route path="/transaction" element={<AllTransaction />} />
         </Routes>
-
       </main>
     </div>
   );
