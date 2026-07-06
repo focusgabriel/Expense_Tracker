@@ -20,7 +20,7 @@ export const CATEGORY_COLORS = {
   food: "darkorange",
   transportation: "blueviolet",
   shopping: "lightgreen",
-  bill: "blue",
+  bill: "indianred",
 
 } as const;
 

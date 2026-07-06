@@ -1,6 +1,6 @@
 /** @format */
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import TranscCard from "./TranscCard";
 
 const AllTransaction = () => {
@@ -52,6 +52,7 @@ const AllTransaction = () => {
           title="Total Balance"
           amount={netBalanceTrans}
           content={
+            monthlyBalance !== null || prevMonth !== null ?
             <span>
               vs last month{" "}
               <span
@@ -59,7 +60,7 @@ const AllTransaction = () => {
               >
                 &#8358;{prevMonth}
               </span>{" "}
-            </span>
+            </span> : ""
           }
           icon="/wallet.png"
           alternate="wallet"

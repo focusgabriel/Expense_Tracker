@@ -59,7 +59,7 @@ const ExpenseProps = new mongoose.Schema<ExpenseSchema>({
   },
 })
 
-const ExpenseModel = mongoose.model("expenditures", ExpenseProps);
+const ExpenseModel = mongoose.model("expenseRecords", ExpenseProps);
 
 export async function addTransaction(type:"income" | "expense", amount:number, category:string, description:string, date:Date, created_date:Date){
     const newTransaction = new ExpenseModel({
@@ -205,13 +205,13 @@ try {
   }])
 
   // calculating for the previous month
-  const lastMonthIncome = getPrevMonthlyIncome.map((item, index) => item.amount).reduce((value, sum) => value + sum)
-  const lastMonthExpense = getPrevMonthlyExpense.map((item, index) => item.amount).reduce((value, sum) => value + sum)
+  const lastMonthIncome = getPrevMonthlyIncome.map((item, index) => item.amount).reduce((value, sum) => value + sum, 0)
+  const lastMonthExpense = getPrevMonthlyExpense.map((item, index) => item.amount).reduce((value, sum) => value + sum, 0)
   const lastMonthNetBalance = lastMonthIncome - lastMonthExpense;
 
   // calculating for the current month
-  const get_expense = getMonthlyExpense.map((item, index) => item.amount).reduce((value, sum) => value + sum)
-  const get_income = getMonthlyIncome.map((item, index) => item.amount).reduce((value, sum) => value + sum)
+  const get_expense = getMonthlyExpense.map((item, index) => item.amount).reduce((value, sum) => value + sum, 0)
+  const get_income = getMonthlyIncome.map((item, index) => item.amount).reduce((value, sum) => value + sum, 0)
   const netbalance = get_income - get_expense;
 
   res.status(200).json({get_expense, get_income, netbalance, lastMonthNetBalance, getMonthlyExpense, endOfLastMonth});

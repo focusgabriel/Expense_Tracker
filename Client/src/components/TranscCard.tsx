@@ -3,7 +3,7 @@ import type { JSX } from "react/jsx-runtime";
 type transcCardProps = {
   title: string;
   amount: number;
-  content: string | JSX.Element;
+  content: string | JSX.Element | boolean;
   icon?: string;
   alternate?: string;
 }
