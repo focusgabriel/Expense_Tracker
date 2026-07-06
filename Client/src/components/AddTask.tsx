@@ -1,6 +1,6 @@
 /** @format */
 
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 
 const AddTask = () => {
   const Type = useRef<HTMLSelectElement>(null);
@@ -52,8 +52,8 @@ const AddTask = () => {
     Current_date.current.value = ""
   };
   return (
-    <div className="md:mx-auto md:max-w-4xl w-full rounded-3xl sm:border border border-blue-600 sm:border-emerald-200 bg-white/90 p-6 sm:p-8">
-      <div className="mb-6 rounded-3xl bg-emerald-50 p-6 text-center w-full border border-red-500">
+    <div className="md:mx-auto md:max-w-4xl w-full rounded-3xl bg-white/90 p-6 sm:p-8">
+      <div className="mb-6 rounded-3xl bg-emerald-50 p-6 text-center w-full ">
         <h2 className="text-2xl font-bold text-emerald-900">
           Add a Transaction
         </h2>

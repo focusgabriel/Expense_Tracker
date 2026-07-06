@@ -52,7 +52,7 @@ const SpendingChart = () => {
 
   return (
     <div className="rounded-2xl border border-emerald-100 bg-white/90 p-4 shadow-sm">
-      <div className="flex w-full flex-col gap-5 lg:h-[340px] lg:flex-row lg:items-stretch lg:justify-between lg:overflow-hidden">
+      <div className="flex w-full flex-col gap-5 lg:h-85 lg:flex-row lg:items-stretch lg:justify-between lg:overflow-hidden">
         <div className="relative h-72 w-full lg:h-full lg:w-[34%]">
           <h2 className="p-2 font-bold text-slate-900">Spending Overview</h2>
           <div className="relative h-[calc(100%-2rem)]">
@@ -70,7 +70,7 @@ const SpendingChart = () => {
               </PieChart>
             </ResponsiveContainer>
             <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-xs uppercase tracking-[0.10em] text-slate-500">
+              <span className="text-xs uppercase tracking-widest text-slate-500">
                 Total expense
               </span>
               <span className="mt-1 text-xl font-semibold text-slate-900">
@@ -80,7 +80,7 @@ const SpendingChart = () => {
           </div>
         </div>
 
-        <div className="grid w-full content-center gap-3 rounded-xl border border-slate-100 bg-slate-50/60 p-4 lg:w-[30%]">
+        <div className="grid w-full content-center gap-3 rounded-xl sm:relative bg-slate-50/60 p-4 lg:w-[30%]">
           {chartData.map(item => (
             <div
               key={item.category}
@@ -93,7 +93,7 @@ const SpendingChart = () => {
               <div className="truncate text-sm font-medium text-slate-900">
                 {item.category}
               </div>
-              <div className="whitespace-nowrap text-sm text-gray-500">
+              <div className="whitespace-nowrap text-sm text-gray-500 sm:absolute sm:right-[30%]">
                 &#8358;{item.amount.toLocaleString()}
               </div>
               <div className="whitespace-nowrap text-sm font-medium text-slate-700">

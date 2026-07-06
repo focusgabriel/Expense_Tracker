@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import CardReview from "./CardReview";
-import type { Transaction } from "../constants";
 
 const MonthReview = () => {
   const [reviewIncome, setReviewIncome] = useState<number | null>(null);
@@ -41,6 +40,7 @@ const MonthReview = () => {
     }
   }, []);
 
+  console.log(reviewExpense);
   const balancePercentage =
     reviewIncome && reviewIncome !== 0 && reviewBalance != null
       ? Number(((reviewBalance / reviewIncome) * 100).toFixed(2))
