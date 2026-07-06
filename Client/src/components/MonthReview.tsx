@@ -68,15 +68,19 @@ const MonthReview = () => {
             title="Net Balance"
             content={<span>{formattedBalance}</span>}
           />
-          <CardReview
+          {/* <CardReview
             title="Balance rate"
             content={
-              <span>
+              <span >
                 {balancePercentage ?? 0}
                 <span>%</span>
               </span>
             }
-          />
+          /> */}
+          <div>
+            <p className="text-sm">BALANCE RATE</p>
+            <p className="font-bold">{balancePercentage ?? 0}<span>%</span></p>
+          </div>
         </div>
       </div>
     </div>
