@@ -7,6 +7,7 @@ import SideBar from "./components/SideBar";
 import { Link } from "react-router-dom";
 import { Plus } from "lucide-react";
 import AllTransaction from "./components/AllTransaction";
+import SuccessfulMsg from "./components/SuccessfulMsg";
 
 const App = () => {
   return (
@@ -30,6 +31,7 @@ const App = () => {
           <Route path="/task" element={<AddTask />} />
           <Route path="/" element={<Dashboard />} />
           <Route path="/transaction" element={<AllTransaction />} />
+          <Route path="/success" element={<SuccessfulMsg />} />
         </Routes>
       </main>
     </div>

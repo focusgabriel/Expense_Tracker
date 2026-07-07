@@ -1,6 +1,8 @@
 /** @format */
 
 import { useRef } from "react";
+import { Link } from "react-router-dom";
+import SuccessfulMsg from "./SuccessfulMsg";
 
 const AddTask = () => {
   const Type = useRef<HTMLSelectElement>(null);
@@ -10,8 +12,8 @@ const AddTask = () => {
   const newDate = useRef<HTMLInputElement>(null);
   const Current_date = useRef<HTMLInputElement>(null);
 
-  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async() => {
+    // e.preventDefault();
 
     const newTransaction = {
       type: Type.current?.value.toLowerCase(),
@@ -50,6 +52,8 @@ const AddTask = () => {
     Category.current.value = ""
     newDate.current.value = ""
     Current_date.current.value = ""
+
+    
   };
   return (
     <div className="md:mx-auto md:max-w-4xl w-full rounded-3xl bg-white/90 p-6 sm:p-8">
@@ -65,6 +69,7 @@ const AddTask = () => {
       <form
         onSubmit={handleSubmit}
         className="grid gap-7 rounded-3xl bg-white p-6 sm:grid-cols-2 sm:p-8"
+        action="/success"
       >
         <div className="flex flex-col gap-4">
           <label htmlFor="type" className="labelClass">
@@ -144,6 +149,7 @@ const AddTask = () => {
           className="col-span-full rounded-full bg-emerald-600 px-6 py-4 text-base font-semibold text-white transition hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-300 cursor-pointer"
         >
           Save Transaction
+          {/* <Link to="/task/success"></Link> */}
         </button>
       </form>
     </div>
