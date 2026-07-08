@@ -3,7 +3,7 @@ import { Link, Route, Routes } from "react-router-dom"
 
 const SuccessfulMsg = () => {
   return (
-    <div className="w-[40%] h-[50vh] rounded-xl bg-white/65 shadow drop-shadow-white mx-auto my-[10vh] p-6">
+    <div className="w-[40%] h-[50vh] rounded-xl bg-white/65 shadow drop-shadow-white mx-auto my-[10vh] p-6 successMsg">
       <h1 className="sm:text-3xl text-center">Successfully added Transaction</h1>
       <p className="text-center text-lg mt-10">
         click here to go back home

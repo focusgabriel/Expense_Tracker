@@ -11,4 +11,29 @@ body{
   .labelClass {
     @apply text-sm font-semibold text-slate-700
   }
+
+  .successMsg {
+    @apply relative overflow-hidden;
+  }
+
+  .successMsg::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 0.35rem;
+    width: 100%;
+    background: #16a34a;
+    transform-origin: left;
+    animation: progress-decrease 4s linear forwards;
+  }
+
+  @keyframes progress-decrease {
+    from {
+      transform: scaleX(1);
+    }
+    to {
+      transform: scaleX(0);
+    }
+  }
 }

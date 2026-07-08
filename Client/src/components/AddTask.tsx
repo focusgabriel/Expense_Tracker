@@ -1,8 +1,6 @@
 /** @format */
 
 import { useRef } from "react";
-import { Link } from "react-router-dom";
-import SuccessfulMsg from "./SuccessfulMsg";
 
 const AddTask = () => {
   const Type = useRef<HTMLSelectElement>(null);
@@ -17,9 +15,9 @@ const AddTask = () => {
 
     const newTransaction = {
       type: Type.current?.value.toLowerCase(),
-      amount: Number(Amount.current?.value ?? 0),
-      category: Category.current?.value.toLowerCase(),
-      description: Description.current?.value.toLowerCase(),
+      amount: Number(Amount.current?.value.trim() ?? 0),
+      category: Category.current?.value.trim().toLowerCase(),
+      description: Description.current?.value.trim().toLowerCase(),
       date: newDate.current?.value,
       created_date: Current_date.current?.value,
     };
