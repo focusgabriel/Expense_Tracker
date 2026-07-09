@@ -1,5 +1,6 @@
 import express, { Request, Response, Application } from 'express';
 import { addTransaction } from "../services/transaction.services.js";
+import { ExpenseModel } from '../db/index.js';
 
 export async function addTransactionController(req:Request, res:Response){
   try {
@@ -10,4 +11,20 @@ export async function addTransactionController(req:Request, res:Response){
     console.log("Error Message:", error)
     res.status(500).json({message: "Error Occurred while adding Transaction"})
   }
+};
+
+export async function totalTransactionController(_req:Request, res:Response){
+  try {
+    const income = await ExpenseModel.find({type:"income"})
+    const Total_income = income.reduce((value, sum) => value + sum.amount, 0);
+    
+    const expense = await ExpenseModel.find({type:"expense"})
+    const Total_expense = expense.reduce((value, sum) => value + sum.amount, 0);
+    
+    const NetBalance = Total_income - Total_expense;
+    res.status(200).json({Total_income, Total_expense, NetBalance});
+  } catch (error) {
+    console.log("Error:", error)
+  }
+  
 };
