@@ -28,3 +28,15 @@ export async function totalTransactionController(_req:Request, res:Response){
   }
   
 };
+
+export async function getTransaction(req:Request, res:Response){
+  try{
+    const allTransactions = await ExpenseModel.find().sort({created_date: -1})
+    res.status(200).json(allTransactions)
+    console.log(allTransactions)
+
+  } catch(err){
+    res.status(500).json({message:"error loading data"})
+    console.log("error:",err);
+  }
+};
