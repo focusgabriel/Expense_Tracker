@@ -3,3 +3,5 @@ import { addTransactionController } from "../controllers/transaction.controllers
 const router = Router();
 
 router.post("/", addTransactionController)
+
+export default router
