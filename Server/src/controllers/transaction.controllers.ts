@@ -5,8 +5,12 @@ import { ExpenseModel } from '../db/index.js';
 export async function addTransactionController(req:Request, res:Response){
   try {
     const {type, amount, category, description, date, created_date=new Date()} = req.body
-    await addTransaction(type, amount, category, description, date, created_date);
-    res.status(201).json({type, amount, category, description, date, created_date});
+    if(amount < 100){
+      throw new Error("amount should be greater than 100")
+    } else {
+      await addTransaction(type, amount, category, description, date, created_date);
+    }
+      res.status(201).json({type, amount, category, description, date, created_date});
   } catch (error) {
     console.log("Error Message:", error)
     res.status(500).json({message: "Error Occurred while adding Transaction"})
@@ -116,3 +120,11 @@ try {
   console.log(error)
 }
 };
+
+export async function editTransaction(req:Request, res:Response) {
+  const getId = await ExpenseModel.aggregate([{
+    $match: {
+      id: "_id"
+    }
+  }])
+}
