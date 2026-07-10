@@ -5,30 +5,30 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 
 const EditForm = () => {
+  const { id } = useParams();
+
   const handleSubmit = async () => {
-    // await axios.put(`/api/v1/6a514e64545fbeea01883574`, formData);
-    // e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/6a514e64545fbeea01883574`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `http://localhost:3000/api/v1/updateTransaction/${id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
         },
-        body: JSON.stringify(formData),
-      });
+      );
 
       const data = await response.json();
       if (!response.ok) {
         throw new Error("Error sending data");
       }
       console.log(data);
-      // await getTrans();
     } catch (error) {
       console.log(error);
     }
   };
-
-  const { id } = useParams();
   console.log("params:", id);
 
   const [formData, setFormData] = useState({
@@ -41,13 +41,20 @@ const EditForm = () => {
 
   useEffect(() => {
     async function fetchTransaction() {
-      fetch(
-        `http://localhost:3000/api/v1/getTransactionById/6a514e64545fbeea01883574`,
-      )
-        .then(res => res.json())
-        .then(data => setFormData(data))
-        .then(data => console.log(`Response: ${data}`))
-      
+      if (id) {
+        fetch(`http://localhost:3000/api/v1/getTransactionById/${id}`)
+          .then(res => res.json())
+          .then(data => {
+            setFormData({
+              type: data.type,
+              amount: data.amount,
+              category: data.category,
+              description: data.description,
+              date: data.date,
+            });
+          })
+          .catch(error => console.log(`Error: ${error}`));
+      }
     }
 
     fetchTransaction();
@@ -64,14 +71,13 @@ const EditForm = () => {
     });
   };
 
-//   <Link to={`/edit/${formData._id}`}>
-//     Edit
-// </Link>
+  //   <Link to={`/edit/${formData._id}`}>
+  //     Edit
+  // </Link>
   console.log(formData.category);
 
   return (
     <div className="md:mx-auto md:max-w-4xl w-full rounded-3xl bg-white/90 p-6 sm:p-8">
-      
       <div className="mb-6 rounded-3xl bg-emerald-50 p-6 text-center w-full ">
         <h2 className="text-2xl font-bold text-emerald-900">
           Add a Transaction
