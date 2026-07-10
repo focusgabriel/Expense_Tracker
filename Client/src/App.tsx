@@ -1,13 +1,14 @@
 /** @format */
 
 import AddTask from "./components/AddTask";
-import { Form, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
 import SideBar from "./components/SideBar";
 import { Link } from "react-router-dom";
 import { Plus } from "lucide-react";
 import AllTransaction from "./components/AllTransaction";
 import SuccessfulMsg from "./components/SuccessfulMsg";
+import EditForm from "./components/Form";
 
 const App = () => {
   return (
@@ -32,7 +33,7 @@ const App = () => {
           <Route path="/" element={<Dashboard />} />
           <Route path="/transaction" element={<AllTransaction />} />
           <Route path="/success" element={<SuccessfulMsg />} />
-          <Route path="/edit" element={<Form />} />
+          <Route path="/edit/:id" element={<EditForm />} />
 
         </Routes>
       </main>

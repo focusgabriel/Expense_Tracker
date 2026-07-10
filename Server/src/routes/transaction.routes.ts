@@ -6,7 +6,7 @@ router.post("/addTransaction", addTransactionController)
 router.get("/totalTransaction", totalTransactionController)
 router.get("/getTransaction", getTransactionController)
 router.get("/getMonthlyIncome", getMonthlyIncomeController)
-router.patch("/", editTransactionControler)
+router.put("/:id", editTransactionControler)
 router.get("/getTransactionById/:id", getTransactionByIdController)
 
 export default router

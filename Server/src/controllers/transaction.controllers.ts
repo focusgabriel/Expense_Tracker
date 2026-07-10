@@ -5,7 +5,7 @@ import { ExpenseModel } from '../db/index.js';
 export async function addTransactionController(req:Request, res:Response){
   try {
     const {type, amount, category, description, date= new Date(), created_date=new Date()} = req.body
-    if(amount >= 100){
+    if(amount < 100){
       throw new Error("amount should be greater than 100")
     } else {
       await addTransaction(type, amount, category, description, date, created_date);
@@ -124,9 +124,9 @@ try {
 export async function editTransactionControler(req:Request, res:Response) {
   
   try {
-    const {type, amount, category, description, date= new Date(), created_date=new Date()} = req.body
-    await ExpenseModel.findOneAndUpdate(
-      {id: req.body.id},
+    const {type, amount, category, description, date, created_date=new Date()} = req.body
+    await ExpenseModel.findByIdAndUpdate(
+      {id: "6a506acfb59c86ea6194d4d6"},
       {$set: await addTransaction(type, amount, category, description, date, created_date)}
     )
     console.log({type, amount, category, description, date, created_date});
@@ -139,6 +139,8 @@ export async function editTransactionControler(req:Request, res:Response) {
 
 export async function getTransactionByIdController(req:Request, res:Response) {
   const transactionId = await ExpenseModel.findById(req.params.id)
+  console.log("controller reached");
+  console.log(req.params.id);
   try {
     if(!transactionId) {
       res.status(400).json({message: "No Transaction"})
