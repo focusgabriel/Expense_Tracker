@@ -1,5 +1,5 @@
 import express, { Request, Response, Application } from 'express';
-import { addTransaction } from "../services/transaction.services.js";
+import { addTransaction, editTransaction } from "../services/transaction.services.js";
 import { ExpenseModel } from '../db/index.js';
 
 export async function addTransactionController(req:Request, res:Response){
@@ -122,13 +122,13 @@ try {
 };
 
 export async function editTransactionControler(req:Request, res:Response) {
-  
   try {
     const {type, amount, category, description, date, created_date=new Date()} = req.body
-    await ExpenseModel.findByIdAndUpdate(
-      {id: "6a506acfb59c86ea6194d4d6"},
-      {$set: await addTransaction(type, amount, category, description, date, created_date)}
-    )
+    if(amount < 100){
+      throw new Error("amount should be greater than 100")
+    } else {
+      await editTransaction(type, amount, category, description, date, created_date);
+    }
     console.log({type, amount, category, description, date, created_date});
     res.status(200).json({type, amount, category, description, date, created_date})
   } catch (error) {
