@@ -4,8 +4,8 @@ import { ExpenseModel } from '../db/index.js';
 
 export async function addTransactionController(req:Request, res:Response){
   try {
-    const {type, amount, category, description, date, created_date=new Date()} = req.body
-    if(amount < 100){
+    const {type, amount, category, description, date= new Date(), created_date=new Date()} = req.body
+    if(amount >= 100){
       throw new Error("amount should be greater than 100")
     } else {
       await addTransaction(type, amount, category, description, date, created_date);
@@ -33,7 +33,7 @@ export async function totalTransactionController(_req:Request, res:Response){
   
 };
 
-export async function getTransaction(req:Request, res:Response){
+export async function getTransactionController(req:Request, res:Response){
   try{
     const allTransactions = await ExpenseModel.find().sort({created_date: -1})
     res.status(200).json(allTransactions)
@@ -45,7 +45,7 @@ export async function getTransaction(req:Request, res:Response){
   }
 };
 
-export async function getMonthlyIncome(req:Request, res:Response) {
+export async function getMonthlyIncomeController(req:Request, res:Response) {
 // getting the first day of the previous month and the first day of the next month
 const now = new Date()
 const startOfPrevMonth = new Date(
@@ -121,10 +121,31 @@ try {
 }
 };
 
-export async function editTransaction(req:Request, res:Response) {
-  const getId = await ExpenseModel.aggregate([{
-    $match: {
-      id: "_id"
-    }
-  }])
+export async function editTransactionControler(req:Request, res:Response) {
+  
+  try {
+    const {type, amount, category, description, date= new Date(), created_date=new Date()} = req.body
+    await ExpenseModel.findOneAndUpdate(
+      {id: req.body.id},
+      {$set: await addTransaction(type, amount, category, description, date, created_date)}
+    )
+    console.log({type, amount, category, description, date, created_date});
+    res.status(200).json({type, amount, category, description, date, created_date})
+  } catch (error) {
+    res.status(500).json({error: "error updating transaction"})
+  }
+
+}
+
+export async function getTransactionByIdController(req:Request, res:Response) {
+  const transactionId = await ExpenseModel.findById(req.params.id)
+  try {
+    if(!transactionId) {
+      res.status(400).json({message: "No Transaction"})
+    } 
+    res.status(200).json(transactionId)
+    
+  } catch (error) {
+    console.error({errorMsg: error});
+  }
 }
