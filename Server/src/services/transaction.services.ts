@@ -15,15 +15,11 @@ export async function addTransaction(type:"income" | "expense", amount:number, c
   return newTransaction;
   }
 
-export async function editTransaction(type:"income" | "expense", amount:number, category:string, description:string, date:Date, created_date:Date){
+export async function editTransaction(id:string | string[], type:"income" | "expense", amount:number, category:string, description:string, date:Date){
     const updateTransaction = await ExpenseModel.findByIdAndUpdate(
-      {_id: "6a514e64545fbeea01883574"},
-      {$set: {type, amount, category, description, date, created_date}}
+      id,
+      {$set: {type, amount, category, description, date}}
     )
-    
 
-
-  // await newTransaction.save();
-  // console.log(newTransaction);
   return updateTransaction;
   }
