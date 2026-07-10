@@ -225,7 +225,6 @@ app.use(cors({origin: "*"}));
 
 app.get("/health", async(_req:Request, res:Response) => {
   try{
-    await mongoose.connect(mongo_uri)
     res.status(200).json({status: "ok", database: "Connected"});
   } catch(error) {
     console.error(error);
