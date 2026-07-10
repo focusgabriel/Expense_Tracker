@@ -15,7 +15,11 @@ const AddTask = () => {
   const handleSubmit = async (e: React.SubmitEvent) => {
     // e.preventDefault();
 
-    e.preventDefault();
+    // e.preventDefault();
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
 
     await axios.put(`/api/v1/${id}`, formData);
 
@@ -78,12 +82,12 @@ const AddTask = () => {
     fetchTransaction();
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setFormData({
+  //     ...formData,
+  //     [e.target.name]: e.target.value,
+  //   });
+  // };
 
   return (
     <div className="md:mx-auto md:max-w-4xl w-full rounded-3xl bg-white/90 p-6 sm:p-8">
