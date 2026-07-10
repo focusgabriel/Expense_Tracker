@@ -123,18 +123,29 @@ try {
 
 export async function editTransactionControler(req:Request, res:Response) {
   try {
-    const {type, amount, category, description, date, created_date=new Date()} = req.body
-    if(amount < 100){
-      throw new Error("amount should be greater than 100")
-    } else {
-      await editTransaction(type, amount, category, description, date, created_date);
+    const { id } = req.params;
+    const {type, amount, category, description, date} = req.body
+    
+    if (!id) {
+      return res.status(400).json({ error: "Transaction ID is required" });
     }
-    console.log({type, amount, category, description, date, created_date});
-    res.status(200).json({type, amount, category, description, date, created_date})
-  } catch (error) {
-    res.status(500).json({error: "error updating transaction"})
-  }
 
+    if(amount < 100){
+      return res.status(400).json({error: "Amount should be greater than 100"});
+    }
+    
+    const updatedTransaction = await editTransaction(id, type, amount, category, description, date);
+    
+    if (!updatedTransaction) {
+      return res.status(404).json({ error: "Transaction not found" });
+    }
+
+    console.log("Transaction updated:", {type, amount, category, description, date});
+    res.status(200).json(updatedTransaction)
+  } catch (error) {
+    console.error("Error updating transaction:", error);
+    res.status(500).json({error: "Error updating transaction"})
+  }
 }
 
 export async function getTransactionByIdController(req:Request, res:Response) {
