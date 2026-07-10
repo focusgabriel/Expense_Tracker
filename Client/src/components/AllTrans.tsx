@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Card from "./Card";
+import { Link } from "react-router-dom";
 // import type { Transaction } from "../constants"
 
 type Transaction = {
@@ -26,9 +27,13 @@ const AllTrans = () => {
 
   return (
     <div className="w-full shrink-0 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm lg:w-[33%] lg:min-w-55 lg:max-w-70">
-      <h2 className="border-b border-slate-100 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-black">
-        Recent Transactions
-      </h2>
+      <div className="flex justify-between items-center border-b border-slate-100 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-black">
+        <h2>
+          Recent Transactions
+        </h2>
+
+        <Link to="/analytics" className="lowercase text-sm text-blue-600">View All</Link>
+      </div>
       {trans
         .map(item => (
           <Card

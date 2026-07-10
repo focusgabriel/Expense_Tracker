@@ -9,13 +9,14 @@ import { Plus } from "lucide-react";
 import AllTransaction from "./components/AllTransaction";
 import SuccessfulMsg from "./components/SuccessfulMsg";
 import EditForm from "./components/Form";
+import Analytics from "./components/Analytics";
 
 const App = () => {
   return (
     <div className="flex h-auto bg-slate-50 w-full">
       <SideBar />
 
-      <main className="w-full flex-1 px-4 py-6 sm:px-6 lg:px-8">
+      <main className="main-with-bottom-sidebar w-full flex-1 px-4 py-6 sm:px-6 lg:px-8">
         <div className="mb-6 flex items-center justify-between gap-4">
           <h1 className="text-xl font-bold text-slate-900 sm:text-2xl">
             Welcome back
@@ -33,8 +34,8 @@ const App = () => {
           <Route path="/" element={<Dashboard />} />
           <Route path="/transaction" element={<AllTransaction />} />
           <Route path="/success" element={<SuccessfulMsg />} />
+          <Route path="/analytics" element={<Analytics />} />
           <Route path="/edit/:id" element={<EditForm />} />
-
         </Routes>
       </main>
     </div>
