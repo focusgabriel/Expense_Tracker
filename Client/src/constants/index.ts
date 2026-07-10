@@ -25,9 +25,9 @@ export const CATEGORY_COLORS = {
 } as const;
 
 export const navItems = [
-  { name: "Overview", icon: LayoutDashboard },
+  { name: "Overview", icon: LayoutDashboard, href:"/"},
   { name: "Reports", icon: FileText },
-  { name: "Analytics", icon: BarChart3 },
+  { name: "Analytics", icon: BarChart3, href:"analytics" },
   { name: "Insights", icon: Lightbulb },
   { name: "Settings", icon: Settings },
 ];
