@@ -6,11 +6,11 @@ import { useParams } from "react-router-dom";
 
 const EditForm = () => {
   const handleSubmit = async () => {
-    // await axios.put(`/api/v1/6a4edbd5ee9b57ce769dfede`, formData);
+    // await axios.put(`/api/v1/6a514e64545fbeea01883574`, formData);
     // e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/6a4edbd5ee9b57ce769dfede`, {
-        method: "PUT",
+      const response = await fetch(`http://localhost:3000/api/v1/6a514e64545fbeea01883574`, {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
@@ -42,7 +42,7 @@ const EditForm = () => {
   useEffect(() => {
     async function fetchTransaction() {
       fetch(
-        `http://localhost:3000/api/v1/getTransactionById/6a4edbd5ee9b57ce769dfede`,
+        `http://localhost:3000/api/v1/getTransactionById/6a514e64545fbeea01883574`,
       )
         .then(res => res.json())
         .then(data => setFormData(data))
@@ -158,7 +158,7 @@ const EditForm = () => {
             id="date"
             className="fieldClass"
             type="date"
-            value={formData.date}
+            value={formData.date.split("T")[0]}
             onChange={handleChange}
             name="date"
           />
