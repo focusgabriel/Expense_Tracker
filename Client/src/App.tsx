@@ -1,7 +1,7 @@
 /** @format */
 
 import AddTask from "./components/AddTask";
-import { Route, Routes } from "react-router-dom";
+import { Form, Route, Routes } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
 import SideBar from "./components/SideBar";
 import { Link } from "react-router-dom";
@@ -32,6 +32,8 @@ const App = () => {
           <Route path="/" element={<Dashboard />} />
           <Route path="/transaction" element={<AllTransaction />} />
           <Route path="/success" element={<SuccessfulMsg />} />
+          <Route path="/edit" element={<Form />} />
+
         </Routes>
       </main>
     </div>
