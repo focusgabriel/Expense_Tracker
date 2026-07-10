@@ -1,48 +1,21 @@
 /** @format */
 
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
 const EditForm = () => {
-  const Type = useRef<HTMLSelectElement>(null);
-  const Amount = useRef<HTMLInputElement>(null);
-  const Category = useRef<HTMLInputElement>(null);
-  const Description = useRef<HTMLInputElement>(null);
-  const newDate = useRef<HTMLInputElement>(null);
-  const Current_date = useRef<HTMLInputElement>(null);
-
-  const handleSubmit = async (e: React.SubmitEvent) => {
+  const handleSubmit = async () => {
+    // await axios.put(`/api/v1/6a4edbd5ee9b57ce769dfede`, formData);
     // e.preventDefault();
-
-    // e.preventDefault();
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-
-    await axios.put(`/api/v1/${id}`, formData);
-
-    const newTransaction = {
-      type: Type.current?.value.toLowerCase(),
-      amount: Number(Amount.current?.value.trim() ?? 0),
-      category: Category.current?.value.trim().toLowerCase(),
-      description: Description.current?.value.trim().toLowerCase(),
-      date: newDate.current?.value,
-      created_date: Current_date.current?.value,
-    };
-    console.log(newTransaction);
     try {
-      const response = await fetch(
-        "http://localhost:3000/api/v1/addTransaction",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newTransaction),
+      const response = await fetch(`http://localhost:3000/api/v1/6a4edbd5ee9b57ce769dfede`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify(formData),
+      });
 
       const data = await response.json();
       if (!response.ok) {
@@ -53,16 +26,10 @@ const EditForm = () => {
     } catch (error) {
       console.log(error);
     }
-
-    Type.current.value = "";
-    Amount.current.value = "";
-    Description.current.value = "";
-    Category.current.value = "";
-    newDate.current.value = "";
-    Current_date.current.value = "";
   };
 
   const { id } = useParams();
+  console.log("params:", id);
 
   const [formData, setFormData] = useState({
     type: "",
@@ -74,23 +41,37 @@ const EditForm = () => {
 
   useEffect(() => {
     async function fetchTransaction() {
-      const response = await axios.get(`/api/v1/getTransactionById/${id}`);
-
-      setFormData(response.data);
+      fetch(
+        `http://localhost:3000/api/v1/getTransactionById/6a4edbd5ee9b57ce769dfede`,
+      )
+        .then(res => res.json())
+        .then(data => setFormData(data))
+        .then(data => console.log(`Response: ${data}`))
+      
     }
 
     fetchTransaction();
-  }, []);
+  }, [id]);
 
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setFormData({
-  //     ...formData,
-  //     [e.target.name]: e.target.value,
-  //   });
-  // };
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    setFormData({
+      ...formData,
+      date: formData.date.split("T")[0],
+      [e.target.name]:
+        e.target.name === "amount" ? Number(e.target.value) : e.target.value,
+    });
+  };
+
+//   <Link to={`/edit/${formData._id}`}>
+//     Edit
+// </Link>
+  console.log(formData.category);
 
   return (
     <div className="md:mx-auto md:max-w-4xl w-full rounded-3xl bg-white/90 p-6 sm:p-8">
+      
       <div className="mb-6 rounded-3xl bg-emerald-50 p-6 text-center w-full ">
         <h2 className="text-2xl font-bold text-emerald-900">
           Add a Transaction
@@ -109,7 +90,13 @@ const EditForm = () => {
           <label htmlFor="type" className="labelClass">
             Type
           </label>
-          <select id="type" name="type" ref={Type} className="fieldClass">
+          <select
+            id="type"
+            name="type"
+            value={formData.type}
+            onChange={handleChange}
+            className="fieldClass"
+          >
             <option value="income">INCOME</option>
             <option value="expense">EXPENSE</option>
           </select>
@@ -126,8 +113,8 @@ const EditForm = () => {
             placeholder="Enter your amount"
             min={0}
             onWheel={event => event.currentTarget.blur()}
-            ref={Amount}
             value={formData.amount}
+            onChange={handleChange}
             name="amount"
           />
         </div>
@@ -141,8 +128,8 @@ const EditForm = () => {
             className="fieldClass"
             type="text"
             placeholder="Enter the category"
-            ref={Category}
             value={formData.category}
+            onChange={handleChange}
             name="category"
           />
         </div>
@@ -157,8 +144,8 @@ const EditForm = () => {
             type="text"
             placeholder="Enter the description"
             minLength={7}
-            ref={Description}
             value={formData.description}
+            onChange={handleChange}
             name="description"
           />
         </div>
@@ -171,8 +158,8 @@ const EditForm = () => {
             id="date"
             className="fieldClass"
             type="date"
-            ref={newDate}
             value={formData.date}
+            onChange={handleChange}
             name="date"
           />
         </div>
