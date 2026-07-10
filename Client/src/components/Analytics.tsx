@@ -3,17 +3,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Card from "./Card";
-// import type { Transaction } from "../constants"
-
-type Transaction = {
-  _id: string;
-  type: "income" | "expense";
-  amount: number;
-  category: string;
-  description: string;
-  date: Date;
-  created_date: string;
-};
+import type { Transaction } from "../constants";
 
 const Analytics = () => {
   const [trans, setTrans] = useState<Transaction[]>([]);

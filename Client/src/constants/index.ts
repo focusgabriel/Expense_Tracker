@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 
 export type Transaction = {
+  _id?: string,
   type: "income" | "expense";
   amount: number;
   category: string;

@@ -3,17 +3,10 @@
 import { useEffect, useState } from "react";
 import Card from "./Card";
 import { Link } from "react-router-dom";
+import type { Transaction } from "../constants";
 // import type { Transaction } from "../constants"
 
-type Transaction = {
-  _id: string;
-  type: "income" | "expense";
-  amount: number;
-  category: string;
-  description: string;
-  date: Date;
-  created_date: string;
-};
+
 
 const AllTrans = () => {
   const [trans, setTrans] = useState<Transaction[]>([]);
