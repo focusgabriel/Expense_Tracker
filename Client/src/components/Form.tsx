@@ -4,7 +4,7 @@ import React, { useRef, useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
-const AddTask = () => {
+const EditForm = () => {
   const Type = useRef<HTMLSelectElement>(null);
   const Amount = useRef<HTMLInputElement>(null);
   const Category = useRef<HTMLInputElement>(null);
@@ -189,4 +189,4 @@ const AddTask = () => {
   );
 };
 
-export default AddTask;
+export default EditForm;
