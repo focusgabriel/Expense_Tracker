@@ -37,7 +37,6 @@ const AllTrans = () => {
             category={item.category}
             description={item.description}
             date={item.date}
-            created_date={item.created_date}
           />
         ))
         .splice(0, 5)}
