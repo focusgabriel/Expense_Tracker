@@ -10,6 +10,7 @@ import AllTransaction from "./components/AllTransaction";
 import SuccessfulMsg from "./components/SuccessfulMsg";
 import EditForm from "./components/Form";
 import Analytics from "./components/Analytics";
+import DeletePage from "./components/DeletePage";
 
 const App = () => {
   return (
@@ -36,6 +37,7 @@ const App = () => {
           <Route path="/success" element={<SuccessfulMsg />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/edit/:id" element={<EditForm />} />
+          <Route path="/delete/:id" element={<DeletePage />} />
         </Routes>
       </main>
     </div>
