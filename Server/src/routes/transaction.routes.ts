@@ -1,5 +1,5 @@
 import {Router} from "express"
-import { addTransactionController, editTransactionControler, getMonthlyIncomeController, getTransactionByIdController, getTransactionController, totalTransactionController } from "../controllers/transaction.controllers.js";
+import { addTransactionController, deleteTransactionController, editTransactionControler, getMonthlyIncomeController, getTransactionByIdController, getTransactionController, totalTransactionController } from "../controllers/transaction.controllers.js";
 const router = Router();
 
 router.post("/addTransaction", addTransactionController)
@@ -8,5 +8,6 @@ router.get("/getTransaction", getTransactionController)
 router.get("/getMonthlyIncome", getMonthlyIncomeController)
 router.get("/getTransactionById/:id", getTransactionByIdController)
 router.patch("/updateTransaction/:id", editTransactionControler)
+router.delete("/deleteTransaction/:id", deleteTransactionController)
 
 export default router
