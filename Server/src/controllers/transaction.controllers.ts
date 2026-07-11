@@ -1,5 +1,5 @@
 import express, { Request, Response, Application } from 'express';
-import { addTransaction, editTransaction } from "../services/transaction.services.js";
+import { addTransaction, deleteTransaction, editTransaction } from "../services/transaction.services.js";
 import { ExpenseModel } from '../db/index.js';
 
 export async function addTransactionController(req:Request, res:Response){
@@ -140,7 +140,7 @@ export async function editTransactionControler(req:Request, res:Response) {
       return res.status(404).json({ error: "Transaction not found" });
     }
 
-    console.log("Transaction updated:", {type, amount, category, description, date});
+    // console.log("Transaction updated:", {type, amount, category, description, date});
     res.status(200).json(updatedTransaction)
   } catch (error) {
     console.error("Error updating transaction:", error);
@@ -160,5 +160,19 @@ export async function getTransactionByIdController(req:Request, res:Response) {
     
   } catch (error) {
     console.error({errorMsg: error});
+  }
+}
+
+export async function deleteTransactionController(req:Request, res:Response) {
+  try {
+    // const {id} = req.params
+    const delTransaction = await deleteTransaction(req.params.id);
+    if(!delTransaction) {
+      res.status(400).json({errorMsg: "couldn't find transaction"})
+    }
+    res.status(200).json(delTransaction)
+    console.log(`successfully deleted ${req.params.id}`);
+  } catch (error) {
+    res.status(500).json({errorMsg: error})
   }
 }
