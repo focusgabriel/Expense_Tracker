@@ -22,4 +22,12 @@ export async function editTransaction(id:string | string[], type:"income" | "exp
     )
 
   return updateTransaction;
-  }
+}
+
+export async function deleteTransaction(id:any) {
+  const deleteTransact = await ExpenseModel.findByIdAndDelete(
+    id
+  );
+
+  return deleteTransact;
+}
