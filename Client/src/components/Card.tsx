@@ -76,7 +76,7 @@ const Card = ({
             <button
               type="button"
               onClick={onEdit}
-              className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-slate-700 transition hover:border-slate-300 hover:bg-slate-100"
+              className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-slate-700 transition hover:border-slate-300 hover:bg-slate-100 cursor-pointer"
             >
               Edit
             </button>
@@ -85,7 +85,7 @@ const Card = ({
             <button
               type="button"
               onClick={onDelete}
-              className="rounded-full border border-red-200 bg-red-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-red-700 transition hover:border-red-300 hover:bg-red-100"
+              className="rounded-full border border-red-200 bg-red-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-red-700 transition hover:border-red-300 hover:bg-red-100 cursor-pointer"
             >
               Delete
             </button>
