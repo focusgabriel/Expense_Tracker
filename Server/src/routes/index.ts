@@ -1,3 +1,3 @@
 import transactionRouter from "./transaction.routes.js";
-
-export {transactionRouter}
+import userRouter from "./users.routes.js"
+export {transactionRouter, userRouter}
