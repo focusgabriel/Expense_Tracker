@@ -2,7 +2,7 @@ import express, { Request, Response, Application } from 'express';
 // import dotenv from 'dotenv'
 import mongoose from "mongoose";
 import cors from "cors";
-import { transactionRouter } from './routes/index.js';
+import { transactionRouter, userRouter } from './routes/index.js';
 
 // dotenv.config();
 
@@ -233,6 +233,7 @@ app.get("/health", async(_req:Request, res:Response) => {
 })
 
 app.use("/api/v1/", transactionRouter);
+app.use("/api/v1/", userRouter);
 
 app.listen(PORT, () => {
   console.log(`🚀 Express server is running on http://localhost:${PORT}`);
