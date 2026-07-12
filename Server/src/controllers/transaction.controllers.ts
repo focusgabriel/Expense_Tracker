@@ -1,6 +1,6 @@
 import express, { Request, Response, Application } from 'express';
 import { addTransaction, deleteTransaction, editTransaction } from "../services/transaction.services.js";
-import { ExpenseModel } from '../db/index.js';
+import { ExpenseModel } from '../model/index.js';
 
 export async function addTransactionController(req:Request, res:Response){
   try {
