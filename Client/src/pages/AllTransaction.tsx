@@ -1,7 +1,8 @@
 /** @format */
 
 import { useEffect, useState } from "react";
-import TranscCard from "./TranscCard";
+import TranscCard from "../components/TranscCard";
+// import TranscCard from "./TranscCard";
 
 const AllTransaction = () => {
   // const [incomeTrans, setIncomeTrans] = useState(null);

@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Card from "./Card";
-import DeleteModal from "./DeleteModal";
+// import Card from "./Card";
+// import DeleteModal from "./DeleteModal";
 import type { Transaction } from "../constants";
+import Card from "../components/Card";
+import DeleteModal from "../components/DeleteModal";
 
 const Analytics = () => {
   const [trans, setTrans] = useState<Transaction[]>([]);

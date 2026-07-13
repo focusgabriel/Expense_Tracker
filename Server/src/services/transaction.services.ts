@@ -12,14 +12,16 @@ export async function addTransaction(type:"income" | "expense", amount:number, c
   })
   }
 
-export async function editTransaction(id:string | string[], userId:string, type:"income" | "expense", amount:number, category:string, description:string, date:Date){
+export async function editTransaction(_id:string | string[], userId:string, type:"income" | "expense", amount:number, category:string, description:string, date:Date){
     const updateTransaction = await ExpenseModel.findOneAndUpdate(
       {
-        id,
-        userId,
-        $set: {type, amount, category, description, date},
-      
-      }
+        _id,
+        userId        
+      },
+      {
+        $set: {type, amount, category, description, date}
+      },
+      {new:true}
     )
 
   return updateTransaction;

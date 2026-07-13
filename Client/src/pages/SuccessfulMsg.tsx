@@ -1,4 +1,4 @@
-import { Link, Route, Routes } from "react-router-dom"
+import { Link } from "react-router-dom"
 // import Dashboard from "./Dashboard"
 
 const SuccessfulMsg = () => {

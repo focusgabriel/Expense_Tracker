@@ -2,15 +2,15 @@
 
 import AddTask from "./components/AddTask";
 import { Route, Routes } from "react-router-dom";
-import Dashboard from "./components/Dashboard";
+import Dashboard from "./pages/Dashboard";
 import SideBar from "./components/SideBar";
 import { Link } from "react-router-dom";
 import { Plus } from "lucide-react";
-import AllTransaction from "./components/AllTransaction";
-import SuccessfulMsg from "./components/SuccessfulMsg";
-import EditForm from "./components/Form";
-import Analytics from "./components/Analytics";
-import DeletePage from "./components/DeletePage";
+import AllTransaction from "./pages/AllTransaction";
+import SuccessfulMsg from "./pages/SuccessfulMsg";
+import EditForm from "./pages/Form";
+import Analytics from "./pages/Analytics";
+import DeletePage from "./pages/DeletePage";
 
 const App = () => {
   return (

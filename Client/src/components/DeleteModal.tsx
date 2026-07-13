@@ -1,7 +1,5 @@
 /** @format */
 
-import React from "react";
-
 type Transaction = {
   _id: string;
   type: "income" | "expense";

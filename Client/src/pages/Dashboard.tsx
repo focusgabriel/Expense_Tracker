@@ -1,8 +1,8 @@
 /** @format */
 
+import MonthReview from "../components/MonthReview";
+import SpendingChart from "../components/SpendingChart";
 import AllTransaction from "./AllTransaction";
-import MonthReview from "./MonthReview";
-import SpendingChart from "./SpendingChart";
 
 const Dashboard = () => {
   return (
