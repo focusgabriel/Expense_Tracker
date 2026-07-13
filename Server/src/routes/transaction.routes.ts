@@ -1,10 +1,11 @@
 import {Router} from "express"
 import { addTransactionController, deleteTransactionController, editTransactionControler, getMonthlyIncomeController, getTransactionByIdController, getTransactionController, totalTransactionController } from "../controllers/transaction.controllers.js";
+import { authMiddleware } from "../middlewares/auth.middlewares.js";
 const router = Router();
 
 router.post("/addTransaction", addTransactionController)
 router.get("/totalTransaction", totalTransactionController)
-router.get("/getTransaction", getTransactionController)
+router.get("/getTransaction", authMiddleware, getTransactionController)
 router.get("/getMonthlyIncome", getMonthlyIncomeController)
 router.get("/getTransactionById/:id", getTransactionByIdController)
 router.patch("/updateTransaction/:id", editTransactionControler)
