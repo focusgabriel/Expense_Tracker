@@ -1,16 +1,28 @@
 import express, { Request, Response, Application } from 'express';
 import { addTransaction, deleteTransaction, editTransaction } from "../services/transaction.services.js";
 import { ExpenseModel } from '../model/index.js';
+import mongoose from 'mongoose';
 
 export async function addTransactionController(req:Request, res:Response){
   try {
     const {type, amount, category, description, date= new Date(), created_date=new Date()} = req.body
+    
     if(amount < 100){
-      throw new Error("amount should be greater than 100")
-    } else {
-      await addTransaction(type, amount, category, description, date, created_date);
-    }
-      res.status(201).json({type, amount, category, description, date, created_date});
+      return res.status(400).json({
+        message: "Amount should be greater than 100",
+      })
+    } 
+    const transaction = await ExpenseModel.create({
+      userId: req.user!.id,
+      type,
+      amount,
+      category,
+      description,
+      date,
+      created_date,
+    });
+    res.status(201).json(transaction);
+
   } catch (error) {
     console.log("Error Message:", error)
     res.status(500).json({message: "Error Occurred while adding Transaction"})
@@ -35,7 +47,7 @@ export async function totalTransactionController(_req:Request, res:Response){
 
 export async function getTransactionController(req:Request, res:Response){
   try{
-    const allTransactions = await ExpenseModel.find().sort({created_date: -1})
+    const allTransactions = await ExpenseModel.find({userId:req.user!.id}).sort({created_date: -1})
     res.status(200).json(allTransactions)
     console.log(allTransactions)
 
@@ -124,9 +136,10 @@ try {
 export async function editTransactionControler(req:Request, res:Response) {
   try {
     const { id } = req.params;
+    const userId = req.user!.id
     const {type, amount, category, description, date} = req.body
     
-    if (!id) {
+    if (!id ) {
       return res.status(400).json({ error: "Transaction ID is required" });
     }
 
@@ -134,7 +147,7 @@ export async function editTransactionControler(req:Request, res:Response) {
       return res.status(400).json({error: "Amount should be greater than 100"});
     }
     
-    const updatedTransaction = await editTransaction(id, type, amount, category, description, date);
+    const updatedTransaction = await editTransaction(id, userId, type, amount, category, description, date);
     
     if (!updatedTransaction) {
       return res.status(404).json({ error: "Transaction not found" });
@@ -166,7 +179,7 @@ export async function getTransactionByIdController(req:Request, res:Response) {
 export async function deleteTransactionController(req:Request, res:Response) {
   try {
     // const {id} = req.params
-    const delTransaction = await deleteTransaction(req.params.id);
+    const delTransaction = await deleteTransaction(req.params.id, req.user!.id);
     if(!delTransaction) {
       res.status(400).json({errorMsg: "couldn't find transaction"})
     }
