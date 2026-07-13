@@ -1,13 +1,6 @@
 /** @format */
 
-type Transaction = {
-  _id: string;
-  type: "income" | "expense";
-  amount: number;
-  category: string;
-  description: string;
-  date: string | Date;
-};
+import type { Transaction } from "../constants";
 
 const DeleteModal = ({
   open,
@@ -22,7 +15,7 @@ const DeleteModal = ({
 }) => {
   if (!open || !transaction) return null;
 
-  const formatDate = (d: string | Date) => {
+  const formatDate = (d: Date) => {
     const date = new Date(d);
     return date.toLocaleDateString();
   };
