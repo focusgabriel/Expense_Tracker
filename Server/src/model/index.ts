@@ -1,4 +1,3 @@
-import dotenv from 'dotenv/config'
 import mongoose from "mongoose";
 import cors from "cors";
 import { ExpenseProps } from './schema.js';
