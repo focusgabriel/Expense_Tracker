@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
+import dotenv from "dotenv"
 import cors from "cors";
 import { ExpenseProps } from './schema.js';
 import { UserProps } from './users.js';
 
-// dotenv.config();
+dotenv.config();
 
 const mongo_uri = process.env.MONGO_URI
 
