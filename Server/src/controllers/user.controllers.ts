@@ -1,7 +1,7 @@
 import {Request, Response} from "express"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
-import {LoginRequestBody, RegisterRequestBody} from "../types/users.types.js"
+import {LoginRequestBody, RegisterRequestBody} from "../types/express/users.types.js"
 // import authModel from "../model/users.js"
 import { hash } from "node:crypto"
 import { authModel } from "../model/index.js"
