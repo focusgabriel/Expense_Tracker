@@ -27,19 +27,16 @@ const AllTrans = () => {
 
         <Link to="/analytics" className="lowercase text-sm text-blue-600">View All</Link>
       </div>
-      {trans
-        .map(item => (
-          <Card
-            key={item._id}
-            id={item._id}
-            type={item.type}
-            amount={item.amount}
-            category={item.category}
-            description={item.description}
-            date={item.date}
-          />
-        ))
-        .splice(0, 5)}
+      {trans.map((item => (
+        <Card
+          id={item._id}
+          type={item.type}
+          amount={item.amount}
+          category={item.category}
+          description={item.description}
+          date={item.date}
+        />
+      ))).splice(0,5)}
       {/* splice to render only the first 5 from the database making it the top five recent transaction */}
     </div>
   );
