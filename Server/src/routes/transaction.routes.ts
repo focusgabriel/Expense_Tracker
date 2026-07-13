@@ -3,12 +3,12 @@ import { addTransactionController, deleteTransactionController, editTransactionC
 import { authMiddleware } from "../middlewares/auth.middlewares.js";
 const router = Router();
 
-router.post("/addTransaction", addTransactionController)
-router.get("/totalTransaction", totalTransactionController)
+router.post("/addTransaction",authMiddleware, addTransactionController)
+router.get("/totalTransaction",authMiddleware, totalTransactionController)
 router.get("/getTransaction", authMiddleware, getTransactionController)
-router.get("/getMonthlyIncome", getMonthlyIncomeController)
-router.get("/getTransactionById/:id", getTransactionByIdController)
-router.patch("/updateTransaction/:id", editTransactionControler)
-router.delete("/deleteTransaction/:id", deleteTransactionController)
+router.get("/getMonthlyIncome", authMiddleware, getMonthlyIncomeController)
+router.get("/getTransactionById/:id",authMiddleware, getTransactionByIdController)
+router.patch("/updateTransaction/:id", authMiddleware, editTransactionControler)
+router.delete("/deleteTransaction/:id", authMiddleware, deleteTransactionController)
 
 export default router
