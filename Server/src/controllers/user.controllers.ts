@@ -85,5 +85,5 @@ export async function loginController(req: Request<{}, {}, LoginRequestBody>,res
         email: user.email
     }
   })
-
 }
+
