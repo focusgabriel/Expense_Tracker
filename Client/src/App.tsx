@@ -11,6 +11,8 @@ import SuccessfulMsg from "./pages/SuccessfulMsg";
 import EditForm from "./pages/Form";
 import Analytics from "./pages/Analytics";
 import DeletePage from "./pages/DeletePage";
+import Login from "./services/auth/login";
+import Register from "./services/auth/register";
 
 const App = () => {
   return (
@@ -31,8 +33,10 @@ const App = () => {
           </Link>
         </div>
         <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/task" element={<AddTask />} />
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/overview" element={<Dashboard />} />
           <Route path="/transaction" element={<AllTransaction />} />
           <Route path="/success" element={<SuccessfulMsg />} />
           <Route path="/analytics" element={<Analytics />} />
