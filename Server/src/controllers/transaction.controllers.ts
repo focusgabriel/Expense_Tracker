@@ -1,6 +1,6 @@
 import express, { Request, Response, Application } from 'express';
 import { addTransaction, deleteTransaction, editTransaction } from "../services/transaction.services.js";
-import { ExpenseModel } from '../model/index.js';
+import { ExpenseModel, authModel } from '../model/index.js';
 import mongoose from 'mongoose';
 
 export async function addTransactionController(req:Request, res:Response){
@@ -29,9 +29,9 @@ export async function addTransactionController(req:Request, res:Response){
   }
 };
 
-export async function totalTransactionController(_req:Request, res:Response){
+export async function totalTransactionController(req:Request, res:Response){
   try {
-    const income = await ExpenseModel.find({type:"income"})
+    const income = await ExpenseModel.find({userId:req.user!.id, type:"income"})
     const Total_income = income.reduce((value, sum) => value + sum.amount, 0);
     
     const expense = await ExpenseModel.find({type:"expense"})
@@ -77,6 +77,7 @@ const startOfNextMonth = new Date(
 try {
   const getMonthlyExpense = await ExpenseModel.aggregate([{
     $match: {
+      userId: req.user!.id,
       type: "expense",
       date: {
         $gte: endOfLastMonth,
@@ -87,6 +88,7 @@ try {
   console.log()
   const getMonthlyIncome = await ExpenseModel.aggregate([{
     $match: {
+      userId: req.user!.id,
       type: "income",
       date: {
         $gte: endOfLastMonth,
@@ -97,6 +99,7 @@ try {
 
   const getPrevMonthlyIncome = await ExpenseModel.aggregate([{
     $match: {
+      userId: req.user!.id,
       type: "income",
       date: {
         $gte: startOfPrevMonth,
@@ -107,6 +110,7 @@ try {
 
   const getPrevMonthlyExpense = await ExpenseModel.aggregate([{
     $match: {
+      userId: req.user!.id,
       type: "expense",
       date: {
         $gte: startOfPrevMonth,
@@ -135,11 +139,11 @@ try {
 
 export async function editTransactionControler(req:Request, res:Response) {
   try {
-    const { id } = req.params;
+    const { _id } = req.params;
     const userId = req.user!.id
     const {type, amount, category, description, date} = req.body
     
-    if (!id ) {
+    if (!_id ) {
       return res.status(400).json({ error: "Transaction ID is required" });
     }
 
@@ -147,7 +151,7 @@ export async function editTransactionControler(req:Request, res:Response) {
       return res.status(400).json({error: "Amount should be greater than 100"});
     }
     
-    const updatedTransaction = await editTransaction(id, userId, type, amount, category, description, date);
+    const updatedTransaction = await editTransaction(_id, userId, type, amount, category, description, date);
     
     if (!updatedTransaction) {
       return res.status(404).json({ error: "Transaction not found" });
@@ -162,17 +166,21 @@ export async function editTransactionControler(req:Request, res:Response) {
 }
 
 export async function getTransactionByIdController(req:Request, res:Response) {
-  const transactionId = await ExpenseModel.findById(req.params.id)
+  const transactionId = await ExpenseModel.findOne({_id:req.params.id, userId:req.user!.id})
   console.log("controller reached");
   console.log(req.params.id);
   try {
+    console.log("controller reached");
+    console.log(req.params.id);
+    const transactionId = await ExpenseModel.findOne({_id: req.params.id, userId:req.user!.id})
     if(!transactionId) {
-      res.status(400).json({message: "No Transaction"})
+      return res.status(400).json({message: "No Transaction"})
     } 
     res.status(200).json(transactionId)
     
   } catch (error) {
     console.error({errorMsg: error});
+    res.status(500).json({message: "Error fetching transaction"})
   }
 }
 
@@ -187,5 +195,40 @@ export async function deleteTransactionController(req:Request, res:Response) {
     console.log(`successfully deleted ${req.params.id}`);
   } catch (error) {
     res.status(500).json({errorMsg: error})
+  }
+}
+
+export async function getAllUserDataController(req: Request, res: Response) {
+  try {
+    const userId = req.user!.id;
+
+    // Get user profile information
+    const userProfile = await authModel.findById(userId).select('-password');
+
+    // Get all transactions for the user
+    const allTransactions = await ExpenseModel.find({ userId }).sort({ created_date: -1 });
+
+    // Calculate summary statistics
+    const income = await ExpenseModel.find({ userId, type: "income" });
+    const totalIncome = income.reduce((sum, trans) => sum + trans.amount, 0);
+
+    const expense = await ExpenseModel.find({ userId, type: "expense" });
+    const totalExpense = expense.reduce((sum, trans) => sum + trans.amount, 0);
+
+    const netBalance = totalIncome - totalExpense;
+
+    res.status(200).json({
+      user: userProfile,
+      transactions: allTransactions,
+      summary: {
+        totalIncome,
+        totalExpense,
+        netBalance,
+        totalTransactions: allTransactions.length
+      }
+    });
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    res.status(500).json({ message: "Error fetching user data" });
   }
 }
