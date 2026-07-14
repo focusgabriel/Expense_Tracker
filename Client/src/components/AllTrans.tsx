@@ -12,8 +12,13 @@ const AllTrans = () => {
   const [trans, setTrans] = useState<Transaction[]>([]);
 
   // getting the whole data from the database
+  const token = localStorage.getItem("token");
   useEffect(() => {
-    fetch(`http://localhost:3000/api/v1/getTransaction`)
+    fetch(`http://localhost:3000/api/v1/getAllUserData`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .then(res => res.json())
       .then(data => setTrans(data));
   }, []);
