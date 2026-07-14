@@ -26,9 +26,16 @@ export const CATEGORY_COLORS = {
 } as const;
 
 export const navItems = [
-  { name: "Overview", icon: LayoutDashboard, href:"/"},
+  { name: "Overview", icon: LayoutDashboard, href:"/overview"},
   { name: "Reports", icon: FileText, href:"#" },
   { name: "Analytics", icon: BarChart3, href:"/analytics" },
   { name: "Insights", icon: Lightbulb, href:"#"  },
   { name: "Settings", icon: Settings , href:"#" },
 ];
+
+export type Registration = {
+  name: string,
+  email: string,
+  password: string,
+  confirm_password:string
+}
