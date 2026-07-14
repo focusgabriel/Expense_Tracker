@@ -31,10 +31,20 @@ export async function addTransactionController(req:Request, res:Response){
 
 export async function totalTransactionController(req:Request, res:Response){
   try {
-    const income = await ExpenseModel.find({userId:req.user!.id, type:"income"})
+    const income = await ExpenseModel.aggregate([{
+      $match: {
+        userId: req.user!.id,
+        type: "income"
+      }
+    }])
     const Total_income = income.reduce((value, sum) => value + sum.amount, 0);
     
-    const expense = await ExpenseModel.find({type:"expense"})
+    const expense = await ExpenseModel.aggregate([{
+      $match: {
+        userId: req.user!.id,
+        type: "expense"
+      }
+    }])
     const Total_expense = expense.reduce((value, sum) => value + sum.amount, 0);
     
     const NetBalance = Total_income - Total_expense;
@@ -47,7 +57,11 @@ export async function totalTransactionController(req:Request, res:Response){
 
 export async function getTransactionController(req:Request, res:Response){
   try{
-    const allTransactions = await ExpenseModel.find({userId:req.user!.id}).sort({created_date: -1})
+    const allTransactions = await ExpenseModel.aggregate([{
+      $match: {
+        userId:req.user!.id
+      }
+    }]).sort({created_date: -1})
     res.status(200).json(allTransactions)
     console.log(allTransactions)
 
@@ -140,7 +154,7 @@ try {
 export async function editTransactionControler(req:Request, res:Response) {
   try {
     const { _id } = req.params;
-    const userId = req.user!.id
+    const userId = req.user!.id;
     const {type, amount, category, description, date} = req.body
     
     if (!_id ) {
@@ -198,37 +212,37 @@ export async function deleteTransactionController(req:Request, res:Response) {
   }
 }
 
-export async function getAllUserDataController(req: Request, res: Response) {
-  try {
-    const userId = req.user!.id;
+// export async function getAllUserDataController(req: Request, res: Response) {
+//   try {
+//     const userId = req.user!.id;
 
-    // Get user profile information
-    const userProfile = await authModel.findById(userId).select('-password');
+//     // Get user profile information
+//     const userProfile = await authModel.findById(userId).select('-password');
 
-    // Get all transactions for the user
-    const allTransactions = await ExpenseModel.find({ userId }).sort({ created_date: -1 });
+//     // Get all transactions for the user
+//     const allTransactions = await ExpenseModel.find({ userId }).sort({ created_date: -1 });
 
-    // Calculate summary statistics
-    const income = await ExpenseModel.find({ userId, type: "income" });
-    const totalIncome = income.reduce((sum, trans) => sum + trans.amount, 0);
+//     // Calculate summary statistics
+//     const income = await ExpenseModel.find({ userId, type: "income" });
+//     const totalIncome = income.reduce((sum, trans) => sum + trans.amount, 0);
 
-    const expense = await ExpenseModel.find({ userId, type: "expense" });
-    const totalExpense = expense.reduce((sum, trans) => sum + trans.amount, 0);
+//     const expense = await ExpenseModel.find({ userId, type: "expense" });
+//     const totalExpense = expense.reduce((sum, trans) => sum + trans.amount, 0);
 
-    const netBalance = totalIncome - totalExpense;
+//     const netBalance = totalIncome - totalExpense;
 
-    res.status(200).json({
-      user: userProfile,
-      transactions: allTransactions,
-      summary: {
-        totalIncome,
-        totalExpense,
-        netBalance,
-        totalTransactions: allTransactions.length
-      }
-    });
-  } catch (error) {
-    console.error("Error fetching user data:", error);
-    res.status(500).json({ message: "Error fetching user data" });
-  }
-}
+//     res.status(200).json({
+//       user: userProfile,
+//       transactions: allTransactions,
+//       summary: {
+//         totalIncome,
+//         totalExpense,
+//         netBalance,
+//         totalTransactions: allTransactions.length
+//       }
+//     });
+//   } catch (error) {
+//     console.error("Error fetching user data:", error);
+//     res.status(500).json({ message: "Error fetching user data" });
+//   }
+// }
