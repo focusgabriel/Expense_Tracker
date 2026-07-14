@@ -42,7 +42,7 @@ const Analytics = () => {
   // getting the whole data from the database
   const token = localStorage.getItem("token")
   useEffect(() => {
-    fetch(`http://localhost:3000/api/v1/getAllUserData`, {
+    fetch(`http://localhost:3000/api/v1/getTransaction`, {
       headers: {
         Authorization: `Bearer ${token}`
       }

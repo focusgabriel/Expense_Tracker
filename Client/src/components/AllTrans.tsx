@@ -14,7 +14,7 @@ const AllTrans = () => {
   // getting the whole data from the database
   const token = localStorage.getItem("token");
   useEffect(() => {
-    fetch(`http://localhost:3000/api/v1/getAllUserData`, {
+    fetch(`http://localhost:3000/api/v1/getTransaction`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -34,6 +34,7 @@ const AllTrans = () => {
       </div>
       {trans.map((item => (
         <Card
+          key={item._id}
           id={item._id}
           type={item.type}
           amount={item.amount}
