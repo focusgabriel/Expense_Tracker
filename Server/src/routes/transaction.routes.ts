@@ -1,5 +1,5 @@
 import {Router} from "express"
-import { addTransactionController, deleteTransactionController, editTransactionControler, getMonthlyIncomeController, getTransactionByIdController, getTransactionController, totalTransactionController, getAllUserDataController } from "../controllers/transaction.controllers.js";
+import { addTransactionController, deleteTransactionController, editTransactionControler, getMonthlyIncomeController, getTransactionByIdController, getTransactionController, totalTransactionController } from "../controllers/transaction.controllers.js";
 import { authMiddleware } from "../middlewares/auth.middlewares.js";
 const router = Router();
 
@@ -8,7 +8,7 @@ router.get("/totalTransaction",authMiddleware, totalTransactionController)
 router.get("/getTransaction", authMiddleware, getTransactionController)
 router.get("/getMonthlyIncome", authMiddleware, getMonthlyIncomeController)
 router.get("/getTransactionById/:id",authMiddleware, getTransactionByIdController)
-router.get("/getAllUserData", authMiddleware, getAllUserDataController)
+// router.get("/getAllUserData", authMiddleware, getAllUserDataController)
 router.patch("/updateTransaction/:id", authMiddleware, editTransactionControler)
 router.delete("/deleteTransaction/:id", authMiddleware, deleteTransactionController)
 
