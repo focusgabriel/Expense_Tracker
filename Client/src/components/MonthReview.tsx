@@ -20,9 +20,15 @@ const MonthReview = () => {
       year: "numeric",
     });
   };
+  
+  const token = localStorage.getItem("token")
   useEffect(() => {
     try {
-      fetch("http://localhost:3000/api/v1/getMonthlyIncome")
+      fetch("http://localhost:3000/api/v1/getMonthlyIncome", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
         .then(res => res.json())
         .then(data => {
           setReviewIncome(data.get_income);

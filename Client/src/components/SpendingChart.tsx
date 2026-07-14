@@ -11,8 +11,13 @@ const SpendingChart = () => {
 
   // getting the monthly expense and income to use it to set the pie chart, particularly the expense variable 
   const getTrans = async () => {
+    const token = localStorage.getItem("token");
     try {
-      fetch("http://localhost:3000/api/v1/getMonthlyIncome")
+      fetch("http://localhost:3000/api/v1/getMonthlyIncome", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
         .then(res => res.json())
         .then(data => {setAllExpense(data.getMonthlyExpense); setAllIncome(data.get_income)});
     } catch (error) {

@@ -13,10 +13,16 @@ const AllTransaction = () => {
   const [monthlyIncome, setMonthlyIncome] = useState(null);
   const [monthlyBalance, setMonthlyBalance] = useState(null);
   const [prevMonth, setPrevMonth] = useState(null);
+  
+  const token = localStorage.getItem("token")
 
   useEffect(() => {
     try {
-      fetch("http://localhost:3000/api/v1/getMonthlyIncome")
+      fetch("http://localhost:3000/api/v1/getMonthlyIncome", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
         .then(res => res.json())
         .then(data => {
           setMonthlyIncome(data.get_income.toLocaleString());
@@ -33,7 +39,11 @@ const AllTransaction = () => {
  
   useEffect(() => {
     try {
-      fetch("http://localhost:3000/api/v1/totalTransaction")
+      fetch("http://localhost:3000/api/v1/totalTransaction", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
         .then(res => res.json())
         .then(data => {
           // setIncomeTrans(data.Total_income.toLocaleString());
