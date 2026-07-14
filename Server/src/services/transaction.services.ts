@@ -27,9 +27,9 @@ export async function editTransaction(_id:string | string[], userId:string, type
   return updateTransaction;
 }
 
-export async function deleteTransaction(id:any, userId:any) {
+export async function deleteTransaction(_id:any, userId:any) {
   const deleteTransact = await ExpenseModel.findOneAndDelete(
-    id,
+    _id,
     userId
   );
 
