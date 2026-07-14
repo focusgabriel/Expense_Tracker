@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 
 type ExpenseSchema = {
-  userId: mongoose.Types.ObjectId;
+  userId: string;
   type: "income" | "expense";
   amount: number;
   category: string;
@@ -13,7 +13,7 @@ type ExpenseSchema = {
 
 export const ExpenseProps = new mongoose.Schema<ExpenseSchema>({
   userId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     ref: "Users",
     required: true
   },

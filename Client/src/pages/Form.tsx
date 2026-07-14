@@ -7,7 +7,6 @@ const EditForm = () => {
   const { id } = useParams();
   const token = localStorage.getItem("token")
 
-  console.log(id)
   const handleSubmit = async () => {
     try {
       const response = await fetch(
