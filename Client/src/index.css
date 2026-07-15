@@ -1,15 +1,48 @@
 @import "tailwindcss";
 
-body{
-  background:white;
+body {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f8fafc 0%, #edf2f7 100%);
+  color: #0f172a;
 }
 
-@layer utilities{
-  .fieldClass{
-    @apply min-h-14 w-full rounded-xl border border-emerald-200 bg-white px-5 py-4 text-base text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-emerald-50 focus:ring-4 focus:ring-emerald-100
+@layer utilities {
+  .fieldClass {
+    @apply min-h-[3.5rem] w-full rounded-2xl border border-slate-200 bg-white px-5 py-4 text-base text-slate-900 shadow-[0_20px_50px_-20px_rgba(15,23,42,0.08)] outline-none transition placeholder:text-slate-400 focus:border-emerald-400 focus:ring-4 focus:ring-emerald-200/40;
   }
+
   .labelClass {
-    @apply text-sm font-semibold text-slate-700
+    @apply text-sm font-semibold text-slate-700;
+  }
+
+  .auth-shell {
+    position: relative;
+    background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(241,245,249,0.98));
+  }
+
+  .auth-shell-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 10% 20%, rgba(16,185,129,0.16), transparent 14%),
+      radial-gradient(circle at 85% 15%, rgba(16,185,129,0.08), transparent 18%);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .auth-action-btn {
+    @apply inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-emerald-600 to-emerald-500 px-6 py-3 text-base font-semibold text-white shadow-xl shadow-emerald-500/20 transition duration-200 ease-out hover:-translate-y-0.5 hover:shadow-emerald-500/30 focus:outline-none focus:ring-2 focus:ring-emerald-300/50;
+  }
+
+  .auth-footer-link {
+    @apply font-semibold text-emerald-600 transition hover:text-emerald-700;
+  }
+
+  .auth-card {
+    @apply rounded-[2rem] border border-slate-200 bg-white shadow-[0_40px_90px_-30px_rgba(15,23,42,0.08)];
+  }
+
+  .auth-hero-card {
+    @apply relative overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-[0_30px_80px_-40px_rgba(15,23,42,0.08)];
   }
 
   .successMsg {
@@ -38,24 +71,41 @@ body{
   }
 
   @media (max-width: 600px) {
+    .auth-card {
+      @apply max-w-full rounded-xl px-4 py-6;
+    }
+
+    .auth-shell {
+      @apply px-4 py-8;
+    }
+
+    .fieldClass {
+      @apply min-h-[3rem] rounded-lg px-4 py-3;
+    }
+
+    .auth-action-btn {
+      @apply py-3 rounded-lg;
+    }
+
     .sidebar-xs-bottom {
-      @apply fixed bottom-0 left-0 z-50 w-full border-r-0 border-t border-slate-200 bg-white px-2 py-2 shadow-lg;
+      @apply fixed bottom-0 left-0 z-50 w-full h-auto flex-row items-center justify-between border-r-0 border-t border-slate-200 bg-white px-2 py-2 shadow-lg;
+      flex-direction: row !important;
     }
 
     .sidebar-xs-bottom nav {
-      @apply flex flex-row items-center justify-between gap-1.5;
+      @apply flex flex-row items-center justify-between gap-1.5 w-full;
     }
 
     .sidebar-xs-bottom nav a {
-      @apply h-12 flex-1 justify-center rounded-t-xl rounded-b-none px-0 text-xs;
+      @apply h-12 flex-1 flex flex-col items-center justify-center rounded-none px-0 text-xs; /* compact bottom items */
     }
 
     .sidebar-xs-bottom > div {
-      @apply hidden;
+      @apply hidden; /* hide logout button on bottom nav */
     }
 
     .main-with-bottom-sidebar {
-      @apply pb-20;
+      @apply pb-20; /* add padding so content isn't hidden behind bottom nav */
     }
   }
 }
