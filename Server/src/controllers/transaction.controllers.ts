@@ -152,15 +152,18 @@ try {
 };
 
 export async function editTransactionControler(req:Request, res:Response) {
-  console.log("PARAMS:", req.params.id);
-  console.log("User Id:", req.user!.id);
-  console.log("body:", req.body);
+  // console.log("PARAMS:", req.params.id);
+  // console.log("User Id:", req.user!.id);
+  // console.log("body:", req.body);
+  const { id } = req.params;
+  const userId = req.user!.id;
+  const {type, amount, category, description, date} = req.body
+
   try {
-    const { _id } = req.params;
-    const userId = req.user!.id;
-    const {type, amount, category, description, date} = req.body
-    console.log(req.body);
-    if (!_id ) {
+    console.log("the id:", id);
+    console.log("the userId:", userId);
+
+    if (!id ) {
       return res.status(400).json({ error: "Transaction ID is required" });
     }
 
@@ -168,8 +171,10 @@ export async function editTransactionControler(req:Request, res:Response) {
       return res.status(400).json({error: "Amount should be greater than 100"});
     }
     
-    const updatedTransaction = await editTransaction(_id, userId, type, amount, category, description, date);
+    console.log("before asking are you there?")
+    const updatedTransaction = await editTransaction(id, userId, type, amount, category, description, date);
     
+    console.log("updated:", updatedTransaction)
     console.log("are you there...");
     if (!updatedTransaction) {
       console.log("can't update transaction")
@@ -177,7 +182,6 @@ export async function editTransactionControler(req:Request, res:Response) {
     }
 
     // console.log("Transaction updated:", {type, amount, category, description, date});
-    console.log("updated:", updatedTransaction)
     res.status(200).json(updatedTransaction)
   } catch (error) {
     console.error("Error updating transaction:", error);

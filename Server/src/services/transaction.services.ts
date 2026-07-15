@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { ExpenseModel } from "../model/index.js";
+import { ReturnDocument } from "mongodb";
 
 export async function addTransaction(type:"income" | "expense", amount:number, category:string, description:string, date:Date, created_date:Date){
     const newTransaction = new ExpenseModel({
@@ -12,7 +13,15 @@ export async function addTransaction(type:"income" | "expense", amount:number, c
   })
   }
 
+
 export async function editTransaction(_id:string | string[], userId:string, type:"income" | "expense", amount:number, category:string, description:string, date:Date){
+
+  const transaction = await ExpenseModel.findOne({
+  _id,
+  userId,
+});
+
+console.log("Found:", transaction);
     const updateTransaction = await ExpenseModel.findOneAndUpdate(
       {
         _id,
@@ -21,7 +30,7 @@ export async function editTransaction(_id:string | string[], userId:string, type
       {
         $set: {type, amount, category, description, date}
       },
-      {new:true}
+      ReturnDocument
     )
 
   return updateTransaction;
