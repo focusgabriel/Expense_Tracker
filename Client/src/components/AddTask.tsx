@@ -10,8 +10,8 @@ const AddTask = () => {
   const newDate = useRef<HTMLInputElement>(null);
   const Current_date = useRef<HTMLInputElement>(null);
 
-  const handleSubmit = async() => {
-    // e.preventDefault();
+  const handleSubmit = async(e: React.SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
     const newTransaction = {
       type: Type.current?.value.toLowerCase(),
@@ -52,8 +52,6 @@ const AddTask = () => {
     Category.current.value = ""
     newDate.current.value = ""
     Current_date.current.value = ""
-
-    
   };
   return (
     <div className="md:mx-auto md:max-w-4xl w-full rounded-3xl bg-white/90 p-6 sm:p-8">

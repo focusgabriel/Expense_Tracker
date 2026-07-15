@@ -63,7 +63,7 @@ export async function getTransactionController(req:Request, res:Response){
       }
     }]).sort({created_date: -1})
     res.status(200).json(allTransactions)
-    console.log(allTransactions)
+    // console.log(allTransactions)
 
   } catch(err){
     res.status(500).json({message:"error loading data"})
@@ -152,11 +152,14 @@ try {
 };
 
 export async function editTransactionControler(req:Request, res:Response) {
+  console.log("PARAMS:", req.params.id);
+  console.log("User Id:", req.user!.id);
+  console.log("body:", req.body);
   try {
     const { _id } = req.params;
     const userId = req.user!.id;
     const {type, amount, category, description, date} = req.body
-    
+    console.log(req.body);
     if (!_id ) {
       return res.status(400).json({ error: "Transaction ID is required" });
     }
@@ -167,11 +170,14 @@ export async function editTransactionControler(req:Request, res:Response) {
     
     const updatedTransaction = await editTransaction(_id, userId, type, amount, category, description, date);
     
+    console.log("are you there...");
     if (!updatedTransaction) {
+      console.log("can't update transaction")
       return res.status(404).json({ error: "Transaction not found" });
     }
 
     // console.log("Transaction updated:", {type, amount, category, description, date});
+    console.log("updated:", updatedTransaction)
     res.status(200).json(updatedTransaction)
   } catch (error) {
     console.error("Error updating transaction:", error);
@@ -181,12 +187,8 @@ export async function editTransactionControler(req:Request, res:Response) {
 
 export async function getTransactionByIdController(req:Request, res:Response) {
   const transactionId = await ExpenseModel.findOne({_id:req.params.id, userId:req.user!.id})
-  console.log("controller reached");
-  console.log(req.params.id);
+
   try {
-    console.log("controller reached");
-    console.log(req.params.id);
-    const transactionId = await ExpenseModel.findOne({_id: req.params.id, userId:req.user!.id})
     if(!transactionId) {
       return res.status(400).json({message: "No Transaction"})
     } 

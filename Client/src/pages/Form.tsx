@@ -8,6 +8,7 @@ const EditForm = () => {
   const token = localStorage.getItem("token")
 
   const handleSubmit = async () => {
+    // e.preventDefault();
     try {
       const response = await fetch(
         `http://localhost:3000/api/v1/updateTransaction/${id}`,
@@ -20,7 +21,7 @@ const EditForm = () => {
           body: JSON.stringify(formData),
         },
       );
-
+      console.log(formData);
       const data = await response.json();
       if (!response.ok) {
         throw new Error("Error sending data");
@@ -169,7 +170,7 @@ const EditForm = () => {
             id="date"
             className="fieldClass"
             type="date"
-            value={formData.date.split("T")[0]}
+            value={formData.date}
             onChange={handleChange}
             name="date"
           />
