@@ -170,7 +170,7 @@ const EditForm = () => {
             id="date"
             className="fieldClass"
             type="date"
-            value={formData.date}
+            value={formData.date.split("T")[0]}
             onChange={handleChange}
             name="date"
           />
