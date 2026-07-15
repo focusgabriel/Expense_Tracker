@@ -79,7 +79,7 @@ const EditForm = () => {
   //   <Link to={`/edit/${formData._id}`}>
   //     Edit
   // </Link>
-  console.log(formData.category);
+  console.log("categories:",formData.category);
 
   return (
     <div className="md:mx-auto md:max-w-4xl w-full rounded-3xl bg-white/90 p-6 sm:p-8">
