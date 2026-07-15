@@ -17,7 +17,7 @@ const SideBar = () => {
   };
   const { pathname } = useLocation();
   return (
-    <aside className="sidebar-xs-bottom flex h-screen w-16 shrink-0 flex-col border-r border-slate-200 bg-white px-2 py-4 shadow-sm transition-all duration-300 sm:w-56 sm:px-4">
+    <aside className="sidebar-xs-bottom flex flex-row sm:flex-col shrink-0 w-16 border-r border-slate-200 bg-white px-2 py-4 shadow-sm transition-all duration-300 sm:w-56 sm:px-4 sm:h-screen">
       <div className="mb-8 flex h-10 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700 sm:justify-start sm:px-3">
         <span className="text-lg font-bold">ET</span>
         <span className="ml-2 hidden text-sm font-semibold text-emerald-900 sm:inline">
@@ -46,14 +46,21 @@ const SideBar = () => {
       </nav>
 
       <div className="relative bottom-10">
-        {
-          isLoggedIn ?
-            <button onClick={logout} className="p-2 rounded-lg bg-gray-300 text-center cursor-pointer">Logout
-          </button> 
-          : <button onClick={logout} className="p-2 rounded-lg bg-gray-300 text-center cursor-pointer">Sign In</button>
-
-        }
-        
+        {isLoggedIn ? (
+          <button
+            onClick={logout}
+            className="p-2 rounded-lg bg-gray-300 text-center cursor-pointer"
+          >
+            Logout
+          </button>
+        ) : (
+          <button
+            onClick={logout}
+            className="p-2 rounded-lg bg-gray-300 text-center cursor-pointer"
+          >
+            Sign In
+          </button>
+        )}
       </div>
     </aside>
   );
