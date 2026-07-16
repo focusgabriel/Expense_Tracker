@@ -20,6 +20,7 @@ const categoryIcon = (category: string) => {
       return <Wallet size={18} />;
     case "food":
       return <CookingPot size={18} />;
+
     default:
       return <ShieldQuestionMark size={20} />;
   }

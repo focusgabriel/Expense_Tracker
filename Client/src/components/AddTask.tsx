@@ -1,5 +1,6 @@
 /** @format */
 
+import axios from "axios";
 import { useRef } from "react";
 
 const AddTask = () => {
@@ -24,22 +25,18 @@ const AddTask = () => {
     console.log(newTransaction)
     try {
       const token = localStorage.getItem("token")
-      const response = await fetch(
+      const response = await axios.post(
         "http://localhost:3000/api/v1/addTransaction",
+        newTransaction,
         {
-          method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`
           },
-          body: JSON.stringify(newTransaction),
         },
       );
 
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error("Error sending data");
-      }
+      const data = await response.data;
       console.log(data);
       // await getTrans();
     } catch (error) {
@@ -51,7 +48,7 @@ const AddTask = () => {
     Description.current.value = ""
     Category.current.value = ""
     newDate.current.value = ""
-    Current_date.current.value = ""
+    // Current_date.current!.value = ""
   };
   return (
     <div className="md:mx-auto md:max-w-4xl w-full sm:rounded-3xl sm:bg-white/90 sm:p-8 p-0">

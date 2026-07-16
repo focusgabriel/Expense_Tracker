@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import type { Transaction } from "../constants";
 import Card from "../components/Card";
 import DeleteModal from "../components/DeleteModal";
+import axios from "axios";
 
 const Analytics = () => {
   const [trans, setTrans] = useState<Transaction[]>([]);
@@ -25,17 +26,15 @@ const Analytics = () => {
     if (!selected) return;
     const token = localStorage.getItem("token")
     try {
-      const res = await fetch(
+      const res = await axios.delete(
         `http://localhost:3000/api/v1/deleteTransaction/${selected._id}`,
         {
-          method: "DELETE",
           headers: {
             Authorization: `Bearer ${token}`
           }
         },
       );
       console.log("response:", res);
-      if (!res.ok) throw new Error("Delete failed");
       setTrans(prev => prev.filter(t => t._id !== selected._id));
       setModalOpen(false);
       setSelected(null);
@@ -47,13 +46,12 @@ const Analytics = () => {
   // getting the whole data from the database
   const token = localStorage.getItem("token")
   useEffect(() => {
-    fetch(`http://localhost:3000/api/v1/getTransaction`, {
+    axios.get(`http://localhost:3000/api/v1/getTransaction`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     })
-      .then(res => res.json())
-      .then(data => setTrans(data));
+      .then(res => setTrans(res.data));
   }, []);
 
   return (

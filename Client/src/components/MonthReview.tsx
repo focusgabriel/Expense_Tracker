@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import CardReview from "./CardReview";
+import axios from "axios";
 
 const MonthReview = () => {
   const [reviewIncome, setReviewIncome] = useState<number | null>(null);
@@ -24,22 +25,21 @@ const MonthReview = () => {
   const token = localStorage.getItem("token")
   useEffect(() => {
     try {
-      fetch("http://localhost:3000/api/v1/getMonthlyIncome", {
+      axios.get("http://localhost:3000/api/v1/getMonthlyIncome", {
         headers: {
           Authorization: `Bearer ${token}`
         }
       })
-        .then(res => res.json())
-        .then(data => {
-          setReviewIncome(data.get_income);
-          setReviewExpense(data.get_expense);
-          setReviewBalance(data.netbalance);
+        .then(res => {
+          setReviewIncome(res.data.get_income);
+          setReviewExpense(res.data.get_expense);
+          setReviewBalance(res.data.netbalance);
 
-          setFormattedIncome(data.get_income.toLocaleString());
-          setFormattedExpense(data.get_expense.toLocaleString());
-          setFormattedBalance(data.netbalance.toLocaleString());
+          setFormattedIncome(res.data.get_income.toLocaleString());
+          setFormattedExpense(res.data.get_expense.toLocaleString());
+          setFormattedBalance(res.data.netbalance.toLocaleString());
 
-          setGetDate(data.endOfLastMonth);
+          setGetDate(res.data.endOfLastMonth);
         });
     } catch (error) {
       console.log(error);

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import TranscCard from "../components/TranscCard";
+import axios from "axios";
 // import TranscCard from "./TranscCard";
 
 const AllTransaction = () => {
@@ -18,18 +19,17 @@ const AllTransaction = () => {
 
   useEffect(() => {
     try {
-      fetch("http://localhost:3000/api/v1/getMonthlyIncome", {
+      axios.get("http://localhost:3000/api/v1/getMonthlyIncome", {
         headers: {
           Authorization: `Bearer ${token}`
         }
       })
-        .then(res => res.json())
-        .then(data => {
-          setMonthlyIncome(data.get_income.toLocaleString());
-          setMonthlyExpense(data.get_expense.toLocaleString());
-          setMonthlyBalance(data.netbalance.toLocaleString());
-          setPrevMonth(data.lastMonthNetBalance.toLocaleString());
-        });
+        .then(response => {
+          setMonthlyIncome(response.data.get_income.toLocaleString());
+          setMonthlyExpense(response.data.get_expense.toLocaleString());
+          setMonthlyBalance(response.data.netbalance.toLocaleString());
+          setPrevMonth(response.data.lastMonthNetBalance.toLocaleString());
+        }).catch(error => console.log(error))
     } catch (error) {
       console.error(error);
     }
@@ -39,16 +39,15 @@ const AllTransaction = () => {
  
   useEffect(() => {
     try {
-      fetch("http://localhost:3000/api/v1/totalTransaction", {
+      axios.get("http://localhost:3000/api/v1/totalTransaction", {
         headers: {
           Authorization: `Bearer ${token}`
         }
       })
-        .then(res => res.json())
-        .then(data => {
+        .then(res => {
           // setIncomeTrans(data.Total_income.toLocaleString());
           // setExpenseTrans(data.Total_expense.toLocaleString());
-          setNetBalanceTrans(data.NetBalance.toLocaleString());
+          setNetBalanceTrans(res.data.NetBalance.toLocaleString());
         });
     } catch (error) {
       console.log(error);

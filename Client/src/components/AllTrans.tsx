@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Card from "./Card";
 import { Link } from "react-router-dom";
 import type { Transaction } from "../constants";
+import axios from "axios";
 // import type { Transaction } from "../constants"
 
 
@@ -16,13 +17,12 @@ const AllTrans = () => {
   // getting the whole data from the database
   const token = localStorage.getItem("token");
   useEffect(() => {
-    fetch(`http://localhost:3000/api/v1/getTransaction`, {
+    axios.get(`http://localhost:3000/api/v1/getTransaction`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     })
-      .then(res => res.json())
-      .then(data => setTrans(data));
+      .then(res => setTrans(res.data));
   }, []);
 
   return (

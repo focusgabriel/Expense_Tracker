@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { PieChart, Pie, ResponsiveContainer } from "recharts";
 import { CATEGORY_COLORS, type Transaction } from "../constants";
 import AllTrans from "./AllTrans";
+import axios from "axios";
 
 const SpendingChart = () => {
   const [allExpense, setAllExpense] = useState<Transaction[]>([]);
@@ -13,13 +14,12 @@ const SpendingChart = () => {
   const getTrans = async () => {
     const token = localStorage.getItem("token");
     try {
-      fetch("http://localhost:3000/api/v1/getMonthlyIncome", {
+      axios.get("http://localhost:3000/api/v1/getMonthlyIncome", {
         headers: {
           Authorization: `Bearer ${token}`
         }
       })
-        .then(res => res.json())
-        .then(data => {setAllExpense(data.getMonthlyExpense); setAllIncome(data.get_income)});
+        .then(res => {setAllExpense(res.data.getMonthlyExpense); setAllIncome(res.data.get_income)});
     } catch (error) {
       console.log(error);
     }

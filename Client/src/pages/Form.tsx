@@ -1,7 +1,8 @@
 /** @format */
 
+import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { data, useParams } from "react-router-dom";
 
 const EditForm = () => {
   const { id } = useParams();
@@ -10,22 +11,18 @@ const EditForm = () => {
   const handleSubmit = async () => {
     // e.preventDefault();
     try {
-      const response = await fetch(
+      const response = await axios.patch(
         `http://localhost:3000/api/v1/updateTransaction/${id}`,
+        formData,
         {
-          method: "PATCH",
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(formData),
         },
       );
       console.log(formData);
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error("Error sending data");
-      }
+      const data = response.data()
       console.log(data);
     } catch (error) {
       console.log(error);
@@ -44,21 +41,20 @@ const EditForm = () => {
   useEffect(() => {
     async function fetchTransaction() {
       if (id) {
-        fetch(`http://localhost:3000/api/v1/getTransactionById/${id}`, {
+        axios.get(`http://localhost:3000/api/v1/getTransactionById/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
         })
-          .then(res => res.json())
-          .then(data => {
+          .then(res => 
             setFormData({
-              type: data.type,
-              amount: data.amount,
-              category: data.category,
-              description: data.description,
-              date: data.date,
-            });
-          })
+              type: res.data.type,
+              amount: res.data.amount,
+              category: res.data.category,
+              description: res.data.description,
+              date: res.data.date,
+            })
+          )
           .catch(error => console.log(`Error: ${error}`));
       }
     }
