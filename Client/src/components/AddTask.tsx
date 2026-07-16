@@ -54,8 +54,8 @@ const AddTask = () => {
     Current_date.current.value = ""
   };
   return (
-    <div className="md:mx-auto md:max-w-4xl w-full rounded-3xl bg-white/90 p-6 sm:p-8">
-      <div className="mb-6 rounded-3xl bg-emerald-50 p-6 text-center w-full ">
+    <div className="md:mx-auto md:max-w-4xl w-full sm:rounded-3xl sm:bg-white/90 sm:p-8 p-0">
+      <div className="mb-6 sm:rounded-3xl bg-emerald-50 sm:p-6 p-4 text-center w-full">
         <h2 className="text-2xl font-bold text-emerald-900">
           Add a Transaction
         </h2>
@@ -66,7 +66,7 @@ const AddTask = () => {
 
       <form
         onSubmit={handleSubmit}
-        className="grid gap-7 rounded-3xl bg-white p-6 sm:grid-cols-2 sm:p-8"
+        className="grid gap-7 sm:rounded-3xl sm:bg-white p-0 sm:p-8 sm:grid-cols-2"
         action="/success"
       >
         <div className="flex flex-col gap-4">
