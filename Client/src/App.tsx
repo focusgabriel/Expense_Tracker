@@ -30,7 +30,6 @@ const App = () => {
       }
     >
       {!isAuthRoute && <SideBar />}
-
       <main
         className={
           isAuthRoute

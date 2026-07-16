@@ -70,7 +70,7 @@ body {
     }
   }
 
-  @media (max-width: 600px) {
+  @media (max-width: 640px) {
     .auth-card {
       @apply max-w-full rounded-xl px-4 py-6;
     }
@@ -80,33 +80,75 @@ body {
     }
 
     .fieldClass {
-      @apply min-h-[3rem] rounded-lg px-4 py-3;
+      @apply min-h-12 rounded-lg px-4 py-3;
     }
 
     .auth-action-btn {
       @apply py-3 rounded-lg;
     }
+  }
 
+  /* === Sidebar: Bottom nav below 620px === */
+  @media (max-width: 600px) {
     .sidebar-xs-bottom {
-      @apply fixed bottom-0 left-0 z-50 w-full h-auto flex-row items-center justify-between border-r-0 border-t border-slate-100 bg-white px-0;
+      position: fixed !important;
+      bottom: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      z-index: 50 !important;
+      width: 100% !important;
+      height: auto !important;
       flex-direction: row !important;
+      align-items: center !important;
+      justify-content: space-around !important;
+      border-top: 1px solid #e2e8f0 !important;
+      background: #ffffff !important;
+      padding: 0 !important;
+      box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.05);
     }
 
     .sidebar-xs-bottom nav {
-      @apply flex flex-row items-center justify-around w-full px-1;
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      justify-content: space-around !important;
+      width: 100% !important;
+      padding: 0 4px !important;
     }
 
     .sidebar-xs-bottom nav a {
-      @apply h-13 flex-1 flex flex-col items-center justify-center rounded-lg my-1 text-[10px] transition-colors duration-200;
+      flex: 1 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      height: 52px !important;
+      margin: 4px 0 !important;
+      font-size: 10px !important;
+      border-radius: 8px !important;
+      transition: all 0.2s ease !important;
     }
 
-    .sidebar-xs-bottom > div {
-      @apply hidden;
+    .sidebar-xs-bottom > div:not(nav):not(:first-child) {
+      display: none !important;
     }
 
     .main-with-bottom-sidebar {
-      @apply pb-16;
+      padding-bottom: 64px !important;
+    }
+  }
+
+  /* === Sidebar: Left side between 621px and 767px === */
+  @media (min-width: 621px) and (max-width: 1023px) {
+    .sidebar-xs-bottom {
+      width: 56px !important;
+      min-width: 56px !important;
+      border-right: 1px solid #e2e8f0 !important;
+      background: #ffffff !important;
+    }
+
+    .sidebar-xs-bottom nav a span {
+      display: none !important;
     }
   }
 }
-
