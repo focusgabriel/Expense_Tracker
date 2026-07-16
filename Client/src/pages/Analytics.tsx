@@ -1,7 +1,7 @@
 /** @format */
 
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 // import Card from "./Card";
 // import DeleteModal from "./DeleteModal";
 import type { Transaction } from "../constants";
@@ -23,13 +23,18 @@ const Analytics = () => {
 
   const handleConfirmDelete = async () => {
     if (!selected) return;
+    const token = localStorage.getItem("token")
     try {
       const res = await fetch(
         `http://localhost:3000/api/v1/deleteTransaction/${selected._id}`,
         {
           method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         },
       );
+      console.log("response:", res);
       if (!res.ok) throw new Error("Delete failed");
       setTrans(prev => prev.filter(t => t._id !== selected._id));
       setModalOpen(false);
@@ -52,24 +57,26 @@ const Analytics = () => {
   }, []);
 
   return (
-    <div className="w-full rounded-lg border border-slate-200 bg-white shadow-sm">
-      <div className="flex justify-between items-center border-b border-slate-100 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-black">
+    <div className="w-full sm:rounded-lg sm:border sm:border-slate-200 sm:bg-white sm:shadow-sm sm:flex sm:flex-col">
+      <div className="flex justify-between items-center border-b border-slate-100 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-black shrink-0">
         <h2>Recent Transactions</h2>
       </div>
-      {trans.map(item => (
-        <Card
-          key={item._id}
-          id={item._id}
-          type={item.type}
-          amount={item.amount}
-          category={item.category}
-          description={item.description}
-          date={item.date}
-          created_date={item.created_date}
-          onEdit={() => handleEdit(item._id)}
-          onDelete={() => handleDelete(item)}
-        />
-      ))}
+      <div className="flex flex-col">
+        {trans.map(item => (
+          <Card
+            key={item._id}
+            id={item._id}
+            type={item.type}
+            amount={item.amount}
+            category={item.category}
+            description={item.description}
+            date={item.date}
+            created_date={item.created_date}
+            onEdit={() => handleEdit(item._id)}
+            onDelete={() => handleDelete(item)}
+          />
+        ))}
+      </div>
 
       <DeleteModal
         open={modalOpen}
