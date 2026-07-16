@@ -160,9 +160,6 @@ export async function editTransactionControler(req:Request, res:Response) {
   const {type, amount, category, description, date} = req.body
 
   try {
-    console.log("the id:", id);
-    console.log("the userId:", userId);
-
     if (!id ) {
       return res.status(400).json({ error: "Transaction ID is required" });
     }
@@ -171,11 +168,8 @@ export async function editTransactionControler(req:Request, res:Response) {
       return res.status(400).json({error: "Amount should be greater than 100"});
     }
     
-    console.log("before asking are you there?")
     const updatedTransaction = await editTransaction(id, userId, type, amount, category, description, date);
     
-    console.log("updated:", updatedTransaction)
-    console.log("are you there...");
     if (!updatedTransaction) {
       console.log("can't update transaction")
       return res.status(404).json({ error: "Transaction not found" });
@@ -205,6 +199,8 @@ export async function getTransactionByIdController(req:Request, res:Response) {
 }
 
 export async function deleteTransactionController(req:Request, res:Response) {
+  console.log("id for del:", req.params.id)
+  console.log("userId for del:", req.user!.id)
   try {
     // const {id} = req.params
     const delTransaction = await deleteTransaction(req.params.id, req.user!.id);

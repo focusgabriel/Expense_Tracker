@@ -37,10 +37,10 @@ console.log("Found:", transaction);
 }
 
 export async function deleteTransaction(_id:any, userId:any) {
-  const deleteTransact = await ExpenseModel.findOneAndDelete(
+  const deleteTransact = await ExpenseModel.findOneAndDelete({
     _id,
     userId
-  );
+  });
 
   return deleteTransact;
 }
