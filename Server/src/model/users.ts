@@ -4,6 +4,7 @@ type Iuser = {
   name:string,
   email:string,
   password:string,
+  refreshToken?:string
   createdAt?:Date,
   updatedAt?:Date
 }
@@ -28,6 +29,12 @@ export const UserProps = new Schema<Iuser>({
     required: true,
     trim: true
   },
+
+  refreshToken: {
+    type: String,
+    default: null
+  },
+
 },
   {
     timestamps: true

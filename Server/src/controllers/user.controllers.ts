@@ -1,10 +1,11 @@
 import {Request, Response} from "express"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
-import {LoginRequestBody, RegisterRequestBody} from "../types/express/users.types.js"
+import {LoginRequestBody, RefreshRequestBody, RegisterRequestBody} from "../types/express/users.types.js"
 // import authModel from "../model/users.js"
 // import { hash } from "node:crypto"
 import { authModel } from "../model/index.js"
+import { generateAccessToken, generateNewRefreshToken, generateRefreshToken } from "../utils/jwt.js"
 
 
 export async function RegisterController(
@@ -52,7 +53,8 @@ export async function RegisterController(
 }
 
 export async function loginController(req: Request<{}, {}, LoginRequestBody>,res: Response) {
-  const {email, password} = req.body
+  const {email, password} = req.body;
+
   if (!email || !password) {
     return res.status(400).json({
         message: "Email and password are required."
@@ -68,22 +70,70 @@ export async function loginController(req: Request<{}, {}, LoginRequestBody>,res
     return res.status(400).json({errorMsg: "Invalid Credentials"})
   }
 
-  const token = jwt.sign({
-      sub: user._id.toString()
-    }, 
-    process.env.JWT_SECRET as string,
-    {
-      expiresIn: "1d"
-    }
-  )
+  // const token = jwt.sign({
+  //     sub: user._id.toString()
+  //   }, 
+  //   process.env.JWT_SECRET as string,
+  //   {
+  //     expiresIn: "1d"
+  //   }
+  // )
+
+  const accessToken = generateAccessToken( user._id.toString() );
+  const refreshToken = generateRefreshToken( user._id.toString() );
+  const newRefreshToken = generateRefreshToken(user._id.toString());
+  user.refreshToken = newRefreshToken;
+  await user.save();
   return res.status(200).json({
-    message: "Login Successful",
-    token,
-    user: {
-        id: user._id,
-        name: user.name,
-        email: user.email
-    }
+    accessToken,
+    refreshToken: newRefreshToken
   })
+  
 }
 
+export async function refreshTokenController(req: Request<{}, {}, RefreshRequestBody>, res:Response) {
+  try {
+    const { refreshToken } = req.body;
+    if(!refreshToken){
+      return res.status(400).json({errorMsg: "Refresh Token is required."})
+    }
+
+    const decoded = jwt.verify(
+      refreshToken,
+      process.env.JWT_REFRESH_TOKEN!
+    );
+
+    if(typeof decoded === "string" || !("sub" in decoded)){
+      return res.status(400).json({errorMsg: "Invalid token"});
+    }
+
+    const user = await authModel.findOne({refreshToken});
+    if (!user) {
+      return res.status(401).json({
+          message: "Invalid refresh token"
+      });
+    }
+
+     // Generate a new access token
+    const accessToken = generateAccessToken(user._id.toString());
+
+    // Generate a new refresh token
+    const newRefreshToken = generateNewRefreshToken(user._id.toString());
+
+    user.refreshToken = newRefreshToken;
+
+    await user.save();
+    // Return it
+    return res.status(200).json({
+      accessToken,
+      refreshToken: newRefreshToken
+    });
+
+
+
+  } catch (error) {
+    return res.status(401).json({errorMsg: "Invalid or expired token."})
+  }
+
+  
+}
