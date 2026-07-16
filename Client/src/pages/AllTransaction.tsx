@@ -56,7 +56,7 @@ const AllTransaction = () => {
   }, []);
 
   return (
-    <div className="rounded-2xl border border-emerald-100 bg-white/90 p-4 shadow-sm">
+    <div className="sm:rounded-2xl sm:border sm:border-emerald-100 sm:bg-white/90 sm:p-4 sm:shadow-sm">
       <div className="grid gap-4 md:grid-cols-4 ">
         {/* <span className="text-green-600">{prevMonth}</span> */}
         <TranscCard
