@@ -54,7 +54,7 @@ const MonthReview = () => {
 
   return (
     <div className="w-full">
-      <div className="rounded-xl border border-green-200 bg-white p-6 shadow-sm">
+      <div className="sm:rounded-xl sm:border sm:border-green-200 sm:bg-white sm:p-6 sm:shadow-sm">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold">Monthly Summary</h1>
