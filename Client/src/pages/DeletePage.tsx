@@ -16,10 +16,12 @@ const DeletePage = () => {
  
   return (
     <div className="h-screen">
-      <div className="w-[50%] mx-auto h-[50vh] items-center p-10">
-        <h2 className="md:text-2xl sm:text-xl">Are you sure, you want to delete this item</h2>
-        <Link to="/analytics"><button onClick={handleClick} className="bg-red-600 text-white font-medium p-2 rounded-lg m-2 w-[20%] cursor-pointer">Proceed</button></Link>
-        <Link to="/analytics"><button className="bg-emerald-500 text-white font-medium p-2 w-[20%] rounded-lg m-2 cursor-pointer">Cancel</button></Link>
+      <div className="w-full md:w-[50%] md:mx-auto min-h-[50vh] sm:p-10 p-4 flex flex-col items-center justify-center">
+        <h2 className="md:text-2xl text-xl text-center">Are you sure, you want to delete this item</h2>
+        <div className="mt-6 flex gap-4">
+          <Link to="/analytics"><button onClick={handleClick} className="bg-red-600 text-white font-medium p-2 rounded-lg w-24 sm:w-28 cursor-pointer">Proceed</button></Link>
+          <Link to="/analytics"><button className="bg-emerald-500 text-white font-medium p-2 w-24 sm:w-28 rounded-lg cursor-pointer">Cancel</button></Link>
+        </div>
       </div>
     </div>
   )
