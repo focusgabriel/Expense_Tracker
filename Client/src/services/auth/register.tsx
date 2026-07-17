@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import refreshClient from "../../api/fetch";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -21,23 +22,12 @@ const Register = () => {
     };
 
     try {
-      const response = await fetch(
-        "http://localhost:3000/api/v1/auth/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newUser),
-        },
-      );
+      const response = await refreshClient.post(
+        "http://localhost:3000/api/v1/auth/register",newUser);
 
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data?.message || "Error sending data");
-      }
-
-      localStorage.setItem("token", data.token);
+      const data = await response.data;
+      console.log(data);
+      localStorage.setItem("token", data.accessToken);
       navigate("/overview");
     } catch (error) {
       console.error(error);
