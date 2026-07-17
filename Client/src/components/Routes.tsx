@@ -6,9 +6,9 @@ import { Navigate } from 'react-router-dom'
   }
 
   export default function ProtectedRoutes({children}: Props){
-    const token = localStorage.getItem("token");
+    const accessToken = localStorage.getItem("accessToken");
 
-    if(!token) {
+    if(!accessToken) {
       return <Navigate to="/" replace />
     }
 
