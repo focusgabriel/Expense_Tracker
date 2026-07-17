@@ -21,13 +21,13 @@ export function generateRefreshToken(userId: string) {
   } 
 )
 }
-export function generateNewRefreshToken(userId: string) {
-  return jwt.sign({
-    sub: userId,
-  },
-  process.env.JWT_NEWREFRESH_SECRET!,
-  {
-    expiresIn: "7d",
-  } 
-)
-}
+// export function generateNewRefreshToken(userId: string) {
+//   return jwt.sign({
+//     sub: userId,
+//   },
+//   process.env.JWT_NEWREFRESH_SECRET!,
+//   {
+//     expiresIn: "7d",
+//   } 
+// )
+// }
