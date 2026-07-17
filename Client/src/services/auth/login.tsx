@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import refreshClient from "../../api/fetch";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -17,21 +18,23 @@ const Login = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:3000/api/v1/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(AuthUser),
-      });
+      const response = await refreshClient.post("http://localhost:3000/api/v1/auth/login", 
+        AuthUser 
+      );
 
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data?.message || "Error sending data");
-      }
+      // const {accessToken, refreshToken, user} = await response.json();
+      const data = await response.data;
+      console.log(data);
 
-      localStorage.setItem("token", data.token);
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("refreshToken", data.refreshToken);
+
+      console.log("Stored Access:", localStorage.getItem("accessToken"));
+      console.log("Stored Refresh:", localStorage.getItem("refreshToken"));
+
       navigate("/overview");
+
+      // return user;
     } catch (error) {
       console.error(error);
     }
