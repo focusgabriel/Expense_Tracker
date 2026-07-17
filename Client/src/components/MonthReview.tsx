@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import CardReview from "./CardReview";
-import axios from "axios";
+import refreshClient from "../api/fetch";
 
 const MonthReview = () => {
   const [reviewIncome, setReviewIncome] = useState<number | null>(null);
@@ -22,14 +22,9 @@ const MonthReview = () => {
     });
   };
   
-  const token = localStorage.getItem("token")
   useEffect(() => {
     try {
-      axios.get("http://localhost:3000/api/v1/getMonthlyIncome", {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+      refreshClient.get("http://localhost:3000/api/v1/getMonthlyIncome")
         .then(res => {
           setReviewIncome(res.data.get_income);
           setReviewExpense(res.data.get_expense);

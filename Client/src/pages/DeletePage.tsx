@@ -1,6 +1,6 @@
-import axios from "axios"
 // import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom"
+import refreshClient from "../api/fetch";
 
 const DeletePage = () => {
   // const [transact, setTransact] = useState()
@@ -10,7 +10,7 @@ const DeletePage = () => {
 
     // fetch(`http://localhost:3000/api/v1/deleteTransaction/${id}`)
 
-    axios.delete(`http://localhost:3000/api/v1/deleteTransaction/${id}`)
+    refreshClient.delete(`http://localhost:3000/api/v1/deleteTransaction/${id}`)
   }
 
  

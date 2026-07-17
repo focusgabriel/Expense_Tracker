@@ -1,26 +1,17 @@
 /** @format */
 
-import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { data, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import refreshClient from "../api/fetch";
 
 const EditForm = () => {
   const { id } = useParams();
-  const token = localStorage.getItem("token")
 
   const handleSubmit = async () => {
     // e.preventDefault();
     try {
-      const response = await axios.patch(
-        `http://localhost:3000/api/v1/updateTransaction/${id}`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        },
-      );
+      const response = await refreshClient.patch(
+        `http://localhost:3000/api/v1/updateTransaction/${id}`,formData);
       console.log(formData);
       const data = response.data()
       console.log(data);
@@ -41,11 +32,7 @@ const EditForm = () => {
   useEffect(() => {
     async function fetchTransaction() {
       if (id) {
-        axios.get(`http://localhost:3000/api/v1/getTransactionById/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
+        refreshClient.get(`http://localhost:3000/api/v1/getTransactionById/${id}`)
           .then(res => 
             setFormData({
               type: res.data.type,

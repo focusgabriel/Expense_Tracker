@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import type { Transaction } from "../constants";
 import Card from "../components/Card";
 import DeleteModal from "../components/DeleteModal";
-import axios from "axios";
+import refreshClient from "../api/fetch";
 
 const Analytics = () => {
   const [trans, setTrans] = useState<Transaction[]>([]);
@@ -24,16 +24,9 @@ const Analytics = () => {
 
   const handleConfirmDelete = async () => {
     if (!selected) return;
-    const token = localStorage.getItem("token")
     try {
-      const res = await axios.delete(
-        `http://localhost:3000/api/v1/deleteTransaction/${selected._id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        },
-      );
+      const res = await refreshClient.delete(
+          `http://localhost:3000/api/v1/deleteTransaction/${selected._id}`);
       console.log("response:", res);
       setTrans(prev => prev.filter(t => t._id !== selected._id));
       setModalOpen(false);
@@ -44,13 +37,8 @@ const Analytics = () => {
   };
 
   // getting the whole data from the database
-  const token = localStorage.getItem("token")
   useEffect(() => {
-    axios.get(`http://localhost:3000/api/v1/getTransaction`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
+    refreshClient.get(`http://localhost:3000/api/v1/getTransaction`)
       .then(res => setTrans(res.data));
   }, []);
 

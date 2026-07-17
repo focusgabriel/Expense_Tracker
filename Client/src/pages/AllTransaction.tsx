@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import TranscCard from "../components/TranscCard";
-import axios from "axios";
+import refreshClient from "../api/fetch";
 // import TranscCard from "./TranscCard";
 
 const AllTransaction = () => {
@@ -15,15 +15,9 @@ const AllTransaction = () => {
   const [monthlyBalance, setMonthlyBalance] = useState(null);
   const [prevMonth, setPrevMonth] = useState(null);
   
-  const token = localStorage.getItem("token")
-
   useEffect(() => {
     try {
-      axios.get("http://localhost:3000/api/v1/getMonthlyIncome", {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+      refreshClient.get("http://localhost:3000/api/v1/getMonthlyIncome")
         .then(response => {
           setMonthlyIncome(response.data.get_income.toLocaleString());
           setMonthlyExpense(response.data.get_expense.toLocaleString());
@@ -39,11 +33,7 @@ const AllTransaction = () => {
  
   useEffect(() => {
     try {
-      axios.get("http://localhost:3000/api/v1/totalTransaction", {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+      refreshClient.get("http://localhost:3000/api/v1/totalTransaction")
         .then(res => {
           // setIncomeTrans(data.Total_income.toLocaleString());
           // setExpenseTrans(data.Total_expense.toLocaleString());
