@@ -18,9 +18,7 @@ const Login = () => {
     };
 
     try {
-      const response = await refreshClient.post("http://localhost:3000/api/v1/auth/login", 
-        AuthUser 
-      );
+      const response = await refreshClient.post("http://localhost:3000/api/v1/auth/login",AuthUser);
 
       // const {accessToken, refreshToken, user} = await response.json();
       const data = await response.data;

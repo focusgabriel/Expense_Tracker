@@ -152,9 +152,6 @@ try {
 };
 
 export async function editTransactionControler(req:Request, res:Response) {
-  // console.log("PARAMS:", req.params.id);
-  // console.log("User Id:", req.user!.id);
-  // console.log("body:", req.body);
   const { id } = req.params;
   const userId = req.user!.id;
   const {type, amount, category, description, date} = req.body
@@ -199,8 +196,6 @@ export async function getTransactionByIdController(req:Request, res:Response) {
 }
 
 export async function deleteTransactionController(req:Request, res:Response) {
-  console.log("id for del:", req.params.id)
-  console.log("userId for del:", req.user!.id)
   try {
     // const {id} = req.params
     const delTransaction = await deleteTransaction(req.params.id, req.user!.id);

@@ -88,6 +88,7 @@ export async function loginController(req: Request<{}, {}, LoginRequestBody>,res
 }
 
 export async function refreshTokenController(req: Request<{}, {}, RefreshRequestBody>, res:Response) {
+  // console.log("Refresh endpoint reached")
   try {
     const { refreshToken } = req.body;
     if(!refreshToken){
