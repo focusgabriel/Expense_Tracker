@@ -1,7 +1,7 @@
 /** @format */
 
-import axios from "axios";
 import { useRef } from "react";
+import refreshClient from "../api/fetch";
 
 const AddTask = () => {
   const Type = useRef<HTMLSelectElement>(null);
@@ -24,17 +24,8 @@ const AddTask = () => {
     };
     console.log(newTransaction)
     try {
-      const token = localStorage.getItem("token")
-      const response = await axios.post(
-        "http://localhost:3000/api/v1/addTransaction",
-        newTransaction,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-          },
-        },
-      );
+      const response = await refreshClient.post(
+        "http://localhost:3000/api/v1/addTransaction",newTransaction);
 
       const data = await response.data;
       console.log(data);
