@@ -55,20 +55,15 @@ refreshClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   
   async(error: AxiosError) => {
     const originalRequest = error.config as CustomAxiosRequestConfig;
-      // console.log("Attempting refresh...");
-      // console.log("Retrying:", originalRequest.url);
-    //   console.log("Failed URL:", error.config?.url);
-    // console.log("Status:", error.response?.status);
-console.log("Failed request:", error.config?.url);
     if(error.response?.status === 401 && !originalRequest._retry){
 
-    // 1. Queue check before refresh
+    // implementing race condition handler.
+    // Queue check before refresh
     if(isRefreshing){
         return new Promise((resolve, reject) => {
           failedQueue.push({
             resolve:(token) => {
               originalRequest.headers = originalRequest.headers ?? {};
-
               originalRequest.headers.Authorization = `Bearer ${token}`;
 
               resolve(refreshClient(originalRequest));
@@ -82,7 +77,7 @@ console.log("Failed request:", error.config?.url);
 
       const refreshToken = localStorage.getItem("refreshToken");
 
-      console.log("Refresh token:", refreshToken);
+      // console.log("Refresh token:", refreshToken);
       if(!refreshToken){
         return Promise.reject(error);
       }
@@ -90,8 +85,7 @@ console.log("Failed request:", error.config?.url);
       try { 
       // Refreshing flag 
       isRefreshing = true;
-      
-
+    
       const response = await tokenRefreshClient.post("/refresh", {refreshToken});
 
       const {accessToken, refreshToken:newRefreshToken} = response.data;
@@ -119,18 +113,16 @@ console.log("Failed request:", error.config?.url);
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       processQueue(err);
-      // isRefreshing = false;
       window.location.href = "/";
 
       return Promise.reject(error);
 
     } finally {
-       //refreshing flag
       isRefreshing = false;
     }
   }
 
-    // return Promise.reject(error);
+    return Promise.reject(error);
   }
 )
 

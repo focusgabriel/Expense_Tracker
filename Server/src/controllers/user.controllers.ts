@@ -72,7 +72,6 @@ export async function loginController(req: Request<{}, {}, LoginRequestBody>,res
 
   const accessToken = generateAccessToken( user._id.toString() );
   const refreshToken = generateRefreshToken( user._id.toString() );
-  // const newRefreshToken = generateRefreshToken(user._id.toString());
   user.refreshToken = refreshToken;
   await user.save();
   return res.status(200).json({
@@ -80,7 +79,6 @@ export async function loginController(req: Request<{}, {}, LoginRequestBody>,res
     refreshToken: refreshToken,
     user: {
       id: user._id,
-      // userId: req.user!.id,
       email: user.email
     }
   })
@@ -106,7 +104,7 @@ export async function refreshTokenController(req: Request<{}, {}, RefreshRequest
 
     const user = await authModel.findOne({_id: decoded.sub, refreshToken});
     if (!user) {
-      return res.status(400).json({
+      return res.status(401).json({
           message: "Invalid refresh token"
       });
     }
@@ -125,9 +123,7 @@ export async function refreshTokenController(req: Request<{}, {}, RefreshRequest
       accessToken,
       refreshToken: newRefreshToken
     });
-
-
-
+    
   } catch (error) {
     return res.status(401).json({errorMsg: "Invalid or expired token."})
   }
