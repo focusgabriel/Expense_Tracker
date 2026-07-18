@@ -23,7 +23,7 @@ const Register = () => {
 
     try {
       const response = await refreshClient.post(
-        "http://localhost:3000/api/v1/auth/register",newUser, {
+        "/auth/register",newUser, {
           headers: {
             "Content-Type": "application/json",
           },

@@ -17,7 +17,7 @@ const AllTransaction = () => {
   
   useEffect(() => {
     try {
-      refreshClient.get("http://localhost:3000/api/v1/getMonthlyIncome")
+      refreshClient.get("/getMonthlyIncome")
         .then(response => {
           setMonthlyIncome(response.data.get_income.toLocaleString());
           setMonthlyExpense(response.data.get_expense.toLocaleString());
@@ -33,7 +33,7 @@ const AllTransaction = () => {
  
   useEffect(() => {
     try {
-      refreshClient.get("http://localhost:3000/api/v1/totalTransaction")
+      refreshClient.get("/totalTransaction")
         .then(res => {
           // setIncomeTrans(data.Total_income.toLocaleString());
           // setExpenseTrans(data.Total_expense.toLocaleString());

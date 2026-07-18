@@ -8,9 +8,9 @@ const DeletePage = () => {
 
   const handleClick = () => {
 
-    // fetch(`http://localhost:3000/api/v1/deleteTransaction/${id}`)
+    // fetch(`/deleteTransaction/${id}`)
 
-    refreshClient.delete(`http://localhost:3000/api/v1/deleteTransaction/${id}`)
+    refreshClient.delete(`/deleteTransaction/${id}`)
   }
 
  

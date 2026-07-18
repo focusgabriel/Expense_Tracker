@@ -26,7 +26,7 @@ const Analytics = () => {
     if (!selected) return;
     try {
       const res = await refreshClient.delete(
-          `http://localhost:3000/api/v1/deleteTransaction/${selected._id}`);
+          `/deleteTransaction/${selected._id}`);
       console.log("response:", res);
       setTrans(prev => prev.filter(t => t._id !== selected._id));
       setModalOpen(false);
@@ -38,7 +38,7 @@ const Analytics = () => {
 
   // getting the whole data from the database
   useEffect(() => {
-    refreshClient.get(`http://localhost:3000/api/v1/getTransaction`)
+    refreshClient.get(`/getTransaction`)
       .then(res => setTrans(res.data));
   }, []);
 

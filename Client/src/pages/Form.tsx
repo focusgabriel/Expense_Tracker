@@ -11,7 +11,7 @@ const EditForm = () => {
     // e.preventDefault();
     try {
       const response = await refreshClient.patch(
-        `http://localhost:3000/api/v1/updateTransaction/${id}`,formData);
+        `/updateTransaction/${id}`,formData);
       console.log(formData);
       const data = response.data()
       console.log(data);
@@ -32,7 +32,7 @@ const EditForm = () => {
   useEffect(() => {
     async function fetchTransaction() {
       if (id) {
-        refreshClient.get(`http://localhost:3000/api/v1/getTransactionById/${id}`)
+        refreshClient.get(`/getTransactionById/${id}`)
           .then(res => 
             setFormData({
               type: res.data.type,
