@@ -3,6 +3,25 @@ import axios,{
   type AxiosRequestConfig,
   type InternalAxiosRequestConfig,
 } from "axios";
+
+let isRefreshing = false;
+let failedQueue: {
+  resolve: (token: string) => void,
+  reject: (error: unknown) => void
+}[] = [];
+
+function processQueue(error:unknown, token:string | null=null){
+  failedQueue.forEach((promise) =>{
+    if(error){
+      promise.reject(error);
+    } else {
+      promise.resolve(token!)
+    }
+  });
+
+  failedQueue = [];
+}
+
 interface CustomAxiosRequestConfig extends AxiosRequestConfig {
   _retry?: boolean;
 }
@@ -10,8 +29,14 @@ const refreshClient = axios.create({
   baseURL: "http://localhost:3000/api/v1",
 });
 
+// Separate instance for token refresh to avoid interceptor loops
+const tokenRefreshClient = axios.create({
+  baseURL: "http://localhost:3000/api/v1",
+});
+
 // request
-refreshClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+refreshClient.interceptors.request.use((config: InternalAxiosRequestConfig) => { 
+  console.log("Request:", config.url);
   const accessToken = localStorage.getItem("accessToken");
 
   if (accessToken) {
@@ -30,18 +55,44 @@ refreshClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   
   async(error: AxiosError) => {
     const originalRequest = error.config as CustomAxiosRequestConfig;
+      // console.log("Attempting refresh...");
+      // console.log("Retrying:", originalRequest.url);
+    //   console.log("Failed URL:", error.config?.url);
+    // console.log("Status:", error.response?.status);
+console.log("Failed request:", error.config?.url);
     if(error.response?.status === 401 && !originalRequest._retry){
-      console.log("Attempting refresh...");
-      console.log("Retrying:", originalRequest.url);
+
+    // 1. Queue check before refresh
+    if(isRefreshing){
+        return new Promise((resolve, reject) => {
+          failedQueue.push({
+            resolve:(token) => {
+              originalRequest.headers = originalRequest.headers ?? {};
+
+              originalRequest.headers.Authorization = `Bearer ${token}`;
+
+              resolve(refreshClient(originalRequest));
+            },
+            reject,
+          })
+        })
+      }
+      // retrying. This prevents an infinite retry loop.
       originalRequest._retry = true
+
       const refreshToken = localStorage.getItem("refreshToken");
 
       console.log("Refresh token:", refreshToken);
       if(!refreshToken){
         return Promise.reject(error);
       }
+
       try { 
-      const response = await refreshClient.post("http://localhost:3000/api/v1/refresh", {refreshToken});
+      // Refreshing flag 
+      isRefreshing = true;
+      
+
+      const response = await tokenRefreshClient.post("/refresh", {refreshToken});
 
       const {accessToken, refreshToken:newRefreshToken} = response.data;
       console.log("Refresh succeeded", response.data);
@@ -55,26 +106,31 @@ refreshClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
       localStorage.setItem("refreshToken", newRefreshToken)
 
       originalRequest.headers = originalRequest.headers ?? {}
-      originalRequest.headers.Authorization = `Bearer ${response.data.accessToken}`
-      // return refreshClient(originalRequest);
+      originalRequest.headers.Authorization = `Bearer ${accessToken}`
 
-      const retryResponse = await refreshClient(originalRequest);
+      // Queue processing. Everybody waiting receives the new token.
+      processQueue(null, accessToken);
 
-      console.log("Retry status:", retryResponse.status);
+      return refreshClient(originalRequest);
 
-      return retryResponse;
-      
     } catch(err) {
       console.log("failed");
       console.log("error is:", err)
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
+      processQueue(err);
+      // isRefreshing = false;
       window.location.href = "/";
+
       return Promise.reject(error);
+
+    } finally {
+       //refreshing flag
+      isRefreshing = false;
     }
   }
 
-    return Promise.reject(error);
+    // return Promise.reject(error);
   }
 )
 
