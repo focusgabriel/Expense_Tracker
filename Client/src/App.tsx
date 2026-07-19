@@ -38,7 +38,7 @@ const App = () => {
         }
       >
         {!isAuthRoute && (
-          <div className="mb-6 flex items-center justify-between gap-4">
+          <div className="mb-6 flex items-center justify-between gap-4 border-2 border-amber-500">
             <h1 className="text-xl font-bold text-slate-900 sm:text-2xl">
               Welcome back
             </h1>

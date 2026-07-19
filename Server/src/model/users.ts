@@ -4,7 +4,7 @@ type Iuser = {
   name:string,
   email:string,
   password:string,
-  refreshToken?:string
+  refreshToken?:string | null,
   createdAt?:Date,
   updatedAt?:Date
 }

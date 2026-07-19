@@ -24,8 +24,7 @@ const AddTask = () => {
     };
     console.log(newTransaction)
     try {
-      const response = await refreshClient.post(
-        "http://localhost:3000/api/v1/addTransaction",newTransaction);
+      const response = await refreshClient.post("/addTransaction", newTransaction);
 
       const data = await response.data;
       console.log(data);

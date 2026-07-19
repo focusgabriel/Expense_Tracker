@@ -86,7 +86,6 @@ export async function loginController(req: Request<{}, {}, LoginRequestBody>,res
 }
 
 export async function refreshTokenController(req: Request<{}, {}, RefreshRequestBody>, res:Response) {
-  // console.log("Refresh endpoint reached")
   try {
     const { refreshToken } = req.body;
     if(!refreshToken){
@@ -108,8 +107,7 @@ export async function refreshTokenController(req: Request<{}, {}, RefreshRequest
           message: "Invalid refresh token"
       });
     }
-
-     // Generate a new access token
+    // Generate a new access token
     const accessToken = generateAccessToken(user._id.toString());
 
     // Generate a new refresh token
@@ -123,7 +121,7 @@ export async function refreshTokenController(req: Request<{}, {}, RefreshRequest
       accessToken,
       refreshToken: newRefreshToken
     });
-    
+
   } catch (error) {
     return res.status(401).json({errorMsg: "Invalid or expired token."})
   }
