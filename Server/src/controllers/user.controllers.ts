@@ -1,4 +1,4 @@
-import {Request, Response} from "express"
+import {NextFunction, Request, Response} from "express"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import {LoginRequestBody, RefreshRequestBody, RegisterRequestBody} from "../types/express/users.types.js"
@@ -6,36 +6,19 @@ import {LoginRequestBody, RefreshRequestBody, RegisterRequestBody} from "../type
 // import { hash } from "node:crypto"
 import { authModel } from "../model/index.js"
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt.js"
+import { loginSchema, registerSchema } from "../validation/auth.schema.js"
+import { AppError } from "../utils/AppError.js"
 
 
 export async function RegisterController(
   req:Request<{}, {}, RegisterRequestBody>,
-  res:Response
+  res:Response,
+  next:NextFunction
 ) {
   try {
     const {name, email, password, confirm_password} = req.body
 
-    if(
-      !name ||
-      !email ||
-      !password ||
-      !confirm_password
-    ) {
-      return res.status(400).json({errorMsg: "All fields are required"})
-    }
-
-    if(password !== confirm_password){
-      return res.status(400).json({errorMsg: "Password do not match"})
-    }
-
-    if(password.length < 8){
-      return res.status(400).json({errorMsg: "Password must be atleast 8 characters"})
-    }
-
-    const emailValidation = await authModel.findOne({email});
-    if(emailValidation){
-      return res.status(500).json({errroMsg: "Email already exists"})
-    }
+    registerSchema
 
     const hashedPassword = await bcrypt.hash(password, 10);
     
@@ -48,26 +31,22 @@ export async function RegisterController(
     
 
   } catch (error) {
-    return res.status(500).json({errorMsg: error})
+    next(error)
   }
-}
 
+}
 export async function loginController(req: Request<{}, {}, LoginRequestBody>,res: Response) {
   const {email, password} = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({
-        message: "Email and password are required."
-    });
-  }
+  loginSchema
 
   const user = await authModel.findOne({email});
   if(!user){
-    return res.status(400).json({errorMsg: "Invalid Credentials"})
+    throw new AppError("Invalid Credentials", 400);
   }
   const isMatch = await bcrypt.compare(password, user.password)
   if(!isMatch){
-    return res.status(400).json({errorMsg: "Invalid Credentials"})
+    throw new AppError("Invalid Credentials", 400);
   }
 
   const accessToken = generateAccessToken( user._id.toString() );
@@ -85,11 +64,11 @@ export async function loginController(req: Request<{}, {}, LoginRequestBody>,res
   
 }
 
-export async function refreshTokenController(req: Request<{}, {}, RefreshRequestBody>, res:Response) {
+export async function refreshTokenController(req: Request<{}, {}, RefreshRequestBody>, res:Response, next:NextFunction) {
   try {
     const { refreshToken } = req.body;
     if(!refreshToken){
-      return res.status(401).json({errorMsg: "Refresh Token is required."})
+      throw new AppError("Refresh Token is required.", 400)
     }
 
     const decoded = jwt.verify(
@@ -98,14 +77,12 @@ export async function refreshTokenController(req: Request<{}, {}, RefreshRequest
     );
 
     if(typeof decoded === "string" || !("sub" in decoded)){
-      return res.status(401).json({errorMsg: "Invalid token"});
+      throw new AppError("Invalid token", 400);
     }
 
     const user = await authModel.findOne({_id: decoded.sub, refreshToken});
     if (!user) {
-      return res.status(401).json({
-          message: "Invalid refresh token"
-      });
+      throw new AppError("Invalid refresh token", 400);
     }
     // Generate a new access token
     const accessToken = generateAccessToken(user._id.toString());
@@ -123,8 +100,6 @@ export async function refreshTokenController(req: Request<{}, {}, RefreshRequest
     });
 
   } catch (error) {
-    return res.status(401).json({errorMsg: "Invalid or expired token."})
+    next(error)
   }
-
-  
 }
