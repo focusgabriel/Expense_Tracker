@@ -26,7 +26,7 @@ const App = () => {
       className={
         isAuthRoute
           ? "min-h-screen bg-slate-50"
-          : "flex h-auto bg-slate-50 w-full"
+          : "flex h-auto bg-slate-50 w-full "
       }
     >
       {!isAuthRoute && <SideBar />}
@@ -34,7 +34,7 @@ const App = () => {
         className={
           isAuthRoute
             ? "min-h-screen w-full"
-            : "main-with-bottom-sidebar w-full flex-1 px-4 py-6 sm:px-6 lg:px-8"
+            : "main-with-bottom-sidebar w-full flex-1 px-4 py-6 sm:px-6 lg:px-8 scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100"
         }
       >
         {!isAuthRoute && (
