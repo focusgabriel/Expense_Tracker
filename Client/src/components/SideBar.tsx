@@ -5,15 +5,26 @@ import { useLocation } from "react-router-dom";
 import { navItems } from "../constants";
 import { useState } from "react";
 import { LogOut, LogIn } from "lucide-react";
+import refreshClient from "../api/fetch";
 
 const SideBar = () => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(true);
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    navigate("/");
-    setIsLoggedIn(false);
+  const logout = async () => {
+    console.log("Logout button clicked");
+    try {
+        await refreshClient.post("/auth/logout");
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("user");
+        navigate("/");
+      
+    } catch (error) {
+      console.error("Error occurred while logging out:", error);
+    } finally {
+      setIsLoggedIn(false);
+    }
   };
   const { pathname } = useLocation();
 
