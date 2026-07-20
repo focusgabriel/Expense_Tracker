@@ -51,7 +51,7 @@ const SpendingChart = () => {
   }, []);
 
   return (
-    <div className="sm:rounded-2xl sm:border sm:border-emerald-100 sm:bg-white/90 sm:p-4 sm:shadow-sm">
+    <div className="sm:rounded-2xl sm:border sm:border-slate-200 sm:bg-white sm:p-4 sm:shadow-sm">
       <div className="flex w-full flex-col gap-5 lg:h-85 lg:flex-row lg:items-stretch lg:justify-between lg:overflow-hidden">
         <div className="relative h-72 w-full lg:h-full lg:w-[34%]">
           <h2 className="p-2 font-bold text-slate-900">Spending Overview</h2>
