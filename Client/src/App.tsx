@@ -1,10 +1,10 @@
 /** @format */
 
 import AddTask from "./components/AddTask";
-import { Link, Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import SideBar from "./components/SideBar";
-import { Plus } from "lucide-react";
+import Header from "./components/Header";
 import AllTransaction from "./pages/AllTransaction";
 import SuccessfulMsg from "./pages/SuccessfulMsg";
 import EditForm from "./pages/Form";
@@ -26,7 +26,7 @@ const App = () => {
       className={
         isAuthRoute
           ? "min-h-screen bg-slate-50"
-          : "flex h-auto bg-slate-50 w-full "
+          : "flex h-screen overflow-hidden bg-slate-50 w-full "
       }
     >
       {!isAuthRoute && <SideBar />}
@@ -34,23 +34,10 @@ const App = () => {
         className={
           isAuthRoute
             ? "min-h-screen w-full"
-            : "main-with-bottom-sidebar w-full flex-1 px-4 py-6 sm:px-6 lg:px-8 scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100"
+            : "main-with-bottom-sidebar w-full flex-1 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-slate-100"
         }
       >
-        {!isAuthRoute && (
-          <div className="mb-6 flex items-center justify-between gap-4 border-2 border-amber-500">
-            <h1 className="text-xl font-bold text-slate-900 sm:text-2xl">
-              Welcome back
-            </h1>
-            <Link
-              to="/task"
-              className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-300"
-            >
-              <Plus size={18} />
-              <span className="hidden sm:inline">Add Transaction</span>
-            </Link>
-          </div>
-        )}
+        {!isAuthRoute && <Header />}
 
         <Routes>
           <Route path="/" element={<Login />} />
