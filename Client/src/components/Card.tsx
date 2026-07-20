@@ -63,7 +63,7 @@ const Card = ({
         className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl sm:h-10 sm:w-10 lg:h-8 lg:w-8 ${
           type === "expense"
             ? "bg-red-50 text-red-500"
-            : "bg-emerald-50 text-emerald-600"
+            : "bg-indigo-50 text-indigo-600"
         }`}
       >
         {categoryIcon(category)}
@@ -79,7 +79,7 @@ const Card = ({
             className={`inline-flex items-center rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase leading-3 sm:px-2 sm:text-[10px] sm:leading-4 lg:text-[9px] lg:px-1.5 ${
               type === "expense"
                 ? "bg-red-50 text-red-600"
-                : "bg-emerald-50 text-emerald-600"
+                : "bg-indigo-50 text-indigo-600"
             }`}
           >
             {type}
@@ -104,7 +104,7 @@ const Card = ({
         <div className="text-right">
           <h4
             className={`whitespace-nowrap text-xs font-bold sm:text-sm lg:text-xs ${
-              type === "expense" ? "text-red-600" : "text-emerald-600"
+              type === "expense" ? "text-red-600" : "text-indigo-600"
             }`}
           >
             {type === "expense" ? "-" : "+"}&#8358;{amount}
