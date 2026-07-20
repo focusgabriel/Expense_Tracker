@@ -1,6 +1,6 @@
 /** @format */
 
-import { useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import Card from "./Card";
 import { Link } from "react-router-dom";
 import type { Transaction } from "../constants";
@@ -8,13 +8,11 @@ import refreshClient from "../api/fetch";
 // import type { Transaction } from "../constants"
 
 
-
 const AllTrans = () => {
   // const navigate = useNavigate();
   const [trans, setTrans] = useState<Transaction[]>([]);
   // const handleEdit = (id: string) => navigate(`/edit/${id}`);
 
-  // getting the whole data from the database
   useEffect(() => {
     refreshClient.get(`http://localhost:3000/api/v1/getTransaction`)
       .then(res => setTrans(res.data));
@@ -27,7 +25,7 @@ const AllTrans = () => {
           Recent Transactions
         </h2>
 
-        <Link to="/analytics" className="lowercase text-sm text-blue-600">View All</Link>
+        <Link to="/analytics" className="lowercase text-sm text-indigo-600 font-medium hover:text-indigo-700">View All</Link>
       </div>
       <div className="flex flex-col lg:flex-1 lg:overflow-y-auto">
         {trans.map((item => (
