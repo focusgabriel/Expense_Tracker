@@ -49,17 +49,21 @@ const MonthReview = () => {
 
   return (
     <div className="w-full">
-      <div className="sm:rounded-xl sm:border sm:border-green-200 sm:bg-white sm:p-6 sm:shadow-sm">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-2xl font-bold">Monthly Summary</h1>
-            <p className="text-sm font-medium text-slate-600">
+            <h1 className="text-xl font-bold text-slate-900 sm:text-2xl">Monthly Summary</h1>
+            <p className="text-sm font-medium text-slate-500">
               {formatDate(getDate)}
             </p>
           </div>
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-600">
+            <span className="h-1.5 w-1.5 rounded-full bg-indigo-500" />
+            Current period
+          </span>
         </div>
 
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <CardReview title="Income" content={<span>{formattedIncome}</span>} />
           <CardReview
             title="Expense"
@@ -69,18 +73,9 @@ const MonthReview = () => {
             title="Net Balance"
             content={<span>{formattedBalance}</span>}
           />
-          {/* <CardReview
-            title="Balance rate"
-            content={
-              <span >
-                {balancePercentage ?? 0}
-                <span>%</span>
-              </span>
-            }
-          /> */}
-          <div>
-            <p className="text-sm">BALANCE RATE</p>
-            <p className="font-bold">{balancePercentage ?? 0}<span>%</span></p>
+          <div className="rounded-xl border border-slate-100 bg-white p-4 shadow-sm">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">BALANCE RATE</p>
+            <p className="mt-1 text-xl font-bold text-indigo-600">{balancePercentage ?? 0}<span className="text-sm font-medium text-slate-400">%</span></p>
           </div>
         </div>
       </div>
