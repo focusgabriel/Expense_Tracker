@@ -45,7 +45,7 @@ const AllTransaction = () => {
   }, []);
 
   return (
-    <div className="sm:rounded-2xl sm:border sm:border-emerald-100 sm:bg-white/90 sm:p-4 sm:shadow-sm">
+    <div className="sm:rounded-2xl sm:border sm:border-slate-200 sm:bg-white sm:p-4 sm:shadow-sm">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 ">
         {/* <span className="text-green-600">{prevMonth}</span> */}
         <TranscCard
@@ -56,7 +56,7 @@ const AllTransaction = () => {
             <span>
               vs last month{" "}
               <span
-                className={`${monthlyBalance >= prevMonth ? "text-red-500 font-bold" : "text-green-500 font-bold"}`}
+                className={`${monthlyBalance >= prevMonth ? "text-red-500 font-bold" : "text-indigo-600 font-bold"}`}
               >
                 &#8358;{prevMonth}
               </span>{" "}
