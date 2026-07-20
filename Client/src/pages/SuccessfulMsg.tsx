@@ -8,7 +8,7 @@ const SuccessfulMsg = () => {
       <p className="text-center text-lg mt-10">
         click here to go back home
       </p>
-      <Link to="/" className="text-center bg-emerald-600 text-white rounded-lg p-3 font-semibold hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-300 block mt-4">Home</Link>
+      <Link to="/" className="text-center bg-indigo-600 text-white rounded-lg p-3 font-semibold hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-300 block mt-4">Home</Link>
     </div>
   )
 }

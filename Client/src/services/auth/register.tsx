@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import refreshClient from "../../api/fetch";
+import Logo from "../../components/Logo";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -49,13 +50,11 @@ const Register = () => {
 
       <div className="relative mx-auto flex min-h-[calc(100vh-5rem)] items-center justify-center">
         <div className="w-full max-w-none sm:max-w-md mx-auto overflow-hidden rounded-[1.25rem] border border-slate-200 bg-white p-6 sm:p-8 shadow-[0_40px_90px_-30px_rgba(15,23,42,0.08)] auth-card">
-          <div className="mb-8 space-y-4">
-            <div className="text-sm font-semibold uppercase tracking-[0.28em] text-emerald-700">
+          <div className="mb-8 space-y-5">
+            <div className="text-sm font-semibold uppercase tracking-[0.28em] text-indigo-600">
               Register
             </div>
-            <h1 className="text-3xl font-semibold text-slate-900">
-              Create account
-            </h1>
+            <Logo variant="auth" />
           </div>
 
           <form onSubmit={submitForm} className="space-y-5">
