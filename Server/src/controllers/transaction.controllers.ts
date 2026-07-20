@@ -2,6 +2,7 @@ import express, { Request, Response, Application } from 'express';
 import { addTransaction, deleteTransaction, editTransaction } from "../services/transaction.services.js";
 import { ExpenseModel, authModel } from '../model/index.js';
 import mongoose from 'mongoose';
+import { CategoryScale } from 'chart.js';
 
 export async function addTransactionController(req:Request, res:Response){
   try {
@@ -57,13 +58,58 @@ export async function totalTransactionController(req:Request, res:Response){
 
 export async function getTransactionController(req:Request, res:Response){
   try{
-    const allTransactions = await ExpenseModel.aggregate([{
-      $match: {
-        userId:req.user!.id
-      }
-    }]).sort({created_date: -1})
-    res.status(200).json(allTransactions)
+    const { search, type, category, sort, order } = req.query;
+    const filter:any = {
+      userId: req.user!.id,
+    }
+
+    if(type){
+      filter.type = type;
+    }
+
+    if(category){
+      filter.category = category;
+    }
+
+    if(search){
+      filter.$or = [
+        {
+          description: {
+            $regex: search,
+            $options: "i"
+          }
+        },
+
+        {
+          category: {
+            $regex: search,
+            $options: "i"
+          }
+        }
+      ]
+    };
+
+    const sortOption: Record<string, 1 | -1> = {
+      created_date: -1
+    }
+
+    if(sort){
+      sortOption[sort as string] = order === "asc" ? 1 : -1;
+    }
+
+    // const allTransactions = await ExpenseModel.aggregate([{
+    //   $match: {
+    //     userId:req.user!.id
+    //   }
+    // }]).sort({created_date: -1})
+    // res.status(200).json(allTransactions)
     // console.log(allTransactions)
+
+    const transactions = await ExpenseModel
+      .find(filter)
+      .sort(sortOption);
+
+    res.status(200).json(transactions);
 
   } catch(err){
     res.status(500).json({message:"error loading data"})
