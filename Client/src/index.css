@@ -8,7 +8,7 @@ body {
 
 @layer utilities {
   .fieldClass {
-    @apply min-h-[3.5rem] w-full rounded-2xl border border-slate-200 bg-white px-5 py-4 text-base text-slate-900 shadow-[0_20px_50px_-20px_rgba(15,23,42,0.08)] outline-none transition placeholder:text-slate-400 focus:border-emerald-400 focus:ring-4 focus:ring-emerald-200/40;
+    @apply min-h-[3.5rem] w-full rounded-2xl border border-slate-200 bg-white px-5 py-4 text-base text-slate-900 shadow-[0_20px_50px_-20px_rgba(15,23,42,0.08)] outline-none transition placeholder:text-slate-400 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-200/40;
   }
 
   .labelClass {
@@ -23,18 +23,18 @@ body {
   .auth-shell-bg {
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at 10% 20%, rgba(16,185,129,0.16), transparent 14%),
-      radial-gradient(circle at 85% 15%, rgba(16,185,129,0.08), transparent 18%);
+    background: radial-gradient(circle at 10% 20%, rgba(99,102,241,0.16), transparent 14%),
+      radial-gradient(circle at 85% 15%, rgba(99,102,241,0.08), transparent 18%);
     pointer-events: none;
     z-index: -1;
   }
 
   .auth-action-btn {
-    @apply inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-emerald-600 to-emerald-500 px-6 py-3 text-base font-semibold text-white shadow-xl shadow-emerald-500/20 transition duration-200 ease-out hover:-translate-y-0.5 hover:shadow-emerald-500/30 focus:outline-none focus:ring-2 focus:ring-emerald-300/50;
+    @apply inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-indigo-600 to-indigo-500 px-6 py-3 text-base font-semibold text-white shadow-xl shadow-indigo-500/20 transition duration-200 ease-out hover:-translate-y-0.5 hover:shadow-indigo-500/30 focus:outline-none focus:ring-2 focus:ring-indigo-300/50;
   }
 
   .auth-footer-link {
-    @apply font-semibold text-emerald-600 transition hover:text-emerald-700;
+    @apply font-semibold text-indigo-600 transition hover:text-indigo-700;
   }
 
   .auth-card {
@@ -56,7 +56,7 @@ body {
     left: 0;
     height: 0.35rem;
     width: 100%;
-    background: #16a34a;
+    background: #6366f1;
     transform-origin: left;
     animation: progress-decrease 4s linear forwards;
   }
@@ -129,7 +129,7 @@ body {
       transition: all 0.2s ease !important;
     }
 
-    .sidebar-xs-bottom > div:not(nav):not(:first-child) {
+    .sidebar-xs-bottom > div:not(nav):not(:first-child):not(:last-child) {
       display: none !important;
     }
 
