@@ -58,7 +58,7 @@ export async function totalTransactionController(req:Request, res:Response){
 
 export async function getTransactionController(req:Request, res:Response){
   try{
-    const { search, type, category, sort, order } = req.query;
+    const { page, limit, search, type, category, sort, order } = req.query;
     const filter:any = {
       userId: req.user!.id,
     }
@@ -97,19 +97,31 @@ export async function getTransactionController(req:Request, res:Response){
       sortOption[sort as string] = order === "asc" ? 1 : -1;
     }
 
-    // const allTransactions = await ExpenseModel.aggregate([{
-    //   $match: {
-    //     userId:req.user!.id
-    //   }
-    // }]).sort({created_date: -1})
-    // res.status(200).json(allTransactions)
-    // console.log(allTransactions)
+    const pageNumber = Number(page);
+    const limitNumber = Number(limit);
 
+    const skip = (pageNumber - 1) * limitNumber;
     const transactions = await ExpenseModel
       .find(filter)
-      .sort(sortOption);
+      .sort(sortOption)
+      .skip(skip)
+      .limit(limitNumber);
+      // console.log(transactions.length)
 
-    res.status(200).json(transactions);
+    const total = await ExpenseModel.countDocuments(filter);
+
+    res.status(200).json({
+      data: transactions,
+      pagination: {
+        page: pageNumber,
+        limit: limitNumber,
+        total,
+        totalLimit: Math.ceil(total / limitNumber)
+      }
+    });
+
+    console.log("page is:", page);
+
 
   } catch(err){
     res.status(500).json({message:"error loading data"})
