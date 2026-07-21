@@ -61,6 +61,9 @@ body {
     animation: progress-decrease 4s linear forwards;
   }
 
+  .filterStyle {
+    @apply w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm transition-colors focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500
+  }
   @keyframes progress-decrease {
     from {
       transform: scaleX(1);
@@ -137,6 +140,8 @@ body {
       padding-bottom: 64px !important;
     }
   }
+
+
 
   /* === Sidebar: Left side between 621px and 767px === */
   @media (min-width: 621px) and (max-width: 1023px) {
