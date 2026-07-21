@@ -12,12 +12,23 @@ const Analytics = () => {
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
   const [selected, setSelected] = useState<Transaction | null>(null);
-
+  const [totalPages, setTotalPages] = useState<number>(1);
+  // const [filter, setFilter] = useState({
+  //   search,
+  //   type,
+  //   category,
+  //   sort: "created_date",
+  //   order: "desc",
+  //   page: 1,
+  //   limit: 10,
+  // });
   const [search, setSearch] = useState<string>("");
   const [type, setType] = useState<string>("");
   const [category, setCategory] = useState<string>("");
   const [sort, setSort] = useState<string>("created_date");
   const [order, setOrder] = useState<"asc" | "desc">("desc");
+  const [page, setPage] = useState<number>(1);  
+  const [limit] = useState<number>(10);
 
   const handleEdit = (id: string) => navigate(`/edit/${id}`);
 
@@ -30,10 +41,10 @@ const Analytics = () => {
     if (!selected) return;
     try {
       const res = await refreshClient.delete(
-        `/deleteTransaction/${selected._id}`
+        `/deleteTransaction/${selected._id}`,
       );
       console.log("response:", res);
-      setTrans((prev) => prev.filter((t) => t._id !== selected._id));
+      setTrans(prev => prev.filter(t => t._id !== selected._id));
       setModalOpen(false);
       setSelected(null);
     } catch (err) {
@@ -41,40 +52,54 @@ const Analytics = () => {
     }
   };
 
-  // getting the whole data from the database
-  useEffect(() => {
-    refreshClient
-      .get(`/getTransaction`, {
-        params: {
-          search,
-          type,
-          category,
-          sort,
-          order,
-        },
-      })
-      .then((res) => setTrans(res.data));
-  }, []);
+  console.log(
+    "trans",
+    trans.map(item => item.amount),
+  );
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    refreshClient
-      .get(`http://localhost:3000/api/v1/getTransaction`, {
-        params: {
-          search,
-          type,
-          category,
-          sort,
-          order,
+  const onSubmit = async () => {
+    try {
+      const res = await refreshClient.get(
+        `http://localhost:3000/api/v1/getTransaction`,
+        {
+          params: {
+            search,
+            type,
+            category,
+            sort,
+            order,
+            page,
+            limit,
+          },
         },
-      })
-      .then((res) => setTrans(res.data));
+      );
+
+      console.log(res.data.pagination.totalLimit);
+      setTrans(res.data.data);
+      setTotalPages(res.data.pagination.totalLimit);
+      // console.log(
+      //   "trans",
+      //   trans.map(item => item.amount),
+      // );
+      console.log("page is:", page);
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+    }
   };
 
+  // getting the whole data from the database
+  useEffect(() => {
+    onSubmit();
+  }, [search, type, category, sort, order, page, limit]);
+
+  // const handleClick = () => {
+  //   setPage(page => page + 1);
+  //   console.log("button clicked");
+  // };
   return (
     <div className="w-full sm:rounded-lg sm:border sm:border-slate-200 sm:bg-white sm:shadow-sm sm:flex sm:flex-col">
       <div className="flex justify-between items-center border-b border-slate-100 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-black shrink-0">
-        <h2>Recent Transactions</h2>
+        <h2>All Transactions</h2>
       </div>
 
       <form onSubmit={onSubmit} className="p-4 sm:p-5">
@@ -87,7 +112,10 @@ const Analytics = () => {
             <input
               type="text"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={e => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
               placeholder="Keyword..."
               className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 placeholder-slate-400 shadow-sm transition-colors focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
             />
@@ -100,8 +128,11 @@ const Analytics = () => {
             </label>
             <select
               value={type}
-              onChange={(e) => setType(e.target.value)}
-              className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm transition-colors focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              onChange={e => {
+                setType(e.target.value);
+                setPage(1);
+              }}
+              className="filterStyle"
             >
               <option value="">All</option>
               <option value="income">Income</option>
@@ -117,7 +148,10 @@ const Analytics = () => {
             <input
               type="text"
               value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              onChange={e => {
+                setCategory(e.target.value);
+                setPage(1);
+              }}
               placeholder="e.g. Food"
               className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 placeholder-slate-400 shadow-sm transition-colors focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
             />
@@ -130,8 +164,11 @@ const Analytics = () => {
             </label>
             <select
               value={sort}
-              onChange={(e) => setSort(e.target.value)}
-              className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm transition-colors focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              onChange={e => {
+                setSort(e.target.value);
+                setPage(1);
+              }}
+              className="filterStyle"
             >
               <option value="created_date">Created Date</option>
               <option value="amount">Amount</option>
@@ -146,8 +183,11 @@ const Analytics = () => {
               </label>
               <select
                 value={order}
-                onChange={(e) => setOrder(e.target.value as "asc" | "desc")}
-                className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm transition-colors focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                onChange={e => {
+                  setOrder(e.target.value as "asc" | "desc");
+                  setPage(1);
+                }}
+                className="filterStyle"
               >
                 <option value="asc">Ascending</option>
                 <option value="desc">Descending</option>
@@ -184,7 +224,7 @@ const Analytics = () => {
       </form>
 
       <div className="flex flex-col">
-        {trans.map((item) => (
+        {trans.map(item => (
           <Card
             key={item._id}
             id={item._id}
@@ -199,6 +239,55 @@ const Analytics = () => {
           />
         ))}
       </div>
+
+      {trans.length === 0 && (
+        <div className="flex flex-col items-center justify-center gap-2 py-10 text-center text-slate-500">
+          <svg
+            className="h-12 w-12 text-slate-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={1.5}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+            />
+          </svg>
+          <p className="text-lg font-medium text-slate-900">
+            No transactions found
+          </p>
+          <p className="text-slate-500">
+            Try adjusting your search or filter criteria
+          </p>
+        </div>
+      )}
+
+      <button
+        disabled={page >= totalPages}
+        onClick={() => setPage(page => Math.max(page - 1, 1))}
+        className="inline-flex items-center justify-center gap-1.5 rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      >
+        Previous
+      </button>
+
+      <button
+        disabled={page >= totalPages}
+        onClick={() => {
+          setPage(prev => prev + 1);
+        }}
+        className="inline-flex items-center justify-center gap-1.5 rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      >
+        Next
+      </button>
+
+      {/* <button
+        onClick={handleLoadMore}
+        className="inline-flex items-center justify-center gap-1.5 rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      >
+        Load More
+      </button> */}
 
       <DeleteModal
         open={modalOpen}
