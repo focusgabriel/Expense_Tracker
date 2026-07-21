@@ -15,7 +15,7 @@ const AllTrans = () => {
 
   useEffect(() => {
     refreshClient.get(`http://localhost:3000/api/v1/getTransaction`)
-      .then(res => setTrans(res.data));
+      .then(res => setTrans(res.data.data));
   }, []);
 
   return (
