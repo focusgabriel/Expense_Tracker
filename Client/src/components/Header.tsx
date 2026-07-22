@@ -5,7 +5,7 @@ import { Link, useLocation } from "react-router-dom";
 import Logo from "./Logo";
 import {
   Plus,
-  Bell,
+  // Bell,
   ChevronDown,
   User,
   Settings,
@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import refreshClient from "../api/fetch";
 import { useNavigate } from "react-router-dom";
+import type { DashboardResponse } from "../types/dashboard";
 
 const PAGE_TITLES: Record<string, { title: string; subtitle: string }> = {
   "/overview": { title: "Overview", subtitle: "Your financial snapshot" },
@@ -30,6 +31,7 @@ const Header = () => {
   const [profileOpen, setProfileOpen] = useState(false);
   const [greeting, setGreeting] = useState("Good morning");
   const profileRef = useRef<HTMLDivElement>(null);
+  const [dashboard, setDashboard] = useState<DashboardResponse | null>(null)
 
   const pageInfo =
     PAGE_TITLES[location.pathname] ||
@@ -57,22 +59,41 @@ const Header = () => {
     return () => target.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close profile on outside click
+  // Close profile on outside click — always mounted to avoid StrictMode / mobile race conditions
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+    const handleClickOutside = (e: MouseEvent | TouchEvent) => {
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(e.target as Node)
+      ) {
         setProfileOpen(false);
       }
     };
-    if (profileOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [profileOpen]);
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside, {
+      passive: true,
+    });
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, []);
 
-  // Get user info
-  let userName = "User";
-  let userEmail = "";
+  useEffect(() => {
+
+    const getData = async() => {
+
+      const res = await refreshClient.get("/dashboard/");
+      setDashboard(res.data);
+    }
+
+    getData();
+  }, [])
+
+    let userName = dashboard?.authenticatedUser.name;
+    console.log(dashboard?.authenticatedUser.name);
+    let userEmail = "";
+  
   try {
     const userData = localStorage.getItem("user");
     if (userData) {
@@ -81,9 +102,9 @@ const Header = () => {
       userEmail = parsed.email || "";
     }
   } catch {
-    userName = "User";
+    userName = dashboard?.authenticatedUser.name;
   }
-  const userInitial = userName.charAt(0).toUpperCase();
+  const userInitial = userName?.charAt(0).toUpperCase();
 
   // Format today's date
   const today = new Date();
@@ -93,17 +114,17 @@ const Header = () => {
     day: "numeric",
   });
 
-  const handleLogout = async () => {
-    try {
-      await refreshClient.post("/auth/logout");
-    } catch {
-      // proceed anyway
-    }
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    localStorage.removeItem("user");
-    navigate("/");
-  };
+  // const handleLogout = async () => {
+  //   try {
+  //     await refreshClient.post("/auth/logout");
+  //   } catch {
+  //     // proceed anyway
+  //   }
+  //   localStorage.removeItem("accessToken");
+  //   localStorage.removeItem("refreshToken");
+  //   localStorage.removeItem("user");
+  //   navigate("/");
+  // };
 
   return (
     <>
@@ -130,7 +151,7 @@ const Header = () => {
                 <span>{dateStr}</span>
               </div>
               <p className="truncate text-[11px] text-slate-400 sm:hidden">
-                {greeting}, {userName.split(" ")[0]}
+                {greeting}, {userName?.split(" ")[1] ?? userName?.split(" ")[0]}
               </p>
             </div>
           </div>
@@ -138,13 +159,13 @@ const Header = () => {
           {/* ── Right: Actions ── */}
           <div className="flex items-center gap-1 sm:gap-2">
             {/* Notification bell */}
-            <button
+            {/* <button
               className="relative flex h-9 w-9 items-center justify-center rounded-xl text-slate-400 transition-all duration-200 hover:bg-slate-100 hover:text-slate-600 active:scale-95 sm:h-10 sm:w-10"
               title="Notifications"
             >
               <Bell size={17} strokeWidth={1.5} />
               <span className="absolute right-2.5 top-2 h-2 w-2 rounded-full bg-rose-500 ring-2 ring-white" />
-            </button>
+            </button> */}
 
             {/* Add Transaction — desktop */}
             <Link
@@ -221,13 +242,14 @@ const Header = () => {
                   </div>
 
                   <div className="border-t border-slate-100 p-1.5">
-                    <button
-                      onClick={handleLogout}
+                    <Link
+                      to="/logout"
+                      onClick={() => setProfileOpen(false)}
                       className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm text-rose-600 transition-colors hover:bg-rose-50"
                     >
                       <LogOut size={15} strokeWidth={1.5} />
                       Sign out
-                    </button>
+                    </Link>
                   </div>
                 </div>
               )}
@@ -237,12 +259,12 @@ const Header = () => {
                 <>
                   {/* Overlay */}
                   <div
-                    className="fixed inset-0 z-[9999] bg-black/20 backdrop-blur-sm animate-fade-in sm:hidden"
+                    className="fixed inset-0 z-9999 bg-black/20 backdrop-blur-sm animate-fade-in sm:hidden"
                     onClick={() => setProfileOpen(false)}
                   />
 
                   {/* Sheet */}
-                  <div className="fixed left-0 right-0 bottom-[60px] z-[9999] flex items-end justify-center sm:hidden pointer-events-none">
+                  <div className="fixed left-0 right-0 bottom-15 z-9999 flex items-end justify-center sm:hidden pointer-events-none">
                     <div
                       className="w-full animate-slide-up rounded-t-3xl border-t border-slate-200 bg-white shadow-2xl pointer-events-auto"
                       style={{ maxHeight: "calc(100dvh - 80px)" }}
@@ -283,13 +305,14 @@ const Header = () => {
                             <Settings size={16} strokeWidth={1.5} className="text-slate-400 shrink-0" />
                             Settings
                           </button>
-                          <button
-                            onClick={handleLogout}
+                          <Link
+                            to="/logout"
+                            onClick={() => setProfileOpen(false)}
                             className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-rose-600 transition-colors hover:bg-rose-50 border border-red-100"
                           >
                             <LogOut size={16} strokeWidth={1.5} className="shrink-0" />
                             Sign out
-                          </button>
+                          </Link>
                         </div>
                       </div>
                     </div>
