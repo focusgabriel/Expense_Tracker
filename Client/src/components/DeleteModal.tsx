@@ -92,7 +92,7 @@ const DeleteModal = ({
           </button>
           <button
             onClick={onConfirm}
-            className="flex-1 rounded-xl bg-gradient-to-r from-red-600 to-red-700 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:from-red-700 hover:to-red-800 active:scale-[0.98]"
+            className="flex-1 rounded-xl bg-linear-to-r from-red-600 to-red-700 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:from-red-700 hover:to-red-800 active:scale-[0.98]"
           >
             Delete
           </button>

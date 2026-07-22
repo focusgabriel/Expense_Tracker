@@ -7,7 +7,7 @@ interface LogoProps {
 const Logo = ({ variant = "sidebar" }: LogoProps) => {
   if (variant === "sidebar") {
     return (
-      <div className="flex h-10 w-full items-center justify-center rounded-lg bg-gradient-to-br from-indigo-600 to-indigo-700 text-white shadow-sm">
+      <div className="flex h-10 w-full items-center justify-center rounded-lg bg-linear-to-br from-indigo-600 to-indigo-700 text-white shadow-sm">
         {/* Wallet icon for small screens, icon + text for large */}
         <svg
           className="h-5 w-5 shrink-0 lg:hidden"
@@ -62,7 +62,7 @@ const Logo = ({ variant = "sidebar" }: LogoProps) => {
 
   if (variant === "header") {
     return (
-      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-600 to-indigo-700 text-white shadow-sm shrink-0">
+      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-linear-to-br from-indigo-600 to-indigo-700 text-white shadow-sm shrink-0">
         <svg
           className="h-5 w-5"
           viewBox="0 0 24 24"
@@ -92,7 +92,7 @@ const Logo = ({ variant = "sidebar" }: LogoProps) => {
   // auth variant — full logo for login/register pages
   return (
     <div className="flex items-center gap-3">
-      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-600 to-indigo-700 text-white shadow-md shadow-indigo-500/20">
+      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-linear-to-br from-indigo-600 to-indigo-700 text-white shadow-md shadow-indigo-500/20">
         <svg
           className="h-6 w-6"
           viewBox="0 0 24 24"
