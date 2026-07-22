@@ -9,6 +9,17 @@ interface TransactionProps {
 }
 
 const AllTrans = ({recentTransactions}: TransactionProps) => {
+
+   if (recentTransactions.length === 0) {
+    return (
+      <div className="flex h-64 flex-col items-center justify-center rounded-lg border border-dashed border-slate-300 text-slate-500">
+        <p className="text-lg font-semibold">No transactions yet</p>
+        <p className="mt-2 text-sm">
+          Add your first transaction to start tracking your finances.
+        </p>
+      </div>
+    );
+  }
   return (
     <div className="w-full shrink-0 overflow-hidden sm:rounded-lg sm:border sm:border-slate-200 sm:bg-white sm:shadow-sm lg:h-full lg:w-[33%] lg:min-w-55 lg:max-w-70">
       <div className="flex justify-between items-center border-b border-slate-100 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-black shrink-0">
@@ -29,7 +40,6 @@ const AllTrans = ({recentTransactions}: TransactionProps) => {
             description={item.description}
             date={item.date}
             created_date={item.created_date}
-            // onEdit={() => handleEdit}
           />
         )))}
       </div>
