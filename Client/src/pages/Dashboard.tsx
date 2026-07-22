@@ -1,17 +1,17 @@
-/** @format */
+// /** @format */
 
-import MonthReview from "../components/MonthReview";
-import SpendingChart from "../components/SpendingChart";
-import AllTransaction from "./AllTransaction";
+// import MonthReview from "../components/MonthReview";
+// import SpendingChart from "../components/SpendingChart";
+// import AllTransaction from "./AllTransaction";
 
-const Dashboard = () => {
-  return (
-    <div className="space-y-6">
-      <AllTransaction />
-      <SpendingChart />
-      <MonthReview />
-    </div>
-  );
-};
+// const Dashboard = () => {
+//   return (
+//     <div className="space-y-6">
+//       <AllTransaction summary={das} />
+//       <SpendingChart />
+//       <MonthReview />
+//     </div>
+//   );
+// };
 
-export default Dashboard;
+// export default Dashboard;
