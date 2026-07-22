@@ -1,66 +1,38 @@
 /** @format */
 
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 import TranscCard from "../components/TranscCard";
-import refreshClient from "../api/fetch";
+// import refreshClient from "../api/fetch";
+import type { DashboardSummary } from "../types/dashboard";
 // import TranscCard from "./TranscCard";
 
-const AllTransaction = () => {
-  // const [incomeTrans, setIncomeTrans] = useState(null);
-  // const [expenseTrans, setExpenseTrans]= useState(null);
-  const [netBalanceTrans, setNetBalanceTrans]= useState(null);
+interface AllTransProps {
+  summary: DashboardSummary;
+}
 
-  const [monthlyExpense, setMonthlyExpense] = useState(null);
-  const [monthlyIncome, setMonthlyIncome] = useState(null);
-  const [monthlyBalance, setMonthlyBalance] = useState(null);
-  const [prevMonth, setPrevMonth] = useState(null);
-  
-  useEffect(() => {
-    try {
-      refreshClient.get("/getMonthlyIncome")
-        .then(response => {
-          setMonthlyIncome(response.data.get_income.toLocaleString());
-          setMonthlyExpense(response.data.get_expense.toLocaleString());
-          setMonthlyBalance(response.data.netbalance.toLocaleString());
-          setPrevMonth(response.data.lastMonthNetBalance.toLocaleString());
-        }).catch(error => console.log(error))
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
+const AllTransaction = ({ summary }: AllTransProps) => {
 
-  //  fetching the totalTransaction endpoint for total income, total expense and net balance from the backend
- 
-  useEffect(() => {
-    try {
-      refreshClient.get("/totalTransaction")
-        .then(res => {
-          // setIncomeTrans(data.Total_income.toLocaleString());
-          // setExpenseTrans(data.Total_expense.toLocaleString());
-          setNetBalanceTrans(res.data.NetBalance.toLocaleString());
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
-
+  console.log("this is a netbalance:", summary.totalExpense)
   return (
     <div className="sm:rounded-2xl sm:border sm:border-slate-200 sm:bg-white sm:p-4 sm:shadow-sm">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 ">
         {/* <span className="text-green-600">{prevMonth}</span> */}
         <TranscCard
           title="Total Balance"
-          amount={netBalanceTrans}
+          amount={summary.netBalance}
           content={
-            monthlyBalance !== null || prevMonth !== null ?
-            <span>
-              vs last month{" "}
-              <span
-                className={`${monthlyBalance >= prevMonth ? "text-red-500 font-bold" : "text-indigo-600 font-bold"}`}
-              >
-                &#8358;{prevMonth}
-              </span>{" "}
-            </span> : ""
+            summary.monthlyBalance !== null || summary.previousMonthBalance !== null ? (
+              <span>
+                vs last month{" "}
+                <span
+                  className={`${summary.monthlyBalance >= summary.previousMonthBalance ? "text-red-500 font-bold" : "text-indigo-600 font-bold"}`}
+                >
+                  &#8358;{summary.previousMonthBalance}
+                </span>{" "}
+              </span>
+            ) : (
+              ""
+            )
           }
           icon="/wallet.png"
           alternate="wallet"
@@ -68,7 +40,7 @@ const AllTransaction = () => {
 
         <TranscCard
           title="Monthly Income"
-          amount={monthlyIncome}
+          amount={summary.totalIncome}
           content="from one source"
           icon="/wallet.png"
           alternate="wallet"
@@ -76,7 +48,7 @@ const AllTransaction = () => {
 
         <TranscCard
           title="Monthly Expense"
-          amount={monthlyExpense}
+          amount={summary.totalExpense}
           content="monthly expense roundup"
           icon="/expense.png"
           alternate="expense"
@@ -84,7 +56,7 @@ const AllTransaction = () => {
 
         <TranscCard
           title="Net Balance"
-          amount={monthlyBalance}
+          amount={summary.netBalance}
           content="available balance"
           icon="/bal.png"
           alternate="balance"
