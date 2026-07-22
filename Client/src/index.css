@@ -64,6 +64,10 @@ body {
   .filterStyle {
     @apply w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm transition-colors focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500
   }
+
+  .button_analytics {
+    @apply inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-linear-to-r from-indigo-600 to-indigo-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-indigo-200/50 transition-all duration-200 hover:from-indigo-700 hover:to-indigo-800 hover:shadow-md active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
+  }
   @keyframes progress-decrease {
     from {
       transform: scaleX(1);
