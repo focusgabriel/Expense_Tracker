@@ -3,6 +3,7 @@ import { addTransaction, deleteTransaction, editTransaction } from "../services/
 import { ExpenseModel, authModel } from '../model/index.js';
 import mongoose from 'mongoose';
 import { CategoryScale } from 'chart.js';
+import { CATEGORY_COLORS } from '../constants/index.js';
 
 export async function addTransactionController(req:Request, res:Response){
   try {
@@ -264,6 +265,166 @@ export async function deleteTransactionController(req:Request, res:Response) {
     console.log(`successfully deleted ${req.params.id}`);
   } catch (error) {
     res.status(500).json({errorMsg: error})
+  }
+}
+
+export async function dashboardController(req:Request, res:Response) {
+  try {
+    const authenticatedUser = await authModel.findById(req.user!.id).select("name email");
+    const userId = req.user!.id;
+    const recentTransactions = await ExpenseModel.find({userId}).sort({created_date: -1}).limit(5)
+    
+    const totalTransactions = await ExpenseModel.find({userId})
+
+    const totalIncome = totalTransactions
+      .filter(item => item.type === "income")
+      .reduce((sum, item) => sum + item.amount, 0);
+
+    const totalExpense = totalTransactions
+      .filter(item => item.type === "expense")
+      .reduce((sum, item) => sum + item.amount, 0);
+
+    const netBalance = totalIncome - totalExpense;
+
+    const now = new Date();
+
+    const firstDayOfMonth = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      1
+    );
+
+    const firstDayOfNextMonth = new Date(
+      now.getFullYear(),
+      now.getMonth() + 1,
+      1
+    );
+
+    const firstDayOfPreviousMonth = new Date(
+      now.getFullYear(),
+      now.getMonth() - 1,
+      1
+    );
+
+    const firstDayOfCurrentMonth = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      1
+    );
+
+    const previousMonthTransactions = await ExpenseModel.find({
+      userId,
+      date: {
+        $gte: firstDayOfPreviousMonth,
+        $lt: firstDayOfCurrentMonth,
+      },
+    });
+
+    const previousMonthIncome = previousMonthTransactions
+      .filter(item => item.type === "income")
+      .reduce((sum, item) => sum + item.amount, 0);
+
+    const previousMonthExpense = previousMonthTransactions
+      .filter(item => item.type === "expense")
+      .reduce((sum, item) => sum + item.amount, 0);
+
+    const previousMonthBalance = previousMonthIncome - previousMonthExpense;
+    
+
+    const monthlyExpense = await ExpenseModel.aggregate([{
+    $match: {
+      userId: req.user!.id,
+      type: "expense",
+      date: {
+        $gte: firstDayOfMonth,
+        $lt: firstDayOfNextMonth
+      }
+    }
+  }]);
+
+  const monthlyIncome = await ExpenseModel.aggregate([{
+    $match: {
+      userId: req.user!.id,
+      type: "income",
+      date: {
+        $gte: firstDayOfMonth,
+        $lt: firstDayOfNextMonth
+      }
+    }
+  }]);
+
+    const totalMonthlyIncome = monthlyIncome
+      .reduce((sum, item) => sum + item.amount, 0);
+
+    const totalMonthlyExpense = monthlyExpense
+      .reduce((sum, item) => sum + item.amount, 0);
+
+    const monthlyBalance = totalMonthlyIncome - totalMonthlyExpense;
+
+    const groupedExpenses = monthlyExpense
+      .reduce<Record<string, number>>((acc, item) => {
+        acc[item.category] = (acc[item.category] || 0) + item.amount;
+        return acc;
+      }, {});
+
+      const get_expense = monthlyExpense.map((item, index) => item.amount).reduce((value, sum) => value + sum, 0);
+
+      const get_income = monthlyIncome.map((item, index) => item.amount).reduce((value, sum) => value + sum, 0);
+    
+    // const getIncome =  
+
+    const chartData = Object.entries(groupedExpenses).map(
+      ([category, amount]) => ({
+        category,
+        amount,
+        percentage: (amount / get_income) * 100,
+        fill: CATEGORY_COLORS[category] ?? "gray"
+      })
+    );
+
+
+    return res.status(200).json({
+      summary: {
+        totalIncome,
+        totalExpense,
+        netBalance,
+
+        // monthlyIncome,
+        // monthlyExpense,
+        // monthlyBalance,
+
+        previousMonthBalance,
+      },
+      get_expense,
+      get_income,
+      monthlyBalance,
+
+      recentTransactions,
+      chartData,
+
+      authenticatedUser
+    })
+
+    // return res.status(200).json({
+    //   summary: {
+    //     totalIncome,
+    //     totalExpense,
+    //     netBalance,
+
+    //     monthlyIncome,
+    //     monthlyExpense,
+    //     monthlyBalance,
+
+    //     previousMonthBalance,
+    //   },
+
+    //   transactions,
+
+    //   chartData
+    // });
+
+  } catch (error) {
+    console.error(error);
   }
 }
 

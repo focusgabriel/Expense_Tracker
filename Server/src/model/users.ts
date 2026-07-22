@@ -6,7 +6,10 @@ type Iuser = {
   password:string,
   refreshToken?:string | null,
   createdAt?:Date,
-  updatedAt?:Date
+  updatedAt?:Date,
+  isVerified: boolean,
+  verificationToken: string,
+  verificationTokenExpires: Date
 }
 
 export const UserProps = new Schema<Iuser>({
@@ -34,6 +37,21 @@ export const UserProps = new Schema<Iuser>({
     type: String,
     default: null
   },
+
+  isVerified: {
+    type: Boolean,
+    default: null
+  },
+
+  verificationToken: {
+    type: String,
+    default: null
+  },
+
+  verificationTokenExpires: {
+    type: Date,
+    default: null
+  }
 
 },
   {

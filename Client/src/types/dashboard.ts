@@ -12,6 +12,11 @@ export interface DashboardSummary {
   previousMonthBalance: number;
 }
 
+export interface User {
+  name:string;
+  email:string;
+}
+
 export interface ChartData {
   category: string;
   amount: number;
@@ -20,6 +25,7 @@ export interface ChartData {
 }
 
 export interface DashboardResponse {
+  authenticatedUser: User;
   summary: DashboardSummary;
   recentTransactions: Transaction[];
   chartData: ChartData[];
