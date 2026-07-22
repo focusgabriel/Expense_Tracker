@@ -3,6 +3,7 @@ import axios,{
   type AxiosRequestConfig,
   type InternalAxiosRequestConfig,
 } from "axios";
+import toast from "react-hot-toast";
 
 let isRefreshing = false;
 let failedQueue: {
@@ -108,11 +109,13 @@ refreshClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
       return refreshClient(originalRequest);
 
     } catch(err) {
-      console.log("failed");
-      console.log("error is:", err)
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       processQueue(err);
+      toast.error("Session expired. Please log in again.", {
+        position: "top-right",
+        duration: 5000
+      });
       window.location.href = "/";
 
       return Promise.reject(error);
