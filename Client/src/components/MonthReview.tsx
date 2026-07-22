@@ -57,8 +57,8 @@ const MonthReview = () => {
               {formatDate(getDate)}
             </p>
           </div>
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-600">
-            <span className="h-1.5 w-1.5 rounded-full bg-indigo-500" />
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-green-50 px-3 py-1 text-xs font-semibold text-green-600">
+            <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
             Current period
           </span>
         </div>
@@ -75,7 +75,7 @@ const MonthReview = () => {
           />
           <div className="rounded-xl border border-slate-100 bg-white p-4 shadow-sm">
             <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">BALANCE RATE</p>
-            <p className="mt-1 text-xl font-bold text-indigo-600">{balancePercentage ?? 0}<span className="text-sm font-medium text-slate-400">%</span></p>
+            <p className="mt-1 text-xl font-bold text-green-600">{balancePercentage ?? 0}<span className="text-sm font-medium text-slate-400">%</span></p>
           </div>
         </div>
       </div>
