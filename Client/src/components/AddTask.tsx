@@ -1,7 +1,9 @@
 /** @format */
 
+import toast from "react-hot-toast";
 import { useRef } from "react";
 import refreshClient from "../api/fetch";
+import axios from "axios";
 
 const AddTask = () => {
   const Type = useRef<HTMLSelectElement>(null);
@@ -22,15 +24,25 @@ const AddTask = () => {
       date: newDate.current?.value,
       created_date: Current_date.current?.value,
     };
-    console.log(newTransaction)
+    
     try {
       const response = await refreshClient.post("/addTransaction", newTransaction);
 
       const data = await response.data;
       console.log(data);
+      console.log(newTransaction);
+
+      toast.success("Transaction added successfully!", {
+        position: "top-right",
+        duration: 5000,
+      });
       // await getTrans();
     } catch (error) {
-      console.log(error);
+      if(axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message ?? "Something went wrong.");
+      } else {
+        "Something went wrong."
+      }
     }
 
     Type.current.value = ""
