@@ -1,18 +1,20 @@
 /** @format */
 
 import AddTask from "./components/AddTask";
+import { Toaster } from "react-hot-toast";
 import { Route, Routes, useLocation } from "react-router-dom";
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./components/Dashboard";
 import SideBar from "./components/SideBar";
 import Header from "./components/Header";
 import AllTransaction from "./pages/AllTransaction";
-import SuccessfulMsg from "./pages/SuccessfulMsg";
 import EditForm from "./pages/Form";
 import Analytics from "./pages/Analytics";
-import DeletePage from "./pages/DeletePage";
+// import DeletePage from "./pages/DeletePage";
+import Logout from "./services/auth/Logout";
 import Login from "./services/auth/login";
 import Register from "./services/auth/register";
 import ProtectedRoutes from "./components/Routes";
+import PublicRoutes from "./components/PublicRoutes";
 
 const App = () => {
   const location = useLocation();
@@ -38,10 +40,10 @@ const App = () => {
         }
       >
         {!isAuthRoute && <Header />}
-
+        <Toaster position="top-right" reverseOrder={false} />
         <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/" element={<PublicRoutes><Login /></PublicRoutes>} />
+          <Route path="/register" element={<PublicRoutes><Register /></PublicRoutes>} />
           <Route
             path="/task"
             element={
@@ -62,15 +64,17 @@ const App = () => {
             path="/transaction"
             element={
               <ProtectedRoutes>
-                <AllTransaction />
-              </ProtectedRoutes>
-            }
-          />
-          <Route
-            path="/success"
-            element={
-              <ProtectedRoutes>
-                <SuccessfulMsg />
+                <AllTransaction
+                  summary={{
+                    totalIncome: 0,
+                    totalExpense: 0,
+                    netBalance: 0,
+                    monthlyIncome: 0,
+                    monthlyExpense: 0,
+                    monthlyBalance: 0,
+                    previousMonthBalance: 0,
+                  }}
+                />
               </ProtectedRoutes>
             }
           />
@@ -90,11 +94,19 @@ const App = () => {
               </ProtectedRoutes>
             }
           />
-          <Route
+          {/* <Route
             path="/delete/:id"
             element={
               <ProtectedRoutes>
                 <DeletePage />
+              </ProtectedRoutes>
+            }
+          /> */}
+          <Route
+            path="/logout"
+            element={
+              <ProtectedRoutes>
+                <Logout />
               </ProtectedRoutes>
             }
           />
