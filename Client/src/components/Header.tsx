@@ -13,7 +13,7 @@ import {
   CalendarDays,
 } from "lucide-react";
 import refreshClient from "../api/fetch";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import type { DashboardResponse } from "../types/dashboard";
 
 const PAGE_TITLES: Record<string, { title: string; subtitle: string }> = {
@@ -26,7 +26,7 @@ const PAGE_TITLES: Record<string, { title: string; subtitle: string }> = {
 
 const Header = () => {
   const location = useLocation();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [greeting, setGreeting] = useState("Good morning");
@@ -80,18 +80,17 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
-
     const getData = async() => {
 
       const res = await refreshClient.get("/dashboard/");
       setDashboard(res.data);
+      
     }
 
     getData();
   }, [])
 
     let userName = dashboard?.authenticatedUser.name;
-    console.log(dashboard?.authenticatedUser.name);
     let userEmail = "";
   
   try {
@@ -113,18 +112,6 @@ const Header = () => {
     month: "short",
     day: "numeric",
   });
-
-  // const handleLogout = async () => {
-  //   try {
-  //     await refreshClient.post("/auth/logout");
-  //   } catch {
-  //     // proceed anyway
-  //   }
-  //   localStorage.removeItem("accessToken");
-  //   localStorage.removeItem("refreshToken");
-  //   localStorage.removeItem("user");
-  //   navigate("/");
-  // };
 
   return (
     <>
