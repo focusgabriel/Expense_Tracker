@@ -8,6 +8,7 @@ import SideBar from "./components/SideBar";
 import Header from "./components/Header";
 import AllTransaction from "./pages/AllTransaction";
 import EditForm from "./pages/Form";
+import VerifyEmail from "./pages/verifyEmail";
 import Analytics from "./pages/Analytics";
 // import DeletePage from "./pages/DeletePage";
 import Logout from "./services/auth/Logout";
@@ -42,8 +43,22 @@ const App = () => {
         {!isAuthRoute && <Header />}
         <Toaster position="top-right" reverseOrder={false} />
         <Routes>
-          <Route path="/" element={<PublicRoutes><Login /></PublicRoutes>} />
-          <Route path="/register" element={<PublicRoutes><Register /></PublicRoutes>} />
+          <Route
+            path="/"
+            element={
+              <PublicRoutes>
+                <Login />
+              </PublicRoutes>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <PublicRoutes>
+                <Register />
+              </PublicRoutes>
+            }
+          />
           <Route
             path="/task"
             element={
@@ -94,14 +109,14 @@ const App = () => {
               </ProtectedRoutes>
             }
           />
-          {/* <Route
-            path="/delete/:id"
+          <Route
+            path="/verify-email/:token"
             element={
-              <ProtectedRoutes>
-                <DeletePage />
-              </ProtectedRoutes>
+              <PublicRoutes>
+                <VerifyEmail />
+              </PublicRoutes>
             }
-          /> */}
+          />
           <Route
             path="/logout"
             element={
