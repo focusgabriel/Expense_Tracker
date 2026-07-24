@@ -1,26 +1,28 @@
 /** @format */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { LogOut, ArrowLeft, AlertTriangle, Loader2, X } from "lucide-react";
+import { LogOut, ArrowLeft, AlertTriangle, Loader2 } from "lucide-react";
 import refreshClient from "../../api/fetch";
+import type { DashboardResponse } from "../../types/dashboard";
 
 const Logout = () => {
   const navigate = useNavigate();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [dashboard, setDashboard] = useState<DashboardResponse | null>(null)
 
   // Grab user info for a personal touch
-  let userName = "User";
-  try {
-    const userData = localStorage.getItem("user");
-    if (userData) {
-      const parsed = JSON.parse(userData);
-      userName = parsed.name || parsed.email?.split("@")[0] || "User";
-    }
-  } catch {
-    // fallback
-  }
 
+  useEffect(() => {
+    const getData = async() => {
+      const res = await refreshClient.get("/dashboard/");
+      setDashboard(res.data);
+    }
+
+    getData();
+  }, [])
+
+  // let userName = dashboard?.authenticatedUser.name;
   const handleConfirmLogout = async () => {
     setIsLoggingOut(true);
     try {
@@ -66,7 +68,7 @@ const Logout = () => {
               <p className="mt-3 text-sm leading-relaxed text-slate-500">
                 Are you sure you want to sign out,{" "}
                 <span className="font-semibold text-slate-700">
-                  {userName.split(" ")[0]}
+                  {dashboard?.authenticatedUser.name.split(" ")[1] ?? dashboard?.authenticatedUser.name.split(" ")[0]}
                 </span>
                 ? You'll need to sign in again to access your dashboard.
               </p>
