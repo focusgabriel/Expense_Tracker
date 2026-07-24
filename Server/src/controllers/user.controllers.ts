@@ -8,7 +8,8 @@ import { authModel } from "../model/index.js"
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt.js"
 import { loginSchema, registerSchema } from "../validation/auth.schema.js"
 import { AppError } from "../utils/AppError.js"
-
+import crypto from "crypto";
+import { sendEmail } from "../services/email.services.js"
 
 export async function RegisterController(
   req:Request<{}, {}, RegisterRequestBody>,
@@ -22,15 +23,41 @@ export async function RegisterController(
 
     const hashedPassword = await bcrypt.hash(password, 10);
     
+    const verifiedToken = crypto.randomBytes(32).toString("hex");
+    const hashedToken = crypto.createHash("sha256").update(verifiedToken).digest("hex");
+    const expireToken = new Date(Date.now() + 1000 * 60 * 60  );//1 hour
+
     const user = await authModel.create({
       name,
       email,
-      password:hashedPassword
+      password:hashedPassword,
+      verificationToken: hashedToken,
+      verificationTokenExpires: expireToken
     })
-    return res.status(201).json({msg: "User Created Successfully"})
+
+    const verificationUrl = `${process.env.CLIENT_URL}/verify-email/${verifiedToken}`;
+
+    await sendEmail({
+      to: user.email,
+      subject: "Verify your Expense Tracker account",
+      html: `
+        <h2>Welcome to Expense Tracker!</h2>
+
+        <p>Click the button below to verify your account.</p>
+
+        <a href="${verificationUrl}">
+          Verify Account
+        </a>
+
+        <p>This link expires in 1 hour.</p>
+      `,
+    });
+    
+    return res.status(201).json({msg: "Registration successful. Please check your email to verify your account."});
     
 
   } catch (error) {
+    console.error("REGISTER ERROR:", error);
     next(error)
   }
 
@@ -41,24 +68,27 @@ export async function loginController(req: Request<{}, {}, LoginRequestBody>,res
   loginSchema
 
   const user = await authModel.findOne({email});
-  if(!user){
-    throw new AppError("Invalid Credentials", 400);
-  }
-  const isMatch = await bcrypt.compare(password, user.password)
+  if (!user!.isVerified) {
+  throw new AppError(
+    "Please verify your email before logging in.",
+    401
+  );
+}
+  const isMatch = await bcrypt.compare(password, user!.password)
   if(!isMatch){
     throw new AppError("Invalid Credentials", 400);
   }
 
-  const accessToken = generateAccessToken( user._id.toString() );
-  const refreshToken = generateRefreshToken( user._id.toString() );
-  user.refreshToken = refreshToken;
-  await user.save();
+  const accessToken = generateAccessToken( user!._id.toString() );
+  const refreshToken = generateRefreshToken( user!._id.toString() );
+  user!.refreshToken = refreshToken;
+  await user!.save();
   return res.status(200).json({
     accessToken,
     refreshToken: refreshToken,
     user: {
-      id: user._id,
-      email: user.email
+      id: user!._id,
+      email: user!.email
     }
   })
   

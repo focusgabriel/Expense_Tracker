@@ -8,8 +8,9 @@ type Iuser = {
   createdAt?:Date,
   updatedAt?:Date,
   isVerified: boolean,
-  verificationToken: string,
-  verificationTokenExpires: Date
+  verificationToken: string | undefined,
+  verificationTokenExpires: Date | undefined,
+  
 }
 
 export const UserProps = new Schema<Iuser>({
@@ -40,11 +41,11 @@ export const UserProps = new Schema<Iuser>({
 
   isVerified: {
     type: Boolean,
-    default: null
+    default: false
   },
 
   verificationToken: {
-    type: String,
+    type: String, 
     default: null
   },
 
