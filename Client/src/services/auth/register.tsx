@@ -1,10 +1,9 @@
 /** @format */
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import refreshClient from "../../api/fetch";
 import Logo from "../../components/Logo";
-import type { AxiosError } from "axios";
 import toast from "react-hot-toast";
 import axios from "axios";
 
@@ -35,7 +34,7 @@ const Register = () => {
 
       const data = await response.data;
       localStorage.setItem("token", data.accessToken);
-      toast.success("Registration successful!", {
+      toast.success("Registration successful! Check your email to verify your account.", {
         position: "top-right",
         duration: 5000,
       });
