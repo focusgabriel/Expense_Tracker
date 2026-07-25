@@ -25,9 +25,9 @@ const ForgotPassword = () => {
 
     } catch (error) {
       if(axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message ?? "check your email for the password reset link.")
+        toast.error(error.response?.data?.message ?? "email verification failed.")
       } else {
-        "check your email for the password reset link."
+        "email verification failed."
       }
     }
   }
