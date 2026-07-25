@@ -4,7 +4,6 @@ import crypto from "crypto";
 import bcrypt from "bcrypt"
 import { AppError } from "../utils/AppError.js";
 import { sendEmail } from "../services/email.services.js";
-
 export async function logoutController(req:Request, res:Response) {
   try {
     console.log("making a logout request", req.user!.id);
@@ -51,6 +50,7 @@ export const verifyEmailController = async (
       .update(token)
       .digest("hex");
       
+
     const user = await authModel.findOne({
       verificationToken: hashedToken,
       verificationTokenExpires: {
@@ -73,6 +73,7 @@ export const verifyEmailController = async (
 
     await user.save();
 
+    console.log("email clicked...")
     return res.status(200).json({
       success: true,
       message: "Email verified successfully.",
@@ -138,7 +139,7 @@ export const ForgotPasswordController = async(
     next(error);
   }
 }
-
+ 
 export const ResetPasswordController = async(
   req:Request,
   res:Response,
@@ -190,3 +191,4 @@ export const ResetPasswordController = async(
     next(error)
   }
 }
+

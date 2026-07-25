@@ -58,6 +58,7 @@ export async function RegisterController(
     
 
   } catch (error) {
+    console.error("REGISTER ERROR:", error);
     next(error)
   }
 
