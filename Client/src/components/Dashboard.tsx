@@ -27,13 +27,6 @@ const Dashboard = () => {
 
   console.log(dashboardData?.authenticatedUser.name)
 
-//   try {
-//   const res = await refreshClient.get("/dashboard");
-//   setDashboardData(res.data);
-// } catch (err) {
-//   setErrorMsg("Unable to load dashboard.");
-// }
-    // }
 if (errorMsg) {
   return (
     <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-red-600">
@@ -41,21 +34,14 @@ if (errorMsg) {
     </div>
   );
 } 
-// if (dashboardData.recentTransactions.length === 0) {
-//   return (
-//     <div className="flex h-64 items-center justify-center text-slate-500">
-//       No transactions yet.
-//     </div>
-//   );
-// }
 
-  if(!dashboardData) return <DashboardSkeleton />
-  return (
-    <div className="space-y-6">
-      <AllTransaction summary={dashboardData.summary} />
-      <SpendingChart chartData={dashboardData.chartData} recentTransactions={dashboardData.recentTransactions} />
-      <MonthReview />
-    </div>
+if(!dashboardData) return <DashboardSkeleton />
+return (
+  <div className="space-y-6">
+    <AllTransaction summary={dashboardData.summary} />
+    <SpendingChart chartData={dashboardData.chartData} recentTransactions={dashboardData.recentTransactions} />
+    <MonthReview />
+  </div>
   )
 }
 
