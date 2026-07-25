@@ -45,12 +45,10 @@ const AddTask = () => {
       }
     }
 
-    Type.current.value = ""
     Amount.current.value = ""
     Description.current.value = ""
     Category.current.value = ""
     newDate.current.value = ""
-    // Current_date.current!.value = ""
   };
   return (
     <div className="mx-auto w-full max-w-2xl">
@@ -66,7 +64,7 @@ const AddTask = () => {
           Add a Transaction
         </h2>
         <p className="mt-1 text-sm text-indigo-600/80">
-          Track your income and expenses
+          Track your expense from your income
         </p>
       </div>
 
@@ -99,7 +97,7 @@ const AddTask = () => {
             className="min-h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
             type="number"
             placeholder="Enter your amount"
-            min={0}
+            min={3}
             onWheel={event => event.currentTarget.blur()}
             ref={Amount}
             name="amount"
@@ -151,7 +149,7 @@ const AddTask = () => {
         <div className="flex items-end sm:col-span-2">
           <button
             type="submit"
-            className="w-full rounded-xl bg-linear-to-r from-indigo-600 to-indigo-700 px-6 py-3 text-sm font-semibold text-white shadow-sm shadow-indigo-200 transition-all hover:from-indigo-700 hover:to-indigo-800 hover:shadow-md active:scale-[0.98]"
+            className="button_addTask"
           >
             Save Transaction
           </button>
