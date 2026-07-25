@@ -114,6 +114,10 @@ const Login = () => {
               <Link to="/register" className="auth-footer-link">
                 Create one
               </Link>
+              <Link to="/forgotPassword" className="auth-footer-link block mt-4">
+                Forgot Password
+              </Link>
+              
             </p>
           </div>
         </div>
