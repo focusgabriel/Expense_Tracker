@@ -14,7 +14,7 @@ import Analytics from "./pages/Analytics";
 import Logout from "./services/auth/Logout";
 import Login from "./services/auth/login";
 import Register from "./services/auth/register";
-import ProtectedRoutes from "./components/Routes";
+import ProtectedRoutes from "./components/ProtectedRoutes";
 import PublicRoutes from "./components/PublicRoutes";
 
 const App = () => {

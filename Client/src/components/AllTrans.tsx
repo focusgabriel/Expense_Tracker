@@ -2,7 +2,6 @@
 import Card from "./Card";
 import { Link } from "react-router-dom";
 import type { Transaction } from "../constants";
-// import type { Transaction } from "../constants"
 
 interface TransactionProps {
   recentTransactions: Transaction[]
@@ -12,9 +11,9 @@ const AllTrans = ({recentTransactions}: TransactionProps) => {
 
    if (recentTransactions.length === 0) {
     return (
-      <div className="flex h-64 flex-col items-center justify-center rounded-lg border border-dashed border-slate-300 text-slate-500">
-        <p className="text-lg font-semibold">No transactions yet</p>
-        <p className="mt-2 text-sm">
+      <div className="flex h-70 flex-col items-center justify-center rounded-lg border border-dashed border-slate-300 text-slate-500">
+        <p className="md:text-lg text-xl font-semibold text-center">No transactions yet</p>
+        <p className="mt-2 md:text-sm text-lg text-center">
           Add your first transaction to start tracking your finances.
         </p>
       </div>
