@@ -19,6 +19,7 @@ export async function RegisterController(
   try {
     const {name, email, password, confirm_password} = req.body
 
+    // the register helper function validation from Zod
     registerSchema
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -57,14 +58,14 @@ export async function RegisterController(
     
 
   } catch (error) {
-    console.error("REGISTER ERROR:", error);
     next(error)
   }
 
 }
 export async function loginController(req: Request<{}, {}, LoginRequestBody>,res: Response) {
   const {email, password} = req.body;
-
+  
+  // the register helper function validation from Zod
   loginSchema
 
   const user = await authModel.findOne({email});
