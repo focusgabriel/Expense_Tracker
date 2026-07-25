@@ -43,11 +43,12 @@ export const verifyEmailController = async (
       );
     }
 
+    // since the verification token in the database is hashed in order to find it using findOne we have to also hash the token on this side so it can find it in the database.
     const hashedToken = crypto
       .createHash("sha256")
       .update(token)
       .digest("hex");
-
+      
     const user = await authModel.findOne({
       verificationToken: hashedToken,
       verificationTokenExpires: {
