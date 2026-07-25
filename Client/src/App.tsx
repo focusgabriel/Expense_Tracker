@@ -16,6 +16,8 @@ import Login from "./services/auth/login";
 import Register from "./services/auth/register";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import PublicRoutes from "./components/PublicRoutes";
+import ForgotPassword from "./services/auth/ForgotPassword";
+import NewPassword from "./services/auth/NewPassword";
 
 const App = () => {
   const location = useLocation();
@@ -56,6 +58,22 @@ const App = () => {
             element={
               <PublicRoutes>
                 <Register />
+              </PublicRoutes>
+            }
+          />
+          <Route
+            path="/forgotPassword"
+            element={
+              <PublicRoutes>
+                <ForgotPassword />
+              </PublicRoutes>
+            }
+          />
+          <Route
+            path="/reset-password/:token"
+            element={
+              <PublicRoutes>
+                <NewPassword />
               </PublicRoutes>
             }
           />
