@@ -1,10 +1,6 @@
 /** @format */
 
-// import { useEffect, useState } from "react";
 import { PieChart, Pie, ResponsiveContainer } from "recharts";
-// import { CATEGORY_COLORS, type Transaction } from "../constants";
-// import type { ChartData } from "../types/dashboard";
-// import Dashboard from "./Dashboard";
 import AllTrans from "./AllTrans";
 
 
@@ -13,60 +9,10 @@ interface spendingProps {
   chartData,
 }
 const SpendingChart = ({chartData, recentTransactions}: spendingProps) => {
-  // const [allExpense, setAllExpense] = useState<Transaction[]>([]);
-  // const [allIncome, setAllIncome] = useState(null);
-
-  // getting the monthly expense and income to use it to set the pie chart, particularly the expense variable 
-  // const getTrans = async () => {
-    // try {
-    //   refreshClient.get("http://localhost:3000/api/v1/getMonthlyIncome")
-    //     .then(res => {setAllExpense(res.data.getMonthlyExpense); setAllIncome(res.data.get_income)});
-    // } catch (error) {
-    //   console.log(error);
-    // }
-
-    // chartData.
-
-
-  //  filtering out the expense type and summing the category amounts specifically to get there percentages so as to represent them graphically on the pie chart.
-  // const grouped = chartData
-  //   .filter(item => item.type === "expense")
-  //   .reduce<Record<string, number>>((acc, trans) => {
-  //     const { category, amount } = trans;
-
-  //     acc[category] = (acc[category] || 0) + amount;
-  //     return acc;
-  //   }, {});
-
-  // getting the total income so that the total amount by the category would be divided by the toal income and multiply by 100 to get the percentage of each category
-  // const totalIncome = allIncome
-
-  // const spendChart = Object.entries(grouped).map(([category, amount]) => ({
-  //   category,
-  //   amount,
-    // here i added a fill object to hold the colors that would be used for categorical representation meaning if it is shopping the color orange would be used to represent it on the pie chart. because our pie chart would be of many colors to make visually beatiful
-    // fill: CATEGORY_COLORS[category] ?? "gray",
-
-    // i also added a percentage object so that i can add the calculated percentage to the array, meaning that every percentage based on the category would be referneced directly just like category and amount, directly from the array. 
-  //   percentage: (amount / totalIncome) * 100,
-  // }));
-
-  // the total expense recorded or gotten from the chartData since we are only dealing with the expense in chartData now i am summing it up the whole expense gotten from each category into one variable.
-  // const totalExpense = chartData.reduce((sum, item) => sum + item.amount, 0);
-
-  // useEffect(() => {
-  //   getTrans();
-  // }, []);
-
   const totalExpense = chartData.reduce(
-    (sum, item) => sum + item.amount,
+    (sum:any, item:any) => sum + item.amount,
     0
   );
-
-  console.log("amount", totalExpense)
-
-  // chartData.fill = CATEGORY_COLORS[chartData.category] ?? "red"
-  
 
   return (
     <div className="sm:rounded-2xl sm:border sm:border-slate-200 sm:bg-white sm:p-4 sm:shadow-sm">
@@ -74,6 +20,7 @@ const SpendingChart = ({chartData, recentTransactions}: spendingProps) => {
         <div className="relative h-72 w-full lg:h-full lg:w-[34%]">
           <h2 className="p-2 font-bold text-slate-900">Spending Overview</h2>
           <div className="relative h-[calc(100%-2rem)]">
+
             {/* the pie chart gotten from rechartjs for the analytical analysis of the expenses */}
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -115,7 +62,7 @@ const SpendingChart = ({chartData, recentTransactions}: spendingProps) => {
                 &#8358;{item.amount.toLocaleString()}
               </div>
               <div className="whitespace-nowrap text-sm font-medium text-slate-700">
-                {/* now this is where i used the percentage that was externally added to the array. now each item now has a percentage of the specified category making it more understandable on what is going on */}
+                {/* now this is where i used the percentage that was externally added to the array. now each item now has a percentage of the specified category making it more understandable on what is going on the percentage calculations was modified to be coming from the backend. */}
                 {item.percentage.toFixed(2)}%
               </div>
             </div>
