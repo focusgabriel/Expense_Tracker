@@ -145,16 +145,7 @@ const Header = () => {
 
           {/* ── Right: Actions ── */}
           <div className="flex items-center gap-1 sm:gap-2">
-            {/* Notification bell */}
-            {/* <button
-              className="relative flex h-9 w-9 items-center justify-center rounded-xl text-slate-400 transition-all duration-200 hover:bg-slate-100 hover:text-slate-600 active:scale-95 sm:h-10 sm:w-10"
-              title="Notifications"
-            >
-              <Bell size={17} strokeWidth={1.5} />
-              <span className="absolute right-2.5 top-2 h-2 w-2 rounded-full bg-rose-500 ring-2 ring-white" />
-            </button> */}
-
-            {/* Add Transaction — desktop */}
+            
             <Link
               to="/task"
               className="hidden sm:inline-flex items-center gap-1.5 rounded-xl bg-linear-to-br from-indigo-600 to-indigo-700 px-3.5 py-2 text-sm font-semibold text-white shadow-sm shadow-indigo-200 transition-all duration-200 hover:from-indigo-700 hover:to-indigo-800 hover:shadow-md hover:shadow-indigo-200 active:scale-[0.97]"
