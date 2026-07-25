@@ -4,6 +4,9 @@ import mongoose from "mongoose";
 import cors from "cors";
 import { transactionRouter, userRouter } from './routes/index.js';
 import { errorHandler } from './middlewares/error.middleware.js';
+import rateLimit from "express-rate-limit";
+import { limiter } from './validation/limiter.js';
+import helmet from "helmet";
 
 // dotenv.config();
 
@@ -16,9 +19,18 @@ if(!mongo_uri){
 mongoose.connect(mongo_uri)
 
 const app: Application = express();
+
+
+app.use(helmet());
+
+app.use(cors({
+  origin: process.env.CLIENT_URL, 
+  credentials:true
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
-app.use(cors({origin: "*"}));
+
 
 app.get("/health", async(_req:Request, res:Response) => {
   try{
@@ -32,6 +44,8 @@ app.get("/health", async(_req:Request, res:Response) => {
 app.use("/api/v1/", transactionRouter);
 app.use("/api/v1/", userRouter);
 app.use(errorHandler);
+
+app.use("/api/v1/auth", limiter);
 
 app.listen(PORT, () => {
   console.log(`🚀 Express server is running on http://localhost:${PORT}`);
