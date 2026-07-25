@@ -3,6 +3,7 @@ import { authModel } from "../model/index.js";
 import crypto from "crypto";
 import bcrypt from "bcrypt"
 import { AppError } from "../utils/AppError.js";
+import { sendEmail } from "../services/email.services.js";
 
 export async function logoutController(req:Request, res:Response) {
   try {
@@ -72,7 +73,6 @@ export const verifyEmailController = async (
 
     await user.save();
 
-    console.log("email clicked...")
     return res.status(200).json({
       success: true,
       message: "Email verified successfully.",
@@ -112,7 +112,26 @@ export const ForgotPasswordController = async(
 
     await user.save();
 
+    const verificationUrl = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
+    
+        await sendEmail({
+          to: user.email,
+          subject: "Email Reset Password",
+          html: `
+            <h2>Welcome to Expense Tracker!</h2>
+    
+            <p>Click the link below to reset your password.</p>
+    
+            <a href="${verificationUrl}">
+              Verify Account
+            </a>
+    
+            <p>This link expires in 15 minutes.</p>
+          `,
+        });
+
     return res.status(200).json({
+      status: true,
       message: "If an account with that email exists, a reset link has been sent."
     });
   } catch (error) {
@@ -136,7 +155,7 @@ export const ResetPasswordController = async(
     const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
 
     const user = await authModel.findOne({
-      passwordHashed: hashedToken,
+      passwordResetToken: hashedToken,
       passwordResetExpires: {
         $gt: new Date()
       }
@@ -159,6 +178,7 @@ export const ResetPasswordController = async(
 
     user.refreshToken = null;
 
+    console.log("new password is:", password);
     await user.save();
 
     return res.status(200).json({
@@ -167,6 +187,6 @@ export const ResetPasswordController = async(
     });
 
   } catch (error) {
-    
+    next(error)
   }
 }
