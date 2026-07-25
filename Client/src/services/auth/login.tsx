@@ -1,31 +1,20 @@
 /** @format */
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { LoaderCircle, LogIn } from "lucide-react";
 import refreshClient from "../../api/fetch";
 import Logo from "../../components/Logo";
-// import ToastContainer from "../../components/ToastContainer";
-// import type { Toast } from "../../components/ToastContainer";
-// import type { AxiosError } from "axios";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 
 const Login = () => {
+  const [signin, setSignin] = useState(false)
   const navigate = useNavigate();
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
-  // const [toasts, setToasts] = useState<Toast[]>([]);
 
-  // const addToast = (message: string, type: Toast["type"] = "error") => {
-  //   const id = crypto.randomUUID();
-  //   setToasts((prev) => [...prev, { id, message, type }]);
-  // };
-
-  // const removeToast = (id: string) => {
-  //   setToasts((prev) => prev.filter((t) => t.id !== id));
-  // };
-
-  const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
+  const submitForm = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const AuthUser = {
@@ -34,18 +23,23 @@ const Login = () => {
     };
 
     try {
+      setSignin(true);
       const response = await refreshClient.post("/auth/login", AuthUser);
 
       const data = await response.data;
 
-      localStorage.setItem("accessToken", data.accessToken);
-      localStorage.setItem("refreshToken", data.refreshToken);
-      toast.success("Login successful!", {
-        position: "top-right",
-        duration: 2000,
-      });
-      navigate("/overview");
+      // Small delay so the spinner shows
+      setTimeout(() => {
+        localStorage.setItem("accessToken", data.accessToken);
+        localStorage.setItem("refreshToken", data.refreshToken);
+        toast.success("Login successful!", {
+          position: "top-right",
+          duration: 2000,
+        });
+        navigate("/overview");
+      }, 300)
     } catch (error) {
+      setSignin(false);
       if(axios.isAxiosError(error)) {
           toast.error(error.response?.data?.message ?? "Login Failed, Please try again.");
         } else {
@@ -56,7 +50,6 @@ const Login = () => {
 
   return (
     <>
-      {/* <ToastContainer toasts={toasts} removeToast={removeToast} /> */}
       <section className="auth-shell min-h-screen px-0 py-6 sm:px-4 sm:py-10 text-slate-900">
         <div className="auth-shell-bg" />
         <div className="relative mx-auto flex min-h-[calc(100vh-5rem)] items-center justify-center">
@@ -100,7 +93,19 @@ const Login = () => {
               </div>
 
               <button type="submit" className="auth-action-btn">
-                Login
+                { signin ? (
+                  <>
+                    <LoaderCircle size={16} className="animate-spin" />
+                    Signing in...
+                  </> 
+                ) : (
+                  <>
+                    <LogIn size={16} strokeWidth={2} />
+                    Login
+                  </>
+                )
+              }
+                
               </button>
             </form>
 

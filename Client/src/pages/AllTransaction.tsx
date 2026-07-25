@@ -1,10 +1,7 @@
 /** @format */
 
-// import { useEffect, useState } from "react";
 import TranscCard from "../components/TranscCard";
-// import refreshClient from "../api/fetch";
 import type { DashboardSummary } from "../types/dashboard";
-// import TranscCard from "./TranscCard";
 
 interface AllTransProps {
   summary: DashboardSummary;
@@ -41,7 +38,7 @@ const AllTransaction = ({ summary }: AllTransProps) => {
         <TranscCard
           title="Monthly Income"
           amount={summary.totalIncome}
-          content="from one source"
+          content="diverse or single source"
           icon="/wallet.png"
           alternate="wallet"
         />

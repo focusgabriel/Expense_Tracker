@@ -52,7 +52,7 @@ const Analytics = () => {
   const onSubmit = async () => {
     try {
       const res = await refreshClient.get(
-        `http://localhost:3000/api/v1/getTransaction`,
+        `/getTransaction`,
         {
           params: {
             search,
@@ -130,7 +130,7 @@ const Analytics = () => {
           <div className="rounded-2xl border border-slate-200/80 bg-slate-50/60 p-4 shadow-xs backdrop-blur-sm sm:p-5">
             <div className="flex flex-wrap items-end gap-3">
               {/* Search */}
-              <div className="min-w-0 w-full sm:w-auto sm:flex-1 sm:min-w-[140px] lg:min-w-[180px]">
+              <div className="min-w-0 w-full sm:w-auto sm:flex-1 sm:min-w-35 lg:min-w-45">
                 <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500">
                   Search
                 </label>
@@ -163,7 +163,7 @@ const Analytics = () => {
               </div>
 
               {/* Type */}
-              <div className="min-w-0 w-full sm:w-auto sm:min-w-[130px]">
+              <div className="min-w-0 w-full sm:w-auto sm:min-w-32.5">
                 <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500">
                   Type
                 </label>
@@ -194,7 +194,7 @@ const Analytics = () => {
               </div>
 
               {/* Category */}
-              <div className="min-w-0 w-full sm:w-auto sm:min-w-[130px]">
+              <div className="min-w-0 w-full sm:w-auto sm:min-w-32.5">
                 <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500">
                   Category
                 </label>
@@ -211,7 +211,7 @@ const Analytics = () => {
               </div>
 
               {/* Sort By */}
-              <div className="min-w-0 w-full sm:w-auto sm:min-w-[120px]">
+              <div className="min-w-0 w-full sm:w-auto sm:min-w-30">
                 <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500">
                   Sort By
                 </label>
@@ -241,7 +241,7 @@ const Analytics = () => {
               </div>
 
               {/* Order */}
-              <div className="min-w-0 w-full sm:w-auto sm:min-w-[120px]">
+              <div className="min-w-0 w-full sm:w-auto sm:min-w-30">
                 <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500">
                   Order
                 </label>
@@ -381,7 +381,7 @@ const Analytics = () => {
             type="button"
             disabled={page <= 1}
             onClick={() => setPage(prev => Math.max(prev - 1, 1))}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition duration-200 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:border-slate-200 disabled:bg-slate-100 disabled:text-slate-400"
+            className="button_prev"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -403,7 +403,7 @@ const Analytics = () => {
             type="button"
             disabled={page >= totalPages}
             onClick={() => setPage(prev => Math.min(prev + 1, totalPages))}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-indigo-600 to-indigo-700 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-indigo-200 transition duration-200 hover:from-indigo-700 hover:to-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500"
+            className="button_next"
           >
             Next
             <svg

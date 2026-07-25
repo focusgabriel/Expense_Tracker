@@ -36,7 +36,7 @@ const Register = () => {
       localStorage.setItem("token", data.accessToken);
       toast.success("Registration successful! Check your email to verify your account.", {
         position: "top-right",
-        duration: 5000,
+        duration: 3000,
       });
       navigate("/overview");
     } catch (error) {
