@@ -1,19 +1,20 @@
 /** @format */
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import refreshClient from "../../api/fetch";
 import Logo from "../../components/Logo";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { Loader } from "lucide-react";
 
 const Register = () => {
   const navigate = useNavigate();
+  const [isRegistering, setIsRegistering] = useState(false);
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const confirmPasswordRef = useRef<HTMLInputElement>(null);
-  
 
   const submitForm = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -26,21 +27,29 @@ const Register = () => {
     };
 
     try {
-      const response = await refreshClient.post("/auth/register", newUser);
+      setIsRegistering(true);
+      await refreshClient.post("/auth/register", newUser);
 
-      // const data = await response.data;
-      // localStorage.setItem("token", data.accessToken);
-      toast.success("Registration successful! Check your email to verify your account.", {
-        position: "top-right",
-        duration: 3000,
-      });
-      navigate("/overview");
+      toast.success(
+        "Registration successful! Check your email to verify your account.",
+        {
+          position: "top-right",
+          duration: 5000,
+        },
+      );
+
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
     } catch (error) {
-      if(axios.isAxiosError(error)) {
+      setIsRegistering(false);
+      if (axios.isAxiosError(error)) {
         toast.error(error.response?.data?.message ?? "Registeration Failed.");
       } else {
-        "Registeration Failed."
+        ("Registeration Failed.");
       }
+    } finally {
+      setIsRegistering(false);
     }
   };
 
@@ -115,10 +124,23 @@ const Register = () => {
                 />
               </div>
 
-              <button type="submit" className="auth-action-btn">
+              {/* <button type="submit" className="auth-action-btn">
                 Register
-              </button>
+              </button> */}
+            <button type="submit" className="auth-action-btn">
+              {isRegistering ? (
+                <>
+                  <Loader size={16} className="animate-spin" />
+                  Registering
+                </>
+              ) : (
+                <>
+                  Register
+                </>
+              )}
+            </button>
             </form>
+
 
             <p className="mt-6 text-center text-sm text-slate-500">
               Already have an account?{" "}
