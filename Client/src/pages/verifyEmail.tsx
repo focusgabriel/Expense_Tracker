@@ -19,7 +19,7 @@ const VerifyEmail = () => {
         setErrorMsg(res.data.message);
         setTimeout(() => {
           navigate("/");
-        }, 2000);
+        }, 5000);
       } catch (error) {
         setSuccess(false);
         setErrorMsg("Verification Failed...");
