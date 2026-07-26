@@ -4,9 +4,11 @@ import crypto from "crypto";
 import bcrypt from "bcrypt"
 import { AppError } from "../utils/AppError.js";
 import { sendEmail } from "../services/email.services.js";
+
 export async function logoutController(req:Request, res:Response) {
   try {
-    console.log("making a logout request", req.user!.id);
+    // console.log("making a logout request", req.user!.id);
+
     const user = await authModel.findById(req.user!.id);
     if (!user) {
       return res.status(404).json({
@@ -14,7 +16,18 @@ export async function logoutController(req:Request, res:Response) {
       });
     }
 
-    user.refreshToken = null;
+    res.clearCookie("accessToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
+
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
+    
     await user.save();
 
     return res.status(200).json({

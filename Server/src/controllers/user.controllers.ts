@@ -2,8 +2,6 @@ import {NextFunction, Request, Response} from "express"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import {LoginRequestBody, RefreshRequestBody, RegisterRequestBody} from "../types/express/users.types.js"
-// import authModel from "../model/users.js"
-// import { hash } from "node:crypto"
 import { authModel } from "../model/index.js"
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt.js"
 import { loginSchema, registerSchema } from "../validation/auth.schema.js"
@@ -63,6 +61,8 @@ export async function RegisterController(
   }
 
 }
+
+
 export async function loginController(req: Request<{}, {}, LoginRequestBody>,res: Response) {
   const {email, password} = req.body;
   
@@ -70,24 +70,47 @@ export async function loginController(req: Request<{}, {}, LoginRequestBody>,res
   loginSchema
 
   const user = await authModel.findOne({email});
-  if (!user!.isVerified) {
+  if (!user) {
   throw new AppError(
-    "Please verify your email before logging in.",
+    "Invalid Credentials.",
     401
   );
 }
-  const isMatch = await bcrypt.compare(password, user!.password)
+
+  if (!user!.isVerified) {
+    throw new AppError(
+      "Please verify your email before logging in.",
+      401
+    );
+  }
+  const isMatch = await bcrypt.compare(password, user.password)
   if(!isMatch){
     throw new AppError("Invalid Credentials", 400);
   }
 
-  const accessToken = generateAccessToken( user!._id.toString() );
-  const refreshToken = generateRefreshToken( user!._id.toString() );
-  user!.refreshToken = refreshToken;
-  await user!.save();
+  const accessToken = generateAccessToken( user._id.toString() );
+  const refreshToken = generateRefreshToken( user._id.toString() );
+  user.refreshToken = refreshToken;
+  await user.save();
+
+  res.cookie("accessToken", accessToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax" as const,
+    maxAge:  15 * 1000,
+  });
+
+
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax" as const,
+    maxAge:  2 * 60 * 1000,
+  });
+
   return res.status(200).json({
-    accessToken,
-    refreshToken: refreshToken,
+    success: true,
+    message: "Login Successful",
     user: {
       id: user!._id,
       email: user!.email
@@ -98,7 +121,8 @@ export async function loginController(req: Request<{}, {}, LoginRequestBody>,res
 
 export async function refreshTokenController(req: Request<{}, {}, RefreshRequestBody>, res:Response, next:NextFunction) {
   try {
-    const { refreshToken } = req.body;
+    // const { refreshToken } = req.body;
+    const refreshToken = req.cookies.refreshToken;
     if(!refreshToken){
       throw new AppError("Refresh Token is required.", 400)
     }
@@ -126,9 +150,25 @@ export async function refreshTokenController(req: Request<{}, {}, RefreshRequest
 
     await user.save();
     // Return it
+
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax" as const,
+      maxAge:  15 * 60 * 1000,
+    });
+
+
+    res.cookie("refreshToken", newRefreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax" as const,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
     return res.status(200).json({
-      accessToken,
-      refreshToken: newRefreshToken
+      status: 200,
+      message: "Refresh token activated"
     });
 
   } catch (error) {
