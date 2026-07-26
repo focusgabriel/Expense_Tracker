@@ -93,16 +93,16 @@ const Header = () => {
     let userName = dashboard?.authenticatedUser.name;
     let userEmail = "";
   
-  try {
-    const userData = localStorage.getItem("user");
-    if (userData) {
-      const parsed = JSON.parse(userData);
-      userName = parsed.name || parsed.email?.split("@")[0] || "User";
-      userEmail = parsed.email || "";
-    }
-  } catch {
-    userName = dashboard?.authenticatedUser.name;
-  }
+  // try {
+    // const userData = localStorage.getItem("user");
+    // if (userData) {
+    //   const parsed = JSON.parse(userData);
+    //   userName = parsed.name || parsed.email?.split("@")[0] || "User";
+    //   userEmail = parsed.email || "";
+    // }
+  // } catch {
+  //   userName = dashboard?.authenticatedUser.name;
+  // }
   const userInitial = userName?.charAt(0).toUpperCase();
 
   // Format today's date

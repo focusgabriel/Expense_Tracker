@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { navItems } from "../constants";
 import { useState } from "react";
-import { LogOut, LogIn } from "lucide-react";
+// import { LogOut, LogIn } from "lucide-react";
 import refreshClient from "../api/fetch";
 import Logo from "./Logo";
 
@@ -16,9 +16,9 @@ const SideBar = () => {
     console.log("Logout button clicked");
     try {
         await refreshClient.post("/auth/logout");
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        localStorage.removeItem("user");
+        // localStorage.removeItem("accessToken");
+        // localStorage.removeItem("refreshToken");
+        // localStorage.removeItem("user");
         navigate("/");
       
     } catch (error) {

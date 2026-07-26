@@ -26,12 +26,12 @@ const Login = () => {
       setSignin(true);
       const response = await refreshClient.post("/auth/login", AuthUser);
 
-      const data = await response.data;
+      // const data = await response.data;
 
       // Small delay so the spinner shows
       setTimeout(() => {
-        localStorage.setItem("accessToken", data.accessToken);
-        localStorage.setItem("refreshToken", data.refreshToken);
+        // localStorage.setItem("accessToken", data.accessToken);
+        // localStorage.setItem("refreshToken", data.refreshToken);
         toast.success("Login successful!", {
           position: "top-right",
           duration: 2000,

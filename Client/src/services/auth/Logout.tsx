@@ -32,9 +32,9 @@ const Logout = () => {
     }
     // Small delay so the spinner shows
     setTimeout(() => {
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
-      localStorage.removeItem("user");
+      // localStorage.removeItem("accessToken");
+      // localStorage.removeItem("refreshToken");
+      // localStorage.removeItem("user");
       navigate("/", { replace: true });
     }, 400);
   };

@@ -6,7 +6,7 @@ type Props = {
 }
 
 export default function PublicRoutes({ children }: Props) {
-  const accessToken = localStorage.getItem("accessToken");
+  // const accessToken = localStorage.getItem("accessToken");
   const location = useLocation();
 
   if (accessToken) {
@@ -26,7 +26,7 @@ export default function PublicRoutes({ children }: Props) {
 // }
 
 // export default function PublicRoutes({ children }: Props) {
-//   const accessToken = localStorage.getItem("accessToken");
+  const accessToken = localStorage.getItem("accessToken");
 //   // const location = useLocation();
 //   const navigate = useNavigate();
 

@@ -26,14 +26,10 @@ const Register = () => {
     };
 
     try {
-      const response = await refreshClient.post("/auth/register", newUser, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await refreshClient.post("/auth/register", newUser);
 
-      const data = await response.data;
-      localStorage.setItem("token", data.accessToken);
+      // const data = await response.data;
+      // localStorage.setItem("token", data.accessToken);
       toast.success("Registration successful! Check your email to verify your account.", {
         position: "top-right",
         duration: 3000,

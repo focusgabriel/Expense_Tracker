@@ -6,11 +6,11 @@ import { Navigate } from 'react-router-dom'
   }
 
   export default function ProtectedRoutes({children}: Props){
-    const accessToken = localStorage.getItem("accessToken");
+    // const accessToken = localStorage.getItem("accessToken");
 
-    if(!accessToken) {
-      return <Navigate to="/" replace />
-    }
+    // if(!accessToken) {
+    //   return <Navigate to="/" replace />
+    // }
 
     return children
   }
