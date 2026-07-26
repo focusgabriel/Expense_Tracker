@@ -9,7 +9,6 @@ interface AllTransProps {
 
 const AllTransaction = ({ summary }: AllTransProps) => {
 
-  console.log("this is a netbalance:", summary.totalExpense)
   return (
     <div className="sm:rounded-2xl sm:border sm:border-slate-200 sm:bg-white sm:p-4 sm:shadow-sm">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 ">
@@ -31,8 +30,8 @@ const AllTransaction = ({ summary }: AllTransProps) => {
               ""
             )
           }
-          icon="/wallet.png"
-          alternate="wallet"
+          icon="/dollar.png"
+          alternate="dollar"
         />
 
         <TranscCard
