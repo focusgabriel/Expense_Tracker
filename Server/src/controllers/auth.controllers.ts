@@ -5,27 +5,40 @@ import bcrypt from "bcrypt"
 import { AppError } from "../utils/AppError.js";
 import { sendEmail } from "../services/email.services.js";
 
+
+export async function getCurrentUserController(req:Request, res:Response) {
+  
+    const user = await authModel.findById(req.user!.id).select(
+      "-password -refreshToken"
+    )
+
+    if(!user) {
+      throw new AppError("User not found", 404);
+    }
+
+    return res.status(200).json({
+      user,
+    });
+}
+
 export async function logoutController(req:Request, res:Response) {
   try {
-    // console.log("making a logout request", req.user!.id);
 
     const user = await authModel.findById(req.user!.id);
     if (!user) {
-      return res.status(404).json({
-          message: "User not found"
-      });
+      throw new AppError("User not found", 404);
     }
 
     res.clearCookie("accessToken", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "lax" as const,
     });
 
     res.clearCookie("refreshToken", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "lax" as const,
     });
     
     await user.save();
@@ -35,7 +48,6 @@ export async function logoutController(req:Request, res:Response) {
     });
 
   } catch (error) {
-    console.error("backend error:", error);
     return res.status(500).json({
         errorMsg: error
     });
@@ -86,7 +98,6 @@ export const verifyEmailController = async (
 
     await user.save();
 
-    console.log("email clicked...")
     return res.status(200).json({
       success: true,
       message: "Email verified successfully.",
@@ -94,7 +105,6 @@ export const verifyEmailController = async (
     
   } catch (err) {
     next(err);
-    console.log("failed to verify email...")
   }
 };
 
@@ -163,7 +173,7 @@ export const ResetPasswordController = async(
   try {
 
     if(typeof token !== "string" || token?.length === 0){
-      return res.status(400).json({message: "token is invalid."})
+      throw new AppError("token is invalid.", 400);
     }
     
     const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
@@ -192,7 +202,6 @@ export const ResetPasswordController = async(
 
     user.refreshToken = null;
 
-    console.log("new password is:", password);
     await user.save();
 
     return res.status(200).json({
