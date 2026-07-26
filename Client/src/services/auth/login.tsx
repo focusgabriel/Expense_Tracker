@@ -7,8 +7,10 @@ import refreshClient from "../../api/fetch";
 import Logo from "../../components/Logo";
 import { toast } from "react-hot-toast";
 import axios from "axios";
+import { useAuth } from "../../lib/useAuth";
 
 const Login = () => {
+  const { checkAuth } = useAuth();
   const [signin, setSignin] = useState(false)
   const navigate = useNavigate();
   const emailRef = useRef<HTMLInputElement>(null);
@@ -17,34 +19,31 @@ const Login = () => {
   const submitForm = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const AuthUser = {
+    const credentials = {
       email: emailRef.current?.value.toLowerCase(),
       password: passwordRef.current?.value,
     };
 
     try {
       setSignin(true);
-      const response = await refreshClient.post("/auth/login", AuthUser);
+      await refreshClient.post("/auth/login", credentials);
 
-      // const data = await response.data;
-
-      // Small delay so the spinner shows
-      setTimeout(() => {
-        // localStorage.setItem("accessToken", data.accessToken);
-        // localStorage.setItem("refreshToken", data.refreshToken);
+      await checkAuth()
         toast.success("Login successful!", {
           position: "top-right",
-          duration: 2000,
+          duration: 3000,
         });
         navigate("/overview");
-      }, 300)
+
     } catch (error) {
       setSignin(false);
       if(axios.isAxiosError(error)) {
-          toast.error(error.response?.data?.message ?? "Login Failed, Please try again.");
+          toast.error(error.response?.data?.message ?? "Login Failed, Please verify your account.");
         } else {
-          "Login Failed, Please try again."
+          "Login Failed, Please verify your account."
         }
+      } finally {
+        setSignin(false)
       }
     }
 
