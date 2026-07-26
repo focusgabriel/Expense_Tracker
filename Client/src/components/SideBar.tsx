@@ -1,33 +1,25 @@
 /** @format */
 
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { navItems } from "../constants";
-import { useState } from "react";
-// import { LogOut, LogIn } from "lucide-react";
-import refreshClient from "../api/fetch";
 import Logo from "./Logo";
+import { LogIn, LogOut } from "lucide-react";
+import { useState } from "react";
 
 const SideBar = () => {
-  const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-
-  const logout = async () => {
-    console.log("Logout button clicked");
-    try {
-        await refreshClient.post("/auth/logout");
-        // localStorage.removeItem("accessToken");
-        // localStorage.removeItem("refreshToken");
-        // localStorage.removeItem("user");
-        navigate("/");
-      
-    } catch (error) {
-      console.error("Error occurred while logging out:", error);
-    } finally {
-      setIsLoggedIn(false);
-    }
-  };
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const logout = () => {
+    try {
+      setIsLoggedIn(true);
+      
+      navigate("/logout")
+    } catch (error) {
+      
+    }
+  }
 
   return (
     <aside className="sidebar-xs-bottom flex flex-col shrink-0 w-16 lg:w-48 border-r border-slate-100 bg-white px-1.5 py-4 h-screen">
@@ -59,10 +51,10 @@ const SideBar = () => {
       </nav>
 
       {/* Logout - always visible on mobile in bottom nav */}
-      {/* <div className="flex lg:mt-auto lg:border-t lg:border-slate-100 lg:pt-3 justify-center">
+      <div className="flex lg:mt-auto lg:border-t lg:border-slate-100 lg:pt-3 justify-center">
         <button
           onClick={logout}
-          className="flex items-center justify-center lg:justify-start lg:px-3 gap-3 rounded-lg py-2 w-full text-sm font-medium text-slate-500 transition-all duration-200 hover:bg-red-50 hover:text-red-600"
+          className="sm:flex items-center hidden justify-center lg:justify-start lg:px-3 gap-3 rounded-lg py-2 w-full text-lg font-medium text-red-500 transition-all duration-200 hover:bg-red-50 hover:text-red-600"
         >
           {isLoggedIn ? (
             <LogOut size={18} className="shrink-0" />
@@ -71,7 +63,7 @@ const SideBar = () => {
           )}
           <span className="hidden lg:inline">Logout</span>
         </button>
-      </div> */}
+      </div>
     </aside>
   );
 };
