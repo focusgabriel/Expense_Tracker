@@ -4,9 +4,9 @@ import mongoose from "mongoose";
 import cors from "cors";
 import { transactionRouter, userRouter } from './routes/index.js';
 import { errorHandler } from './middlewares/error.middleware.js';
-import rateLimit from "express-rate-limit";
 import { limiter } from './validation/limiter.js';
 import helmet from "helmet";
+import cookieParser from "cookie-parser";
 
 // dotenv.config();
 
@@ -30,6 +30,8 @@ app.use(cors({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
+
+app.use(cookieParser());
 
 
 app.get("/health", async(_req:Request, res:Response) => {
