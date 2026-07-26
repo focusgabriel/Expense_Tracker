@@ -1,44 +1,21 @@
-import React from 'react'
-import { Navigate, useLocation } from 'react-router-dom'
+import React from "react";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../lib/useAuth";
 
 type Props = {
-  children: React.ReactNode
-}
+  children: React.ReactNode;
+};
 
-export default function PublicRoutes({ children }: Props) {
-  // const accessToken = localStorage.getItem("accessToken");
-  const location = useLocation();
+export default function PublicRoute({ children }: Props) {
+  const { loading, isAuthenticated } = useAuth();
 
-  if (accessToken) {
-    // Redirect back to where they came from, or default to /overview
-    const from = location.state?.from?.pathname || "/overview";
-    return <Navigate to={from} replace />;
+  if (loading) {
+    return <div  className="flex h-screen items-center justify-center">Loading...</div>;
   }
 
-  return children
+  if (isAuthenticated) {
+    return <Navigate to="/overview" replace />;
+  }
+
+  return <>{children}</>;
 }
-
-// import React from 'react'
-// import { useNavigate } from 'react-router-dom'
-
-// type Props = {
-//   children: React.ReactNode
-// }
-
-// export default function PublicRoutes({ children }: Props) {
-  const accessToken = localStorage.getItem("accessToken");
-//   // const location = useLocation();
-//   const navigate = useNavigate();
-
-//   if (accessToken) {
-//     // Redirect back to where they came from, or default to /overview
-//     // const from = location.state?.from?.pathname || "/overview";
-
-//     const from = navigate(-1) || "/overview"
-
-//     return from;
-//     // return <Navigate to={from} replace />;
-//   }
-
-//   return children
-// }
