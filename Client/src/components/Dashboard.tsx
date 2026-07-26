@@ -25,8 +25,6 @@ const Dashboard = () => {
     getDashboard()
   }, [])
 
-  console.log(dashboardData?.authenticatedUser.name)
-
 if (errorMsg) {
   return (
     <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-red-600">
