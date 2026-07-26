@@ -43,11 +43,12 @@ app.get("/health", async(_req:Request, res:Response) => {
   }
 })
 
+app.use("/api/v1/auth", limiter);
+
 app.use("/api/v1/", transactionRouter);
 app.use("/api/v1/", userRouter);
 app.use(errorHandler);
 
-app.use("/api/v1/auth", limiter);
 
 app.listen(PORT, () => {
   console.log(`🚀 Express server is running on http://localhost:${PORT}`);
