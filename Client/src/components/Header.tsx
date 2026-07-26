@@ -12,9 +12,10 @@ import {
   LogOut,
   CalendarDays,
 } from "lucide-react";
-import refreshClient from "../api/fetch";
+// import refreshClient from "../api/fetch";
 // import { useNavigate } from "react-router-dom";
-import type { DashboardResponse } from "../types/dashboard";
+// import type { DashboardResponse } from "../types/dashboard";
+import { useAuth } from "../lib/useAuth";
 
 const PAGE_TITLES: Record<string, { title: string; subtitle: string }> = {
   "/overview": { title: "Overview", subtitle: "Your financial snapshot" },
@@ -31,7 +32,8 @@ const Header = () => {
   const [profileOpen, setProfileOpen] = useState(false);
   const [greeting, setGreeting] = useState("Good morning");
   const profileRef = useRef<HTMLDivElement>(null);
-  const [dashboard, setDashboard] = useState<DashboardResponse | null>(null)
+  // const [dashboard, setDashboard] = useState<DashboardResponse | null>(null)
+  const { user } = useAuth();
 
   const pageInfo =
     PAGE_TITLES[location.pathname] ||
@@ -79,30 +81,9 @@ const Header = () => {
     };
   }, []);
 
-  useEffect(() => {
-    const getData = async() => {
-
-      const res = await refreshClient.get("/dashboard/");
-      setDashboard(res.data);
-      
-    }
-
-    getData();
-  }, [])
-
-    let userName = dashboard?.authenticatedUser.name;
+    let userName = user?.name;
     let userEmail = "";
-  
-  // try {
-    // const userData = localStorage.getItem("user");
-    // if (userData) {
-    //   const parsed = JSON.parse(userData);
-    //   userName = parsed.name || parsed.email?.split("@")[0] || "User";
-    //   userEmail = parsed.email || "";
-    // }
-  // } catch {
-  //   userName = dashboard?.authenticatedUser.name;
-  // }
+
   const userInitial = userName?.charAt(0).toUpperCase();
 
   // Format today's date
@@ -172,7 +153,7 @@ const Header = () => {
                 className="group flex items-center gap-2 rounded-xl px-1.5 py-1 transition-all duration-200 hover:bg-slate-100 active:scale-95 sm:px-2"
               >
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-linear-to-br from-indigo-500 to-indigo-600 text-xs font-bold text-white shadow-sm ring-2 ring-white transition-all duration-200 group-hover:ring-indigo-200 sm:h-9 sm:w-9">
-                  {userInitial}
+                  {userInitial?.split("")[1] ?? userInitial?.split("")[0]}
                 </div>
                 <div className="hidden text-left lg:block">
                   <p className="text-sm font-semibold text-slate-800 leading-tight">

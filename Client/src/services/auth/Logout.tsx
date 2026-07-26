@@ -1,26 +1,28 @@
 /** @format */
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LogOut, ArrowLeft, AlertTriangle, Loader2 } from "lucide-react";
 import refreshClient from "../../api/fetch";
-import type { DashboardResponse } from "../../types/dashboard";
+import { useAuth } from "../../lib/useAuth";
+// import type { DashboardResponse } from "../../types/dashboard";
 
 const Logout = () => {
   const navigate = useNavigate();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [dashboard, setDashboard] = useState<DashboardResponse | null>(null)
+  // const [dashboard, setDashboard] = useState<DashboardResponse | null>(null)
+  const { user } = useAuth();
 
   // Grab user info for a personal touch
 
-  useEffect(() => {
-    const getData = async() => {
-      const res = await refreshClient.get("/dashboard/");
-      setDashboard(res.data);
-    }
+  // useEffect(() => {
+  //   const getData = async() => {
+  //     const res = await refreshClient.get("/dashboard/");
+  //     setDashboard(res.data);
+  //   }
 
-    getData();
-  }, [])
+  //   getData();
+  // }, [])
 
   // let userName = dashboard?.authenticatedUser.name;
   const handleConfirmLogout = async () => {
@@ -32,9 +34,6 @@ const Logout = () => {
     }
     // Small delay so the spinner shows
     setTimeout(() => {
-      // localStorage.removeItem("accessToken");
-      // localStorage.removeItem("refreshToken");
-      // localStorage.removeItem("user");
       navigate("/", { replace: true });
     }, 400);
   };
@@ -68,7 +67,7 @@ const Logout = () => {
               <p className="mt-3 text-sm leading-relaxed text-slate-500">
                 Are you sure you want to sign out,{" "}
                 <span className="font-semibold text-slate-700">
-                  {dashboard?.authenticatedUser.name.split(" ")[1] ?? dashboard?.authenticatedUser.name.split(" ")[0]}
+                  {user.name.split(" ")[1] ?? user.name.split(" ")[0]}
                 </span>
                 ? You'll need to sign in again to access your dashboard.
               </p>
