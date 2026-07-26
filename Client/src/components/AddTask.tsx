@@ -28,9 +28,9 @@ const AddTask = () => {
     try {
       const response = await refreshClient.post("/addTransaction", newTransaction);
 
-      const data = await response.data;
-      console.log(data);
-      console.log(newTransaction);
+      // const data = await response.data;
+      // console.log(data);
+      // console.log(newTransaction);
 
       toast.success("Transaction added successfully!", {
         position: "top-right",

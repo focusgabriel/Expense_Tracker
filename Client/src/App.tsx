@@ -1,7 +1,6 @@
 /** @format */
 
 import AddTask from "./components/AddTask";
-import { Toaster } from "react-hot-toast";
 import { Route, Routes, useLocation } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
 import SideBar from "./components/SideBar";
@@ -21,7 +20,7 @@ import NewPassword from "./services/auth/NewPassword";
 
 const App = () => {
   const location = useLocation();
-  const authRoutes = ["/", "/register"];
+  const authRoutes = ["/", "/register", "/verify-password", "/reset-password", "/verify-email"];
   const isAuthRoute = authRoutes.some(
     r => location.pathname === r || location.pathname.startsWith(r + "/"),
   );
@@ -43,7 +42,6 @@ const App = () => {
         }
       >
         {!isAuthRoute && <Header />}
-        <Toaster position="top-right" reverseOrder={false} />
         <Routes>
           <Route
             path="/"

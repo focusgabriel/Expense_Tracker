@@ -42,7 +42,7 @@ body {
   }
 
   .auth-hero-card {
-    @apply relative overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-[0_30px_80px_-40px_rgba(15,23,42,0.08)];
+    @apply relative overflow-hidden rounded-[1.75rem] border-amber-600 bg-white p-6 shadow-[0_30px_80px_-40px_rgba(15,23,42,0.08)];
   }
 
   .successMsg {
