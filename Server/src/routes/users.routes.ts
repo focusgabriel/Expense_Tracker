@@ -1,7 +1,7 @@
 import {Router} from "express";
 import { loginController, refreshTokenController, RegisterController } from "../controllers/user.controllers.js";
 import { authMiddleware } from "../middlewares/auth.middlewares.js";
-import { ForgotPasswordController, logoutController, ResetPasswordController, verifyEmailController } from "../controllers/auth.controllers.js";
+import { ForgotPasswordController, getCurrentUserController, logoutController, ResetPasswordController, verifyEmailController } from "../controllers/auth.controllers.js";
 
 import { validate } from "../middlewares/validate.middleware.js";
 import { registerSchema, loginSchema } from "../validation/auth.schema.js";
@@ -15,5 +15,6 @@ router.post("/auth/logout", authMiddleware, logoutController);
 router.get("/auth/verify-email/:token",verifyEmailController);
 router.post("/auth/forgot-password/", ForgotPasswordController);
 router.post("/auth/reset-password/:token",ResetPasswordController);
+router.get("/auth/me", authMiddleware, getCurrentUserController);
 
 export default router;
