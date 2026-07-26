@@ -16,10 +16,7 @@ const ForgotPassword = () => {
     }
 
     try {
-      const res = await refreshClient.post("/auth/forgot-password", writeEmail);
-
-      const data = await res.data
-      console.log(data);
+      await refreshClient.post("/auth/forgot-password", writeEmail);
 
       toast.success("check your email for the password reset link.")
 
