@@ -3,19 +3,10 @@ import jwt from "jsonwebtoken";
 import { AppError } from "../utils/AppError.js";
 
 export const authMiddleware = (req:Request, res:Response, next:NextFunction) => {
-  
-    // const authHeader = req.headers.authorization;
-    // if(!authHeader){
-    //   return res.status(401).json({errorMsg: "no token provided"})
-    // }
-    // if(!authHeader.startsWith("Bearer ")){
-    //   return res.status(401).json({errorMsg: "Invalid authorization format"})
-    // }
-    // const token = authHeader.split(" ")[1]!;
 
 
     const token = req.cookies.accessToken;
-
+  
     if (!token) {
       throw new AppError("Unauthorized", 401);
     }

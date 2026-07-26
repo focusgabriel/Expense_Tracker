@@ -9,7 +9,7 @@ import { AppError } from "../utils/AppError.js"
 import crypto from "crypto";
 import { sendEmail } from "../services/email.services.js"
 
-export async function RegisterController(
+export async function RegisterController (
   req:Request<{}, {}, RegisterRequestBody>,
   res:Response,
   next:NextFunction
@@ -56,7 +56,6 @@ export async function RegisterController(
     
 
   } catch (error) {
-    console.error("REGISTER ERROR:", error);
     next(error)
   }
 
@@ -93,19 +92,22 @@ export async function loginController(req: Request<{}, {}, LoginRequestBody>,res
   user.refreshToken = refreshToken;
   await user.save();
 
-  res.cookie("accessToken", accessToken, {
+  const cookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax" as const,
-    maxAge:  15 * 1000,
+    path: "/",
+  };
+
+  res.cookie("accessToken", accessToken, {
+    ...cookieOptions,
+    maxAge:  15 * 60 * 1000,
   });
 
 
   res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax" as const,
-    maxAge:  2 * 60 * 1000,
+    ...cookieOptions,
+    maxAge:  7 * 24 * 60 * 60 * 1000,
   });
 
   return res.status(200).json({
@@ -126,7 +128,6 @@ export async function refreshTokenController(req: Request<{}, {}, RefreshRequest
     if(!refreshToken){
       throw new AppError("Refresh Token is required.", 400)
     }
-
     const decoded = jwt.verify(
       refreshToken,
       process.env.JWT_REFRESH_SECRET!
@@ -151,18 +152,21 @@ export async function refreshTokenController(req: Request<{}, {}, RefreshRequest
     await user.save();
     // Return it
 
-    res.cookie("accessToken", accessToken, {
+    const cookieOptions = {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax" as const,
+      path: "/",
+    };
+
+    res.cookie("accessToken", accessToken, {
+      ...cookieOptions,
       maxAge:  15 * 60 * 1000,
     });
 
 
     res.cookie("refreshToken", newRefreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax" as const,
+      ...cookieOptions,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
