@@ -3,6 +3,8 @@ export const CATEGORY_COLORS:any = {
   food: "darkorange",
   transportation: "blueviolet",
   shopping: "lightgreen",
-  bill: "indianred",
+  bill: "#C61A23",
+  utility: "teal",
+  entertainment: "#043BF3"
 
 } as const;

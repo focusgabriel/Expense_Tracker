@@ -30,7 +30,7 @@ const SpendingChart = ({chartData, recentTransactions}: spendingProps) => {
                   nameKey="category"
                   innerRadius="50%"
                   outerRadius="75%"
-                  paddingAngle={3}
+                  paddingAngle={2}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -53,7 +53,7 @@ const SpendingChart = ({chartData, recentTransactions}: spendingProps) => {
             >
               <span
                 className="h-3 w-3 shrink-0 rounded-full"
-                style={{ backgroundColor: item.fill }}
+                style={{ backgroundColor: item.fill ?? "#07023A" }}
               />
               <div className="truncate text-sm font-medium text-slate-900">
                 {item.category}

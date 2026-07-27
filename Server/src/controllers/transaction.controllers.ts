@@ -3,6 +3,7 @@ import { addTransaction, deleteTransaction, editTransaction } from "../services/
 import { ExpenseModel, authModel } from '../model/index.js';
 import mongoose from 'mongoose';
 import { CATEGORY_COLORS } from '../constants/index.js';
+import { AppError } from '../utils/AppError.js';
 
 export async function addTransactionController(req:Request, res:Response){
   try {
@@ -384,7 +385,7 @@ export async function dashboardController(req:Request, res:Response) {
         category,
         amount,
         percentage: (amount / get_income) * 100,
-        fill: CATEGORY_COLORS[category] ?? "gray"
+        fill: CATEGORY_COLORS[category] ?? "#07023A"
       })
     );
 
@@ -411,27 +412,9 @@ export async function dashboardController(req:Request, res:Response) {
 
       authenticatedUser
     })
-
-    // return res.status(200).json({
-    //   summary: {
-    //     totalIncome,
-    //     totalExpense,
-    //     netBalance,
-
-    //     monthlyIncome,
-    //     monthlyExpense,
-    //     monthlyBalance,
-
-    //     previousMonthBalance,
-    //   },
-
-    //   transactions,
-
-    //   chartData
-    // });
-
-  } catch (error) {
-    console.error(error);
+    
+  } catch {
+    throw new AppError("couldn't fetch data", 500);
   }
 }
 
