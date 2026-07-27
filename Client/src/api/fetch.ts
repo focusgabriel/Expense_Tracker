@@ -2,7 +2,8 @@ import axios,{
   type AxiosError,
   type AxiosRequestConfig,
 } from "axios";
-import toast from "react-hot-toast";
+import { PUBLIC_ROUTES } from "../constants";
+// import toast from "react-hot-toast";
 
 
 interface CustomAxiosRequestConfig extends AxiosRequestConfig {
@@ -46,14 +47,19 @@ const tokenRefreshClient = axios.create({
       return refreshClient(originalRequest)
 
     } catch(err) {
-        toast.error("Session expired. Please log in again.", {
-          position: "top-right",
-          duration: 5000
-        });
+        // toast.error(err.response?.data?.message ?? "Session expired. Please log in again.", {
+        //   position: "top-right",
+        //   duration: 5000
+        // });
+        const isAuthPage = PUBLIC_ROUTES.some((route) =>
+          window.location.pathname === route ||
+          window.location.pathname.startsWith(route + "/")
+        );
 
-        if (window.location.pathname !== "/") {
-          window.location.replace("/");
+        if (!isAuthPage) {
+          window.dispatchEvent(new Event("auth:logout"));
         }
+
 
         return Promise.reject(error);
       }
