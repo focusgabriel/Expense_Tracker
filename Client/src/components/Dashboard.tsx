@@ -38,7 +38,12 @@ return (
   <div className="space-y-6">
     <AllTransaction summary={dashboardData.summary} />
     <SpendingChart chartData={dashboardData.chartData} recentTransactions={dashboardData.recentTransactions} />
-    <MonthReview />
+    <MonthReview
+      get_income={dashboardData.get_income}
+      get_expense={dashboardData.get_expense}
+      monthlyBalance={dashboardData.monthlyBalance}
+      endOfLastMonth={dashboardData.endOfLastMonth}
+    />
   </div>
   )
 }

@@ -312,6 +312,13 @@ export async function dashboardController(req:Request, res:Response) {
       1
     );
 
+    // Date for display — last day of previous month (matches what getMonthlyIncomeController returns)
+    const endOfLastMonth = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      0
+    ).toISOString();
+
     const previousMonthTransactions = await ExpenseModel.find({
       userId,
       date: {
@@ -389,15 +396,16 @@ export async function dashboardController(req:Request, res:Response) {
         totalExpense,
         netBalance,
 
-        // monthlyIncome,
-        // monthlyExpense,
-        // monthlyBalance,
+        monthlyIncome,
+        monthlyExpense,
+        monthlyBalance,
 
         previousMonthBalance,
       },
       get_expense,
       get_income,
       monthlyBalance,
+      endOfLastMonth,
 
       recentTransactions,
       chartData,

@@ -9,7 +9,6 @@ import AllTransaction from "./pages/AllTransaction";
 import EditForm from "./pages/Form";
 import VerifyEmail from "./pages/verifyEmail";
 import Analytics from "./pages/Analytics";
-// import DeletePage from "./pages/DeletePage";
 import Logout from "./services/auth/Logout";
 import Login from "./services/auth/login";
 import Register from "./services/auth/register";
@@ -17,6 +16,8 @@ import ProtectedRoutes from "./components/ProtectedRoutes";
 import PublicRoutes from "./components/PublicRoutes";
 import ForgotPassword from "./services/auth/ForgotPassword";
 import NewPassword from "./services/auth/NewPassword";
+import MonthlyReport from "./components/Reports";
+import Insight from "./components/Insight";
 
 const App = () => {
   const location = useLocation();
@@ -84,6 +85,14 @@ const App = () => {
             }
           />
           <Route
+            path="/reports"
+            element={
+              <ProtectedRoutes>
+                <MonthlyReport />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
             path="/overview"
             element={
               <ProtectedRoutes>
@@ -106,6 +115,14 @@ const App = () => {
                     previousMonthBalance: 0,
                   }}
                 />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/insights"
+            element={
+              <ProtectedRoutes>
+                <Insight />
               </ProtectedRoutes>
             }
           />

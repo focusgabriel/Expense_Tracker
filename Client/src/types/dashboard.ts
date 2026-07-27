@@ -29,4 +29,8 @@ export interface DashboardResponse {
   summary: DashboardSummary;
   recentTransactions: Transaction[];
   chartData: ChartData[];
+  get_expense: number;
+  get_income: number;
+  monthlyBalance: number;
+  endOfLastMonth: string;
 }

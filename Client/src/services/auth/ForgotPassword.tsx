@@ -18,13 +18,22 @@ const ForgotPassword = () => {
     try {
       await refreshClient.post("/auth/forgot-password", writeEmail);
 
-      toast.success("check your email for the password reset link.")
+      toast.success("Check your email for the password reset link.", {
+        position: "top-right",
+        duration: 5000,
+      });
 
     } catch (error) {
       if(axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message ?? "email verification failed.")
+        toast.error(error.response?.data?.message ?? "Email verification failed.", {
+          position: "top-right",
+          duration: 3000,
+        });
       } else {
-        "email verification failed."
+        toast.error("Email verification failed.", {
+          position: "top-right",
+          duration: 3000,
+        });
       }
     }
   }

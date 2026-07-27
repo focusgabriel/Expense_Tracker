@@ -26,22 +26,23 @@ const AddTask = () => {
     };
     
     try {
-      const response = await refreshClient.post("/addTransaction", newTransaction);
-
-      // const data = await response.data;
-      // console.log(data);
-      // console.log(newTransaction);
+      await refreshClient.post("/addTransaction", newTransaction);
 
       toast.success("Transaction added successfully!", {
         position: "top-right",
-        duration: 5000,
+        duration: 3000,
       });
-      // await getTrans();
     } catch (error) {
       if(axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message ?? "Something went wrong.");
+        toast.error(error.response?.data?.message ?? "Something went wrong.", {
+          position: "top-right",
+          duration: 3000,
+        });
       } else {
-        "Something went wrong."
+        toast.error("Something went wrong.", {
+          position: "top-right",
+          duration: 3000,
+        });
       }
     }
 

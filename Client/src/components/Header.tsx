@@ -19,6 +19,7 @@ import { useAuth } from "../lib/useAuth";
 
 const PAGE_TITLES: Record<string, { title: string; subtitle: string }> = {
   "/overview": { title: "Overview", subtitle: "Your financial snapshot" },
+  "/insights": { title: "Insights", subtitle: "Smart financial intelligence" },
   "/analytics": { title: "Analytics", subtitle: "Track your spending patterns" },
   "/transaction": { title: "Transactions", subtitle: "All your records" },
   "/task": { title: "Add Transaction", subtitle: "Record a new entry" },

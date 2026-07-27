@@ -30,23 +30,26 @@ const Register = () => {
       setIsRegistering(true);
       await refreshClient.post("/auth/register", newUser);
 
-      toast.success(
-        "Registration successful! Check your email to verify your account.",
-        {
-          position: "top-right",
-          duration: 5000,
-        },
-      );
+      toast.success("Registration successful! Check your email to verify your account.", {
+        position: "top-right",
+        duration: 5000,
+      });
+      console.log(toast.success("Registration successful! Check your email to verify your account."))
 
-      setTimeout(() => {
+      // setTimeout(() => {
         navigate("/");
-      }, 1000);
+      // }, 1000);
     } catch (error) {
-      setIsRegistering(false);
       if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message ?? "Registeration Failed.");
+        toast.error(error.response?.data?.message ?? "Registration failed.", {
+          position: "top-right",
+          duration: 3000,
+        });
       } else {
-        ("Registeration Failed.");
+        toast.error("Registration failed.", {
+          position: "top-right",
+          duration: 3000,
+        });
       }
     } finally {
       setIsRegistering(false);
@@ -124,9 +127,6 @@ const Register = () => {
                 />
               </div>
 
-              {/* <button type="submit" className="auth-action-btn">
-                Register
-              </button> */}
             <button type="submit" className="auth-action-btn">
               {isRegistering ? (
                 <>

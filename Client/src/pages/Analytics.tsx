@@ -40,12 +40,22 @@ const Analytics = () => {
       setTrans(prev => prev.filter(t => t._id !== selected._id));
       setModalOpen(false);
       setSelected(null);
+      toast.success("Transaction deleted successfully.", {
+        position: "top-right",
+        duration: 3000,
+      });
     } catch (error) {
       if(axios.isAxiosError(error)) {
-          toast.error(error.response?.data?.message ?? "failed to delete item.");
-        } else {
-          "failed to delete item."
-        }
+        toast.error(error.response?.data?.message ?? "Failed to delete item.", {
+          position: "top-right",
+          duration: 3000,
+        });
+      } else {
+        toast.error("Failed to delete item.", {
+          position: "top-right",
+          duration: 3000,
+        });
+      }
     }
   };
 
@@ -70,10 +80,16 @@ const Analytics = () => {
       setTotalPages(res.data.pagination.totalLimit);
     } catch (error) {
       if(axios.isAxiosError(error)) {
-          toast.error(error.response?.data?.message ?? "Error Fetching Transactions");
-        } else {
-          "Error Fetching Transactions"
-        }
+        toast.error(error.response?.data?.message ?? "Error fetching transactions.", {
+          position: "top-right",
+          duration: 3000,
+        });
+      } else {
+        toast.error("Error fetching transactions.", {
+          position: "top-right",
+          duration: 3000,
+        });
+      }
     }
   };
 

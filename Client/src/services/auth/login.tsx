@@ -28,24 +28,30 @@ const Login = () => {
       setSignin(true);
       await refreshClient.post("/auth/login", credentials);
 
+      toast.success("Login successful!", {
+        position: "top-right",
+        duration: 3000,
+      });
       await checkAuth()
-        toast.success("Login successful!", {
+        
+      navigate("/overview");
+
+    } catch (error) {
+      if(axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message ?? "Login failed. Please verify your account.", {
           position: "top-right",
           duration: 3000,
         });
-        navigate("/overview");
-
-    } catch (error) {
-      setSignin(false);
-      if(axios.isAxiosError(error)) {
-          toast.error(error.response?.data?.message ?? "Login Failed, Please verify your account.");
-        } else {
-          "Login Failed, Please verify your account."
-        }
-      } finally {
-        setSignin(false)
+      } else {
+        toast.error("Login failed. Please try again.", {
+          position: "top-right",
+          duration: 3000,
+        });
       }
+    } finally {
+      setSignin(false);
     }
+  }
 
   return (
     <>

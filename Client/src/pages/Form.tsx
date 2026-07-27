@@ -17,16 +17,21 @@ const EditForm = () => {
       );
       toast.success("Transaction updated successfully!", {
         position: "top-right",
-        duration: 5000,
+        duration: 3000,
       });
-      console.log(formData);
       const data = response.data();
       console.log(data);
     } catch (error) {
       if(axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message ?? "Something went wrong.");
+        toast.error(error.response?.data?.message ?? "Something went wrong.", {
+          position: "top-right",
+          duration: 3000,
+        });
       } else {
-        "Something went wrong."
+        toast.error("Something went wrong.", {
+          position: "top-right",
+          duration: 3000,
+        });
       }
     }
   };
@@ -56,9 +61,15 @@ const EditForm = () => {
           )
           .catch(error => {
             if(axios.isAxiosError(error)) {
-              toast.error(error.response?.data?.message ?? "Something went wrong.");
+              toast.error(error.response?.data?.message ?? "Something went wrong.", {
+                position: "top-right",
+                duration: 3000,
+              });
             } else {
-              "Something went wrong."
+              toast.error("Something went wrong.", {
+                position: "top-right",
+                duration: 3000,
+              });
             }
           });
         }
