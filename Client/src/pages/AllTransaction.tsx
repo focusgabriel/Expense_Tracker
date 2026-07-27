@@ -30,16 +30,16 @@ const AllTransaction = ({ summary }: AllTransProps) => {
               ""
             )
           }
-          icon="/dollar.png"
-          alternate="dollar"
+          icon="/wallet.png"
+          alternate="wallet"
         />
 
         <TranscCard
           title="Monthly Income"
           amount={summary.totalIncome}
           content="diverse or single source"
-          icon="/wallet.png"
-          alternate="wallet"
+          icon="/dollar.png"
+          alternate="dollar"
         />
 
         <TranscCard
