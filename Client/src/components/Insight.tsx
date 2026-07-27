@@ -4,13 +4,13 @@ const Insight = () => {
   return (
     <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 py-8">
       {/* Hero Card */}
-      <div className="relative overflow-hidden rounded-2xl border border-indigo-100/60 bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-8 sm:p-12 shadow-sm shadow-indigo-100/50">
+      <div className="relative overflow-hidden rounded-2xl border border-indigo-100/60 bg-linear-to-br from-indigo-50 via-white to-purple-50 p-8 sm:p-12 shadow-sm shadow-indigo-100/50">
         {/* Decorative background elements */}
         <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-indigo-200/20 blur-3xl" />
         <div className="absolute -bottom-16 -left-16 h-48 w-48 rounded-full bg-purple-200/20 blur-3xl" />
 
         {/* Icon */}
-        <div className="relative mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-indigo-600 shadow-lg shadow-indigo-200/50 ring-4 ring-white">
+        <div className="relative mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-indigo-500 to-indigo-600 shadow-lg shadow-indigo-200/50 ring-4 ring-white">
           <Lightbulb size={32} className="text-white" strokeWidth={1.5} />
         </div>
 
@@ -26,7 +26,7 @@ const Insight = () => {
         </p>
 
         {/* Coming Soon Badge */}
-        <div className="relative mb-8 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/60 px-4 py-2">
+        <div className="relative mb-8 inline-flex items-center gap-2 rounded-full bg-linear-to-r from-amber-50 to-orange-50 border border-amber-200/60 px-4 py-2">
           <Sparkles size={16} className="text-amber-500" strokeWidth={1.5} />
           <span className="text-sm font-semibold text-amber-700">
             Coming Soon

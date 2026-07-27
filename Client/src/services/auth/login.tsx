@@ -34,7 +34,9 @@ const Login = () => {
       });
       await checkAuth()
         
-      navigate("/overview");
+      setTimeout(() => {
+        navigate("/overview");
+      }, 500);
 
     } catch (error) {
       if(axios.isAxiosError(error)) {
