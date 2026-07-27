@@ -7,7 +7,7 @@ import { sendEmail } from "../services/email.services.js";
 const isProduction = process.env.NODE_ENV === "production";
 
 
-export async function getCurrentUserController(req:Request, res:Response) {
+export async function getCurrentUserController(req:Request, res:Response, next:NextFunction) {
   
     const user = await authModel.findById(req.user!.id).select(
       "-password -refreshToken"
@@ -22,7 +22,7 @@ export async function getCurrentUserController(req:Request, res:Response) {
     });
 }
 
-export async function logoutController(req:Request, res:Response) {
+export async function logoutController(req:Request, res:Response, next:NextFunction) {
   try {
 
     const user = await authModel.findById(req.user!.id);
@@ -51,9 +51,7 @@ export async function logoutController(req:Request, res:Response) {
     });
 
   } catch (error) {
-    return res.status(500).json({
-        errorMsg: error
-    });
+    next();
   }
 }
 
