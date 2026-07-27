@@ -8,6 +8,14 @@ import { loginSchema, registerSchema } from "../validation/auth.schema.js"
 import { AppError } from "../utils/AppError.js"
 import crypto from "crypto";
 import { sendEmail } from "../services/email.services.js"
+const isProduction = process.env.NODE_ENV === "production";
+
+const cookieOptions = {
+  httpOnly: true,
+  secure: isProduction,
+  sameSite: isProduction ? "none" as const: "lax" as const,
+  path: "/",
+};
 
 export async function RegisterController (
   req:Request<{}, {}, RegisterRequestBody>,
@@ -121,12 +129,7 @@ export async function loginController(req: Request<{}, {}, LoginRequestBody>,res
   user.refreshToken = refreshToken;
   await user.save();
 
-  const cookieOptions = {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax" as const,
-    path: "/",
-  };
+  // const isProduction = process.env.NODE_ENV === "production"
 
   res.cookie("accessToken", accessToken, {
     ...cookieOptions,
@@ -181,12 +184,12 @@ export async function refreshTokenController(req: Request<{}, {}, RefreshRequest
     await user.save();
     // Return it
 
-    const cookieOptions = {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax" as const,
-      path: "/",
-    };
+    // const cookieOptions = {
+    //   httpOnly: true,
+    //   secure: isProduction,
+    //   sameSite: isProduction ? "none" as const: "lax" as const,
+    //   path: "/",
+    // };
 
     res.cookie("accessToken", accessToken, {
       ...cookieOptions,

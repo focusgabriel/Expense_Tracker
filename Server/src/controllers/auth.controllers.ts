@@ -4,6 +4,7 @@ import crypto from "crypto";
 import bcrypt from "bcrypt"
 import { AppError } from "../utils/AppError.js";
 import { sendEmail } from "../services/email.services.js";
+const isProduction = process.env.NODE_ENV === "production";
 
 
 export async function getCurrentUserController(req:Request, res:Response) {
@@ -29,17 +30,19 @@ export async function logoutController(req:Request, res:Response) {
       throw new AppError("User not found", 404);
     }
 
-    res.clearCookie("accessToken", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax" as const,
-    });
+   res.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? "none" as const: "lax" as const,
+    path: "/",
+  });
 
-    res.clearCookie("refreshToken", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax" as const,
-    });
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? "none" as const: "lax" as const,
+    path: "/",
+  });
     
     await user.save();
 
