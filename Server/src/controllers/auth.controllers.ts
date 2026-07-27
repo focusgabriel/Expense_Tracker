@@ -14,6 +14,7 @@ export async function getCurrentUserController(req:Request, res:Response, next:N
     )
 
     if(!user) {
+      console.log(user);
       throw new AppError("User not found", 404);
     }
 
