@@ -13,4 +13,12 @@ export interface AuthContextType {
   checkAuth: () => Promise<void>;
 }
 
+export interface AuthContextType {
+  user: User | null;
+  loading: boolean;
+  isAuthenticated: boolean;
+  checkAuth: () => Promise<void>;
+  logout: () => void;
+}
+
 export const AuthContext = createContext<AuthContextType | null>(null);
