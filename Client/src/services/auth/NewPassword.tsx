@@ -30,26 +30,23 @@ const NewPassword = () => {
         newPassword,
       );
 
-      toast.success("Password updated successfully!", {
-        position: "top-right",
-        duration: 3000,
-      });
+      console.log(res.data.message);
 
+      toast.success("Password Updated Successfully", {
+        position: "top-right",
+        duration: 1000,
+      });
+      
       setTimeout(() => {
         navigate("/");
       }, 300);
 
     } catch (error) {
+      setIsLoading(false);
       if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message ?? "Reset password failed.", {
-          position: "top-right",
-          duration: 3000,
-        });
+        toast.error(error.response?.data?.message ?? "reset password failed")
       } else {
-        toast.error("Reset password failed.", {
-          position: "top-right",
-          duration: 3000,
-        });
+        ("reset password failed");
       }
     } finally{
       setIsLoading(false);

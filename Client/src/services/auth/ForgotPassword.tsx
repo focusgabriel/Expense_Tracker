@@ -1,11 +1,12 @@
 import axios from "axios";
 import refreshClient from "../../api/fetch"
 import toast from "react-hot-toast";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Logo from "../../components/Logo";
+import { Loader2 } from "lucide-react";
 
 const ForgotPassword = () => {
-
+  const [isLoading, setIsLoading] = useState(false);
   const emailRef = useRef<HTMLInputElement>(null);
 
   const resetSubmit = async(e: React.SubmitEvent<HTMLFormElement>) => {
@@ -16,6 +17,7 @@ const ForgotPassword = () => {
     }
 
     try {
+      setIsLoading(true);
       await refreshClient.post("/auth/forgot-password", writeEmail);
 
       toast.success("Check your email for the password reset link.", {
@@ -24,6 +26,7 @@ const ForgotPassword = () => {
       });
 
     } catch (error) {
+      setIsLoading(false)
       if(axios.isAxiosError(error)) {
         toast.error(error.response?.data?.message ?? "Email verification failed.", {
           position: "top-right",
@@ -35,7 +38,9 @@ const ForgotPassword = () => {
           duration: 3000,
         });
       }
-    }
+    } finally {
+      setIsLoading(false);
+    } 
   }
 
   
@@ -68,7 +73,16 @@ const ForgotPassword = () => {
                 />
               </div>
 
-              <button type="submit" className="auth-action-btn">Submit</button>
+              <button type="submit" className="auth-action-btn">
+                {isLoading ? (
+                  <>
+                    <Loader2 size={16} className="animate-spin" />
+                    Submitting...
+                  </>
+                ) : (
+                  <>Submit</>
+                )}
+              </button>
             </form>
           </div>
         </div>
