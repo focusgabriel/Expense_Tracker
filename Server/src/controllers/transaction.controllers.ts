@@ -2,7 +2,6 @@ import express, { Request, Response, Application } from 'express';
 import { addTransaction, deleteTransaction, editTransaction } from "../services/transaction.services.js";
 import { ExpenseModel, authModel } from '../model/index.js';
 import mongoose from 'mongoose';
-import { CategoryScale } from 'chart.js';
 import { CATEGORY_COLORS } from '../constants/index.js';
 
 export async function addTransactionController(req:Request, res:Response){
