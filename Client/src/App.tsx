@@ -2,6 +2,7 @@
 
 import AddTask from "./components/AddTask";
 import { Route, Routes, useLocation } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import Dashboard from "./components/Dashboard";
 import SideBar from "./components/SideBar";
 import Header from "./components/Header";
@@ -18,11 +19,11 @@ import ForgotPassword from "./services/auth/ForgotPassword";
 import NewPassword from "./services/auth/NewPassword";
 import MonthlyReport from "./components/Reports";
 import Insight from "./components/Insight";
+import { PUBLIC_ROUTES } from "./constants";
 
 const App = () => {
   const location = useLocation();
-  const authRoutes = ["/", "/register", "/verify-password", "/reset-password", "/verify-email"];
-  const isAuthRoute = authRoutes.some(
+  const isAuthRoute = PUBLIC_ROUTES.some(
     r => location.pathname === r || location.pathname.startsWith(r + "/"),
   );
 
@@ -34,6 +35,7 @@ const App = () => {
           : "flex h-screen overflow-hidden bg-slate-50 w-full "
       }
     >
+      <Toaster position="top-right" />
       {!isAuthRoute && <SideBar />}
       <main
         className={
