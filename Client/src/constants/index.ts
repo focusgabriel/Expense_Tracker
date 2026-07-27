@@ -39,3 +39,11 @@ export type Registration = {
   password: string,
   confirm_password:string
 }
+
+export const PUBLIC_ROUTES = [
+  "/",
+  "/register",
+  "/forgotPassword",
+  "/verify-email",
+  "/reset-password",
+];
