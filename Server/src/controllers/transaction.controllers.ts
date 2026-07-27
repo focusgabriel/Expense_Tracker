@@ -1,11 +1,12 @@
-import express, { Request, Response, Application } from 'express';
+import express, { Request, Response, Application, NextFunction } from 'express';
 import { addTransaction, deleteTransaction, editTransaction } from "../services/transaction.services.js";
 import { ExpenseModel, authModel } from '../model/index.js';
 import mongoose from 'mongoose';
 import { CATEGORY_COLORS } from '../constants/index.js';
 import { AppError } from '../utils/AppError.js';
+import { nextTick } from 'node:process';
 
-export async function addTransactionController(req:Request, res:Response){
+export async function addTransactionController(req:Request, res:Response, next:NextFunction){
   try {
     const {type, amount, category, description, date= new Date(), created_date=new Date()} = req.body
     
@@ -26,12 +27,11 @@ export async function addTransactionController(req:Request, res:Response){
     res.status(201).json(transaction);
 
   } catch (error) {
-    console.log("Error Message:", error)
-    res.status(500).json({message: "Error Occurred while adding Transaction"})
+    next();
   }
 };
 
-export async function totalTransactionController(req:Request, res:Response){
+export async function totalTransactionController(req:Request, res:Response, next:NextFunction){
   try {
     const income = await ExpenseModel.aggregate([{
       $match: {
@@ -51,13 +51,13 @@ export async function totalTransactionController(req:Request, res:Response){
     
     const NetBalance = Total_income - Total_expense;
     res.status(200).json({Total_income, Total_expense, NetBalance});
-  } catch (error) {
-    console.log("Error:", error)
+  } catch (error:any) {
+    next();
   }
   
 };
 
-export async function getTransactionController(req:Request, res:Response){
+export async function getTransactionController(req:Request, res:Response, next:NextFunction){
   try{
     const { page, limit, search, type, category, sort, order } = req.query;
     const filter:any = {
@@ -98,6 +98,8 @@ export async function getTransactionController(req:Request, res:Response){
       sortOption[sort as string] = order === "asc" ? 1 : -1;
     }
 
+    // pagination logic implementation
+
     const pageNumber = Number(page);
     const limitNumber = Number(limit);
 
@@ -121,16 +123,12 @@ export async function getTransactionController(req:Request, res:Response){
       }
     });
 
-    console.log("page is:", page);
-
-
   } catch(err){
-    res.status(500).json({message:"error loading data"})
-    console.log("error:",err);
+    next();
   }
 };
 
-export async function getMonthlyIncomeController(req:Request, res:Response) {
+export async function getMonthlyIncomeController(req:Request, res:Response, next:NextFunction) {
 // getting the first day of the previous month and the first day of the next month
 const now = new Date()
 const startOfPrevMonth = new Date(
@@ -205,12 +203,11 @@ try {
   res.status(200).json({get_expense, get_income, netbalance, lastMonthNetBalance, getMonthlyExpense, endOfLastMonth});
   
 } catch (error) {
-  res.status(500).json({message: "Server Error"})
-  console.log(error)
+  next();
 }
 };
 
-export async function editTransactionControler(req:Request, res:Response) {
+export async function editTransactionControler(req:Request, res:Response, next:NextFunction) {
   const { id } = req.params;
   const userId = req.user!.id;
   const {type, amount, category, description, date} = req.body
@@ -227,19 +224,17 @@ export async function editTransactionControler(req:Request, res:Response) {
     const updatedTransaction = await editTransaction(id, userId, type, amount, category, description, date);
     
     if (!updatedTransaction) {
-      console.log("can't update transaction")
-      return res.status(404).json({ error: "Transaction not found" });
+      throw new AppError("Transaction not found", 404);
     }
 
     // console.log("Transaction updated:", {type, amount, category, description, date});
     res.status(200).json(updatedTransaction)
   } catch (error) {
-    console.error("Error updating transaction:", error);
-    res.status(500).json({error: "Error updating transaction"})
+    next();
   }
 }
 
-export async function getTransactionByIdController(req:Request, res:Response) {
+export async function getTransactionByIdController(req:Request, res:Response, next:NextFunction) {
   const transactionId = await ExpenseModel.findOne({_id:req.params.id, userId:req.user!.id})
 
   try {
@@ -249,26 +244,24 @@ export async function getTransactionByIdController(req:Request, res:Response) {
     res.status(200).json(transactionId)
     
   } catch (error) {
-    console.error({errorMsg: error});
-    res.status(500).json({message: "Error fetching transaction"})
+    next();
   }
 }
 
-export async function deleteTransactionController(req:Request, res:Response) {
+export async function deleteTransactionController(req:Request, res:Response, next:NextFunction) {
   try {
     // const {id} = req.params
     const delTransaction = await deleteTransaction(req.params.id, req.user!.id);
     if(!delTransaction) {
-      res.status(400).json({errorMsg: "couldn't find transaction"})
+      throw new AppError("couldn't find transaction", 404);
     }
     res.status(200).json(delTransaction)
-    console.log(`successfully deleted ${req.params.id}`);
-  } catch (error) {
-    res.status(500).json({errorMsg: error})
+  } catch (error:any) {
+    next();
   }
 }
 
-export async function dashboardController(req:Request, res:Response) {
+export async function dashboardController(req:Request, res:Response, next:NextFunction) {
   try {
     const authenticatedUser = await authModel.findById(req.user!.id).select("name email");
     const userId = req.user!.id;
@@ -414,7 +407,7 @@ export async function dashboardController(req:Request, res:Response) {
     })
     
   } catch {
-    throw new AppError("couldn't fetch data", 500);
+    next();
   }
 }
 

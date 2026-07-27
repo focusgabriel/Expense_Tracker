@@ -32,7 +32,7 @@ const App = () => {
       className={
         isAuthRoute
           ? "min-h-screen bg-slate-50"
-          : "flex h-screen overflow-hidden bg-slate-50 w-full "
+          : "flex h-screen overflow-hidden bg-slate-50 w-full"
       }
     >
       <Toaster position="top-right" />

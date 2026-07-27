@@ -10,12 +10,12 @@ interface CustomAxiosRequestConfig extends AxiosRequestConfig {
   _retry?: boolean;
 }
 const refreshClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: "http://localhost:3000/api/v1",
   withCredentials: true,
 });
 
 const tokenRefreshClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: "http://localhost:3000/api/v1",
   withCredentials: true,
 });
 
@@ -47,6 +47,10 @@ const tokenRefreshClient = axios.create({
       return refreshClient(originalRequest)
 
     } catch(err) {
+        // toast.error(err.response?.data?.message ?? "Session expired. Please log in again.", {
+        //   position: "top-right",
+        //   duration: 5000
+        // });
         const isAuthPage = PUBLIC_ROUTES.some((route) =>
           window.location.pathname === route ||
           window.location.pathname.startsWith(route + "/")

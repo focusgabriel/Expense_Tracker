@@ -9,10 +9,17 @@ interface spendingProps {
   chartData,
 }
 const SpendingChart = ({chartData, recentTransactions}: spendingProps) => {
-  const totalExpense = chartData.reduce(
-    (sum:any, item:any) => sum + item.amount,
-    0
-  );
+  const hasData = chartData.length > 0;
+  const totalExpense = hasData
+    ? chartData.reduce(
+        (sum:any, item:any) => sum + item.amount,
+        0
+      )
+    : 0;
+
+  const pieData = hasData
+    ? chartData
+    : [{ category: "No data", amount: 1, fill: "#CBD5E1" }];
 
   return (
     <div className="sm:rounded-2xl sm:border sm:border-slate-200 sm:bg-white sm:p-4 sm:shadow-sm">
@@ -25,12 +32,12 @@ const SpendingChart = ({chartData, recentTransactions}: spendingProps) => {
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
-                  data={chartData}
+                  data={pieData}
                   dataKey="amount"
                   nameKey="category"
                   innerRadius="50%"
                   outerRadius="75%"
-                  paddingAngle={2}
+                  paddingAngle={hasData ? 2 : 0}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -46,27 +53,32 @@ const SpendingChart = ({chartData, recentTransactions}: spendingProps) => {
         </div>
 
         <div className="grid w-full content-center gap-3 rounded-xl sm:relative bg-slate-50/60 p-4 lg:w-[30%]">
-          {chartData.map(item => (
-            <div
-              key={item.category}
-              className="grid grid-cols-[0.75rem_minmax(0,1fr)_auto_auto] items-center gap-3"
-            >
-              <span
-                className="h-3 w-3 shrink-0 rounded-full"
-                style={{ backgroundColor: item.fill ?? "#07023A" }}
-              />
-              <div className="truncate text-sm font-medium text-slate-900">
-                {item.category}
+          {hasData ? (
+            chartData.map(item => (
+              <div
+                key={item.category}
+                className="grid grid-cols-[0.75rem_minmax(0,1fr)_auto_auto] items-center gap-3"
+              >
+                <span
+                  className="h-3 w-3 shrink-0 rounded-full"
+                  style={{ backgroundColor: item.fill ?? "#07023A" }}
+                />
+                <div className="truncate text-sm font-medium text-slate-900">
+                  {item.category}
+                </div>
+                <div className="whitespace-nowrap text-sm text-gray-500 sm:absolute sm:right-[30%]">
+                  &#8358;{item.amount.toLocaleString()}
+                </div>
+                <div className="whitespace-nowrap text-sm font-medium text-slate-700">
+                  {item.percentage.toFixed(2)}%
+                </div>
               </div>
-              <div className="whitespace-nowrap text-sm text-gray-500 sm:absolute sm:right-[30%]">
-                &#8358;{item.amount.toLocaleString()}
-              </div>
-              <div className="whitespace-nowrap text-sm font-medium text-slate-700">
-                {/* now this is where i used the percentage that was externally added to the array. now each item now has a percentage of the specified category making it more understandable on what is going on the percentage calculations was modified to be coming from the backend. */}
-                {item.percentage.toFixed(2)}%
-              </div>
+            ))
+          ) : (
+            <div className="col-span-full py-6 text-center text-sm text-slate-400">
+              No expenses recorded yet
             </div>
-          ))}
+          )}
         </div>
 
         <AllTrans recentTransactions={recentTransactions} />
