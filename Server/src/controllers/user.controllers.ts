@@ -38,17 +38,46 @@ export async function RegisterController (
 
     await sendEmail({
       to: user.email,
-      subject: "Verify your Expense Tracker account",
+      subject: "Verify Your Expense Tracker Account",
       html: `
-        <h2>Welcome to Expense Tracker!</h2>
+      <!DOCTYPE html>
+      <html>
+        <head>
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background-color: #f8f9fa; padding: 20px; border-radius: 5px; }
+          .button { display: inline-block; padding: 12px 30px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+          .footer { color: #666; font-size: 12px; margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px; }
+          .warning { color: #666; font-size: 13px; margin-top: 15px; }
+        </style>
+        </head>
+        <body>
+        <div class="container">
+          <div class="header">
+          <h1>Welcome to Expense Tracker!</h1>
+          <p>Thank you for signing up. We're excited to have you on board.</p>
+          </div>
 
-        <p>Click the button below to verify your account.</p>
+          <p>To complete your registration and secure your account, please verify your email address by clicking the button below:</p>
 
-        <a href="${verificationUrl}">
-          Verify Account
-        </a>
+          <a href="${verificationUrl}" class="button" style="color:white;">Verify Email Address</a>
 
-        <p>This link expires in 1 hour.</p>
+          <p>Or copy and paste this link in your browser:</p>
+          <p style="word-break: break-all; color: #007bff;">${verificationUrl}</p>
+
+          <div class="warning">
+          <p><strong>Security Note:</strong></p>
+          <p>This verification link will expire in 1 hour. If you did not create this account, please ignore this email or contact our support team.</p>
+          </div>
+
+          <div class="footer">
+          <p>Best regards,<br>The Expense Tracker Team</p>
+          <p>If you have any questions, leave a reply.</p>
+          
+        </div>
+        </body>
+      </html>
       `,
     });
     

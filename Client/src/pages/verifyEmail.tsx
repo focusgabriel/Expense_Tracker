@@ -7,7 +7,7 @@ import refreshClient from "../api/fetch";
 const VerifyEmail = () => {
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState<string | null>("");
   const { token } = useParams();
   const navigate = useNavigate();
 
@@ -15,14 +15,21 @@ const VerifyEmail = () => {
     const emailVerify = async () => {
       try {
         const res = await refreshClient.get(`/auth/verify-email/${token}`);
+
+        if(!res.data) {
+          setErrorMsg("Invalid verification link");
+        }
+
         setSuccess(true);
-        setErrorMsg(res.data.message);
+
         setTimeout(() => {
           navigate("/");
-        }, 5000);
+        }, 3000);
+
       } catch (error) {
-        setSuccess(false);
+
         setErrorMsg("Verification Failed...");
+
       } finally {
         setLoading(false);
       }
@@ -32,7 +39,7 @@ const VerifyEmail = () => {
   }, [token]);
 
   if (loading) {
-    return <h2>Verifying your email...</h2>;
+    return <h2 className="lg:text-2xl text-lg font-medium text-center">Verifying your email...</h2>;
   }
 
   return (
@@ -43,10 +50,8 @@ const VerifyEmail = () => {
             success ? "text-green-600" : "text-red-600"
           }`}
         >
-          {success ? "Success!" : "Oops!"}
+          {success ? "Success!" : `Opps! ${errorMsg}`}
         </h1>
-
-        <p className="mt-4">{errorMsg}</p>
       </div>
     </section>
   );

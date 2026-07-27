@@ -140,17 +140,45 @@ export const ForgotPasswordController = async(
     
         await sendEmail({
           to: user.email,
-          subject: "Email Reset Password",
+          subject: "Reset Your Expense Tracker Password",
           html: `
-            <h2>Welcome to Expense Tracker!</h2>
-    
-            <p>Click the link below to reset your password.</p>
-    
-            <a href="${verificationUrl}">
-              Verify Account
-            </a>
-    
-            <p>This link expires in 15 minutes.</p>
+            <!DOCTYPE html>
+            <html>
+              <head>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; background: #f9f9f9; }
+            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
+            .content { background: white; padding: 30px; border-radius: 0 0 8px 8px; }
+            .button { display: inline-block; padding: 12px 30px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; font-weight: bold; }
+            .footer { text-align: center; color: #666; font-size: 12px; margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px; }
+            .warning { background: #fff3cd; padding: 10px; border-left: 4px solid #ffc107; margin: 20px 0; border-radius: 3px; }
+          </style>
+              </head>
+              <body>
+          <div class="container">
+            <div class="header">
+              <h1>Password Reset Request</h1>
+            </div>
+            <div class="content">
+              <p>Hi,</p>
+              <p>We received a request to reset the password for your Expense Tracker account. If you didn't make this request, you can safely ignore this email.</p>
+              <p style="text-align: center;">
+                <a href="${verificationUrl}" class="button">Reset Your Password</a>
+              </p>
+              <p>Or copy and paste this link in your browser:</p>
+              <p style="word-break: break-all; background: #f5f5f5; padding: 10px; border-radius: 5px; font-size: 12px;">${verificationUrl}</p>
+              <div class="warning">
+                <strong>⚠️ Security Notice:</strong> This link will expire in 15 minutes for your protection.
+              </div>
+              <p><strong>Didn't request a password reset?</strong> Your account may be compromised. Please contact our support team immediately.</p>
+            </div>
+            <div class="footer">
+              <p>&copy; 2026 Expense Tracker. All rights reserved.</p>
+            </div>
+          </div>
+              </body>
+            </html>
           `,
         });
 
