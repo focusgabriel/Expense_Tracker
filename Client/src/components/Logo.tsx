@@ -58,21 +58,8 @@ const Logo = ({ variant = "sidebar" }: LogoProps) => {
             />
             <circle cx="16.5" cy="12" r="0.75" fill="currentColor" />
           </svg>
-          <div className="flex items-center font-bold text-[clamp(1.1rem,1.5vw,1.35rem)] leading-none tracking-tight">
-            <span>Trac</span>
-            <span className="relative inline-block w-[0.65em] h-[0.78em] mx-[0.02em]">
-              <svg
-                viewBox="0 0 100 120"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-full h-full"
-              >
-                <path d="M 12 110 L 12 25 C 12 10, 28 5, 45 5 L 45 22 C 30 22, 28 28, 28 38 L 28 110 Z" fill="white" />
-                <path d="M 28 68 L 78 110 L 52 110 L 12 76 Z" fill="white" />
-                <path d="M 16 52 C 10 40, 25 22, 50 18 L 75 18 C 60 32, 40 45, 28 65 Z" fill="white" fillOpacity="0.7" />
-              </svg>
-            </span>
-            <span>io</span>
+          <div className="w-[50%] font-medium">
+            <TrackKioLogo />
           </div>
         </span>
       </div>
@@ -117,7 +104,7 @@ const Logo = ({ variant = "sidebar" }: LogoProps) => {
       <div className="flex flex-col leading-tight justify-start">
         <TrackKioLogo />
           <span className="text-[12px] mt-1 font-medium uppercase tracking-[0.2em] text-indigo-600">
-          Financial clarity<br /> starts here.
+          Financial clarity starts here.
         </span>
       </div>
     </div>
