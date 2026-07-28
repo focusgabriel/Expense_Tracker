@@ -58,6 +58,7 @@ export async function totalTransactionController(req:Request, res:Response, next
 };
 
 export async function getTransactionController(req:Request, res:Response, next:NextFunction){
+  // filteration implementation.
   try{
     const { page, limit, search, type, category, sort, order } = req.query;
     const filter:any = {
@@ -109,7 +110,6 @@ export async function getTransactionController(req:Request, res:Response, next:N
       .sort(sortOption)
       .skip(skip)
       .limit(limitNumber);
-      // console.log(transactions.length)
 
     const total = await ExpenseModel.countDocuments(filter);
 

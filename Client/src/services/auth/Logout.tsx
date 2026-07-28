@@ -10,7 +10,6 @@ import { useAuth } from "../../lib/useAuth";
 const Logout = () => {
   const navigate = useNavigate();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  // const [dashboard, setDashboard] = useState<DashboardResponse | null>(null)
   const { user } = useAuth();
 
   const handleConfirmLogout = async () => {
