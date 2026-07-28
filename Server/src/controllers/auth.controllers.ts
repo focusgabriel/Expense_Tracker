@@ -48,6 +48,7 @@ export async function logoutController(req:Request, res:Response, next:NextFunct
     await user.save();
 
     return res.status(200).json({
+        success:true,
         message: "Logged out successfully."
     });
 
@@ -122,7 +123,7 @@ export const ForgotPasswordController = async(
 
     if (!user) {
       return res.status(200).json({
-        status: true,
+        success: true,
         message: "If an account with that email exists, a reset link has been sent."
       });
     }
@@ -235,6 +236,7 @@ export const ResetPasswordController = async(
     await user.save();
 
     return res.status(200).json({
+      success:true,
       message: "Password reset successful.",
     });
 
