@@ -1,9 +1,17 @@
 /** @format */
 
 import toast from "react-hot-toast";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import refreshClient from "../api/fetch";
 import axios from "axios";
+
+const getTodayString = (): string => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
 
 const AddTask = () => {
   const Type = useRef<HTMLSelectElement>(null);
@@ -12,6 +20,15 @@ const AddTask = () => {
   const Description = useRef<HTMLInputElement>(null);
   const newDate = useRef<HTMLInputElement>(null);
   const Current_date = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (newDate.current) {
+      newDate.current.value = getTodayString();
+    }
+    if (Current_date.current) {
+      Current_date.current.value = getTodayString();
+    }
+  }, []);
 
   const handleSubmit = async(e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
