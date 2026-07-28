@@ -18,21 +18,24 @@ type Iuser = {
 export const UserProps = new Schema<Iuser>({
   name: {
     type: String,
-    required: true,
-    trim: true
+    required: [true, "Name is required"],
+    trim: true,
+    minLength:3,
+    maxLength:50,
   },
 
   email: {
     type: String,
-    required: true,
+    required: [true, "Email is required"],
     trim: true,
     unique: true,
-    lowercase: true
+    lowercase: true,
+    match: [/\S+@\S+\.\S+/, "Please enter a valid email address"]
   },
 
   password: {
     type: String,
-    required: true,
+    required: [true, "Password is required"],
     trim: true
   },
 
