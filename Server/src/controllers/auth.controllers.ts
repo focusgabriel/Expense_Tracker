@@ -142,7 +142,7 @@ export const ForgotPasswordController = async(
     
         await sendEmail({
           to: user.email,
-          subject: "Reset Your Expense Tracker Password",
+          subject: "Reset Your TracKiu Password",
           html: `
             <!DOCTYPE html>
             <html>
@@ -164,7 +164,7 @@ export const ForgotPasswordController = async(
             </div>
             <div class="content">
               <p>Hi,</p>
-              <p>We received a request to reset the password for your Expense Tracker account. If you didn't make this request, you can safely ignore this email.</p>
+              <p>We received a request to reset the password for your TracKiu account. If you didn't make this request, you can safely ignore this email.</p>
               <p style="text-align: center;">
                 <a href="${verificationUrl}" class="button">Reset Your Password</a>
               </p>
@@ -173,10 +173,10 @@ export const ForgotPasswordController = async(
               <div class="warning">
                 <strong>⚠️ Security Notice:</strong> This link will expire in 15 minutes for your protection.
               </div>
-              <p><strong>Didn't request a password reset?</strong> Your account may be compromised. Please contact our support team immediately.</p>
+              <p><strong>Didn't request a password reset?</strong> Your account may be compromised. Please leave a message immediately.</p>
             </div>
             <div class="footer">
-              <p>&copy; 2026 Expense Tracker. All rights reserved.</p>
+              <p>&copy; 2026 Trackiu. All rights reserved.</p>
             </div>
           </div>
               </body>
@@ -235,7 +235,6 @@ export const ResetPasswordController = async(
     await user.save();
 
     return res.status(200).json({
-      success: true,
       message: "Password reset successful.",
     });
 
