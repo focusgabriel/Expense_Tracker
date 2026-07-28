@@ -116,7 +116,7 @@ const Logo = ({ variant = "sidebar" }: LogoProps) => {
       </div>
       <div className="flex flex-col leading-tight justify-start">
         <TrackKioLogo />
-          <span className="text-[12px] mt-2 font-medium uppercase tracking-[0.2em] text-indigo-600">
+          <span className="text-[12px] mt-1 font-medium uppercase tracking-[0.2em] text-indigo-600">
           Financial clarity<br /> starts here.
         </span>
       </div>
