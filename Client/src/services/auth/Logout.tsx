@@ -13,18 +13,6 @@ const Logout = () => {
   // const [dashboard, setDashboard] = useState<DashboardResponse | null>(null)
   const { user } = useAuth();
 
-  // Grab user info for a personal touch
-
-  // useEffect(() => {
-  //   const getData = async() => {
-  //     const res = await refreshClient.get("/dashboard/");
-  //     setDashboard(res.data);
-  //   }
-
-  //   getData();
-  // }, [])
-
-  // let userName = dashboard?.authenticatedUser.name;
   const handleConfirmLogout = async () => {
     setIsLoggingOut(true);
     try {
