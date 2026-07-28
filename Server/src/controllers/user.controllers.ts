@@ -90,7 +90,11 @@ export async function RegisterController (
       `,
     });
     
-    return res.status(201).json({msg: "Registration successful. Please check your email to verify your account."});
+    return res.status(201).json(
+      {
+        success:true,
+        msg: "Registration successful. Please check your email to verify your account."}
+    );
     
 
   } catch (error) {
@@ -194,7 +198,7 @@ export async function refreshTokenController(req: Request<{}, {}, RefreshRequest
     });
 
     return res.status(200).json({
-      status: 200,
+      success: 200,
       message: "Refresh token activated"
     });
 
