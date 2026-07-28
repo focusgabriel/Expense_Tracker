@@ -28,7 +28,8 @@ export async function RegisterController (
     // the register helper function validation from Zod
     registerSchema
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
     
     const verifiedToken = crypto.randomBytes(32).toString("hex");
     const hashedToken = crypto.createHash("sha256").update(verifiedToken).digest("hex");
@@ -46,7 +47,7 @@ export async function RegisterController (
 
     await sendEmail({
       to: user.email,
-      subject: "Verify Your Expense Tracker Account",
+      subject: "Verify Your TracKiu Account",
       html: `
       <!DOCTYPE html>
       <html>
@@ -63,7 +64,7 @@ export async function RegisterController (
         <body>
         <div class="container">
           <div class="header">
-          <h1>Welcome to Expense Tracker!</h1>
+          <h1>Welcome to Trackiu!</h1>
           <p>Thank you for signing up. We're excited to have you on board.</p>
           </div>
 
@@ -80,8 +81,8 @@ export async function RegisterController (
           </div>
 
           <div class="footer">
-          <p>Best regards,<br>The Expense Tracker Team</p>
-          <p>If you have any questions, leave a reply.</p>
+          <p>Best regards,<br>The TracKiu Team</p>
+          <p>If you have any questions, leave a message.</p>
           
         </div>
         </body>
@@ -113,7 +114,7 @@ export async function loginController(req: Request<{}, {}, LoginRequestBody>,res
   );
 }
 
-  if (!user!.isVerified) {
+  if (!user.isVerified) {
     throw new AppError(
       "Please verify your email before logging in.",
       401
@@ -128,8 +129,6 @@ export async function loginController(req: Request<{}, {}, LoginRequestBody>,res
   const refreshToken = generateRefreshToken( user._id.toString() );
   user.refreshToken = refreshToken;
   await user.save();
-
-  // const isProduction = process.env.NODE_ENV === "production"
 
   res.cookie("accessToken", accessToken, {
     ...cookieOptions,
@@ -146,8 +145,8 @@ export async function loginController(req: Request<{}, {}, LoginRequestBody>,res
     success: true,
     message: "Login Successful",
     user: {
-      id: user!._id,
-      email: user!.email
+      id: user._id,
+      email: user.email
     }
   })
   
@@ -183,14 +182,6 @@ export async function refreshTokenController(req: Request<{}, {}, RefreshRequest
 
     await user.save();
     // Return it
-
-    // const cookieOptions = {
-    //   httpOnly: true,
-    //   secure: isProduction,
-    //   sameSite: isProduction ? "none" as const: "lax" as const,
-    //   path: "/",
-    // };
-
     res.cookie("accessToken", accessToken, {
       ...cookieOptions,
       maxAge:  15 * 60 * 1000,
