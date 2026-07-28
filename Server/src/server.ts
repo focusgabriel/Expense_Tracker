@@ -29,10 +29,15 @@ app.use(cors({
 }));
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: false }))
 
 app.use(cookieParser());
 
+app.use("/api/v1/auth", limiter);
+
+app.use("/api/v1/", transactionRouter);
+app.use("/api/v1/", userRouter);
+app.use(errorHandler);
 
 app.get("/health", async(_req:Request, res:Response) => {
   try{
@@ -42,12 +47,6 @@ app.get("/health", async(_req:Request, res:Response) => {
     res.status(400).json({status: "failed", database: "Disconnected"});
   }
 })
-
-app.use("/api/v1/auth", limiter);
-
-app.use("/api/v1/", transactionRouter);
-app.use("/api/v1/", userRouter);
-app.use(errorHandler);
 
 
 app.listen(PORT, () => {
