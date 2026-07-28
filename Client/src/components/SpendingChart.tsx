@@ -2,24 +2,38 @@
 
 import { PieChart, Pie, ResponsiveContainer } from "recharts";
 import AllTrans from "./AllTrans";
-
+import type { ChartData } from "../types/dashboard";
+import type { Transaction } from "../constants";
 
 interface spendingProps {
-  recentTransactions,
-  chartData,
+  recentTransactions: Transaction[];
+  chartData: ChartData[];
 }
-const SpendingChart = ({chartData, recentTransactions}: spendingProps) => {
-  const hasData = chartData.length > 0;
+
+const formatAmount = (value: number | undefined | null): string => {
+  if (value == null) return "0";
+  return value.toLocaleString();
+};
+
+const formatPercentage = (value: number | undefined | null): string => {
+  if (value == null) return "0.00";
+  return value.toFixed(2);
+};
+
+const SpendingChart = ({ chartData, recentTransactions }: spendingProps) => {
+  const safeChartData: ChartData[] = Array.isArray(chartData) ? chartData : [];
+
+  const hasData = safeChartData.length > 0;
   const totalExpense = hasData
-    ? chartData.reduce(
-        (sum:any, item:any) => sum + item.amount,
+    ? safeChartData.reduce(
+        (sum: number, item: ChartData) => sum + (item.amount ?? 0),
         0
       )
     : 0;
 
   const pieData = hasData
-    ? chartData
-    : [{ category: "No data", amount: 1, fill: "#CBD5E1" }];
+    ? safeChartData
+    : [{ category: "No data", amount: 1, fill: "#CBD5E1" } as ChartData];
 
   return (
     <div className="sm:rounded-2xl sm:border sm:border-slate-200 sm:bg-white sm:p-4 sm:shadow-sm">
@@ -46,7 +60,7 @@ const SpendingChart = ({chartData, recentTransactions}: spendingProps) => {
                 Total expense
               </span>
               <span className="mt-1 text-xl font-semibold text-slate-900">
-                &#8358;{totalExpense.toLocaleString()}
+                &#8358;{formatAmount(totalExpense)}
               </span>
             </div>
           </div>
@@ -54,9 +68,9 @@ const SpendingChart = ({chartData, recentTransactions}: spendingProps) => {
 
         <div className="grid w-full content-center gap-3 rounded-xl sm:relative bg-slate-50/60 p-4 lg:w-[30%]">
           {hasData ? (
-            chartData.map(item => (
+            safeChartData.map((item, index) => (
               <div
-                key={item.category}
+                key={item.category ?? `item-${index}`}
                 className="grid grid-cols-[0.75rem_minmax(0,1fr)_auto_auto] items-center gap-3"
               >
                 <span
@@ -64,13 +78,13 @@ const SpendingChart = ({chartData, recentTransactions}: spendingProps) => {
                   style={{ backgroundColor: item.fill ?? "#07023A" }}
                 />
                 <div className="truncate text-sm font-medium text-slate-900">
-                  {item.category}
+                  {item.category ?? "Other"}
                 </div>
                 <div className="whitespace-nowrap text-sm text-gray-500 sm:absolute sm:right-[30%]">
-                  &#8358;{item.amount.toLocaleString()}
+                  &#8358;{formatAmount(item.amount)}
                 </div>
                 <div className="whitespace-nowrap text-sm font-medium text-slate-700">
-                  {item.percentage.toFixed(2)}%
+                  {formatPercentage(item.percentage)}%
                 </div>
               </div>
             ))
@@ -85,6 +99,6 @@ const SpendingChart = ({chartData, recentTransactions}: spendingProps) => {
       </div>
     </div>
   );
-}
+};
 
 export default SpendingChart;

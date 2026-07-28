@@ -24,7 +24,7 @@ const Analytics = () => {
   const [limit] = useState<number>(10);
   const [showFiltersMobile, setShowFiltersMobile] = useState(false);
 
-  const handleEdit = (id: string) => navigate(`/edit/${id}`);
+  const handleEdit = (id: string | undefined) => navigate(`/edit/${id}`);
 
   const handleDelete = (tx: Transaction) => {
     setSelected(tx);
@@ -350,7 +350,6 @@ const Analytics = () => {
             category={item.category}
             description={item.description}
             date={item.date}
-            created_date={item.created_date}
             onEdit={() => handleEdit(item._id)}
             onDelete={() => handleDelete(item)}
           />

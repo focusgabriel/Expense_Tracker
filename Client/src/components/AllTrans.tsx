@@ -38,7 +38,6 @@ const AllTrans = ({recentTransactions}: TransactionProps) => {
             category={item.category}
             description={item.description}
             date={item.date}
-            created_date={item.created_date}
           />
         )))}
       </div>

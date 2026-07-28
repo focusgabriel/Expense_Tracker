@@ -67,7 +67,7 @@ const Logout = () => {
               <p className="mt-3 text-sm leading-relaxed text-slate-500">
                 Are you sure you want to sign out,{" "}
                 <span className="font-semibold text-slate-700">
-                  {user.name.split(" ")[1] ?? user.name.split(" ")[0]}
+                  {user?.name.split(" ")[1] ?? user?.name.split(" ")[0]}
                 </span>
                 ? You'll need to sign in again to access your dashboard.
               </p>

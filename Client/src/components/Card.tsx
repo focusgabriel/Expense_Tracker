@@ -3,46 +3,73 @@
 import {
   CarFront,
   Wifi,
-  Wallet,
-  CookingPot,
-  ShieldQuestionMark,
   Pencil,
   Trash2,
+  UtilityPole,
+  Spotlight,
+  DollarSign,
+  Utensils,
+  CircleSlash,
+  ShoppingBag,
+  DumbbellIcon,
+  Store,
 } from "lucide-react";
 
-const categoryIcon = (category: string) => {
+const categoryIcon = (category?: string) => {
   switch (category) {
     case "transportation":
       return <CarFront size={18} />;
+    case "utility":
+      return <UtilityPole size={18} />;
+    case "entertainment":
+      return <Spotlight size={18} />;
     case "bill":
       return <Wifi size={18} />;
     case "salary":
-      return <Wallet size={18} />;
+      return <DollarSign size={18} />;
     case "food":
-      return <CookingPot size={18} />;
+      return <Utensils size={18} />;
+    case "food":
+      return <ShoppingBag size={18} />;
+    case "health":
+    case "fitness":
+      return <DumbbellIcon size={18} />;
+    case "grocery":
+      return <Store size={18} />;
 
     default:
-      return <ShieldQuestionMark size={20} />;
+      return <CircleSlash size={20} />;
   }
 };
 
-const formatDate = dateValue => {
-  const date = new Date(dateValue);
-  return date.toLocaleDateString("en-us", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
+const formatDate = (dateValue: string | Date | undefined | null): string => {
+  if (!dateValue) return "Unknown date";
+
+  try {
+    const date = new Date(dateValue);
+    if (isNaN(date.getTime())) return "Invalid date";
+
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  } catch {
+    return "Invalid date";
+  }
+};
+
+const formatAmount = (amount: number | undefined | null): string => {
+  if (amount == null) return "0";
+  return amount.toLocaleString();
 };
 
 const Card = ({
-  id,
   type,
   amount,
   category,
   description,
   date,
-  created_date,
   onEdit,
   onDelete,
 }: {
@@ -51,8 +78,7 @@ const Card = ({
   amount?: number;
   category?: string;
   description?: string;
-  date?: Date;
-  created_date?: Date;
+  date?: string | Date;
   onEdit?: () => void;
   onDelete?: () => void;
 }) => {
@@ -73,7 +99,7 @@ const Card = ({
       <div className="flex min-w-0 flex-1 flex-col gap-0.5 sm:gap-1 lg:gap-0.5">
         <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 lg:gap-1.5">
           <h3 className="text-xs font-semibold capitalize text-slate-900 sm:text-sm lg:text-xs">
-            {category}
+            {category ?? "Uncategorized"}
           </h3>
           <span
             className={`inline-flex items-center rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase leading-3 sm:px-2 sm:text-[10px] sm:leading-4 lg:text-[9px] lg:px-1.5 ${
@@ -82,7 +108,7 @@ const Card = ({
                 : "bg-green-50 text-green-600"
             }`}
           >
-            {type}
+            {type ?? "expense"}
           </span>
         </div>
         {description ? (
@@ -107,7 +133,7 @@ const Card = ({
               type === "expense" ? "text-red-600" : "text-green-600"
             }`}
           >
-            {type === "expense" ? "-" : "+"}&#8358;{amount}
+            {type === "expense" ? "-" : "+"}&#8358;{formatAmount(amount)}
           </h4>
         </div>
 

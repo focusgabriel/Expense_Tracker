@@ -46,10 +46,10 @@ const AddTask = () => {
       }
     }
 
-    Amount.current.value = ""
-    Description.current.value = ""
-    Category.current.value = ""
-    newDate.current.value = ""
+    Amount.current!.value = ""
+    Description.current!.value = ""
+    Category.current!.value = ""
+    newDate.current!.value = ""
   };
   return (
     <div className="mx-auto w-full max-w-2xl">

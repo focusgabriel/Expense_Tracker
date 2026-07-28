@@ -15,7 +15,7 @@ const AllTransaction = ({ summary }: AllTransProps) => {
         {/* <span className="text-green-600">{prevMonth}</span> */}
         <TranscCard
           title="Total Balance"
-          amount={summary.netBalance}
+          amount={summary.netBalance.toLocaleString()}
           content={
             summary.monthlyBalance !== null || summary.previousMonthBalance !== null ? (
               <span>
@@ -23,7 +23,7 @@ const AllTransaction = ({ summary }: AllTransProps) => {
                 <span
                   className={`${summary.monthlyBalance >= summary.previousMonthBalance ? "text-red-500 font-bold" : "text-indigo-600 font-bold"}`}
                 >
-                  &#8358;{summary.previousMonthBalance}
+                  &#8358;{summary.previousMonthBalance.toLocaleString()}
                 </span>{" "}
               </span>
             ) : (
@@ -36,7 +36,7 @@ const AllTransaction = ({ summary }: AllTransProps) => {
 
         <TranscCard
           title="Monthly Income"
-          amount={summary.totalIncome}
+          amount={summary.totalIncome.toLocaleString()}
           content="diverse or single source"
           icon="/dollar.png"
           alternate="dollar"
@@ -44,7 +44,7 @@ const AllTransaction = ({ summary }: AllTransProps) => {
 
         <TranscCard
           title="Monthly Expense"
-          amount={summary.totalExpense}
+          amount={summary.totalExpense.toLocaleString()}
           content="monthly expense roundup"
           icon="/expense.png"
           alternate="expense"
@@ -52,7 +52,7 @@ const AllTransaction = ({ summary }: AllTransProps) => {
 
         <TranscCard
           title="Net Balance"
-          amount={summary.netBalance}
+          amount={summary.netBalance.toLocaleString()}
           content="available balance"
           icon="/bal.png"
           alternate="balance"

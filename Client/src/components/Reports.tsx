@@ -8,7 +8,7 @@ import axios from "axios";
 
 const MonthlyReport = () => {
   const [reviewIncome, setReviewIncome] = useState<number | null>(null);
-  const [reviewExpense, setReviewExpense] = useState<number | null>(null);
+  // const [reviewExpense, setReviewExpense] = useState<number | null>(null);
   const [reviewBalance, setReviewBalance] = useState<number | null>(null);
 
   const [formattedIncome, setFormattedIncome] = useState<string | null>(null);
@@ -29,7 +29,7 @@ const MonthlyReport = () => {
       .get("/getMonthlyIncome")
       .then(res => {
         setReviewIncome(res.data.get_income);
-        setReviewExpense(res.data.get_expense);
+        // setReviewExpense(res.data.get_expense);
         setReviewBalance(res.data.netbalance);
 
         setFormattedIncome(res.data.get_income.toLocaleString());
