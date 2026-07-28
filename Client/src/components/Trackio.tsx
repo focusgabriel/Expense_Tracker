@@ -68,11 +68,11 @@ export default function TrackKioLogo({ className = "" }: { className?: string })
           </span>
 
           {/* "io" with Gradient — immediately after the "k" mark */}
-          <span className="inline-flex items-baseline -ml-[0.10em] text-2xl ">
-            <span className="text-transparent bg-clip-text bg-gradient-to-b from-[#00C6FF] via-[#0072FF] to-[#003BFF] ">
+          <span className="inline-flex items-baseline ml-[0.1em] text-2xl ">
+            <span className="text-transparent bg-clip-text bg-linear-to-b from-[#00C6FF] via-[#0072FF] to-[#003BFF] ">
               i
             </span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-tr from-[#003BFF] via-[#0072FF] to-[#00E5FF] ">
+            <span className="text-transparent bg-clip-text bg-linear-to-tr from-[#003BFF] via-[#0072FF] to-[#00E5FF] ">
               o
             </span>
           </span>
