@@ -98,7 +98,7 @@ const Analytics = () => {
   }, [search, type, category, sort, order, page, limit]);
 
   return (
-    <div className="w-full sm:rounded-lg sm:border sm:border-slate-200 sm:shadow-sm sm:flex sm:flex-col">
+    <section className="w-full sm:rounded-lg sm:border sm:border-slate-200 sm:shadow-sm sm:flex sm:flex-col">
       <div className="border-b border-slate-100 px-3 py-2">
         <h2 className="text-xs font-semibold uppercase tracking-wide">
           All Transactions
@@ -448,7 +448,7 @@ const Analytics = () => {
         }}
         onConfirm={handleConfirmDelete}
       />
-    </div>
+    </section>
   );
 };
 
