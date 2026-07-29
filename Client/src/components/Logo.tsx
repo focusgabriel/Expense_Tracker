@@ -34,7 +34,7 @@ const Logo = ({ variant = "sidebar" }: LogoProps) => {
           <circle cx="16.5" cy="12" r="0.75" fill="currentColor" />
         </svg>
 
-        {/* Desktop: wallet icon + full branded "Trackio" text */}
+        {/* Desktop: wallet icon + full branded "Trackiu" text */}
         <span className="hidden lg:flex lg:w-full lg:items-center lg:justify-center lg:gap-2">
           <svg
             className="h-5 w-5"
@@ -103,7 +103,7 @@ const Logo = ({ variant = "sidebar" }: LogoProps) => {
       </div>
       <div className="flex flex-col leading-tight justify-start">
         <TrackKioLogo />
-          <span className="text-[12px] mt-1 font-medium uppercase tracking-[0.2em] text-indigo-600">
+          <span className="text-[12px] mt-1 font-medium uppercase tracking-[0.1em] text-indigo-600">
           Financial clarity starts here.
         </span>
       </div>

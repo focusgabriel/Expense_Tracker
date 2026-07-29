@@ -46,10 +46,10 @@ const ForgotPassword = () => {
   
   return (
     <>
-      <section className="auth-shell min-h-screen px-0 py-6 sm:px-4 sm:py-10 text-slate-900">
-        <div className="auth-shell-bg" />
-        <div className="relative mx-auto flex min-h-[calc(100vh-5rem)] items-center justify-center">
-          <div className="w-full max-w-none sm:max-w-md mx-auto overflow-hidden rounded-[1.25rem] border border-slate-200 bg-white p-6 sm:p-8 shadow-[0_40px_90px_-30px_rgba(15,23,42,0.08)] auth-card">
+      <section className="md:auth-shell min-h-screen sm:px-4 sm:py-10 text-slate-900">
+        <div className="md:auth-shell-bg" />
+        <div className="relative mx-auto flex md:min-h-[calc(100vh-5rem)] min-h-screen items-center justify-center">
+          <div className="w-full max-w-none sm:max-w-md mx-auto overflow-hidden sm:rounded-[1.25rem] sm:border sm:border-slate-200 sm:bg-white p-3 sm:p-8 md:auth-card shadow-[0_40px_90px_-30px_rgba(15,23,42,0.08)]">
             <div className="mb-8 space-y-5">
               <div className="text-sm font-semibold uppercase tracking-[0.28em] text-indigo-600">
                 Reset Password

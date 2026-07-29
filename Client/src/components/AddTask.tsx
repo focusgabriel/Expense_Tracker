@@ -69,7 +69,7 @@ const AddTask = () => {
     newDate.current!.value = ""
   };
   return (
-    <div className="mx-auto w-full max-w-2xl">
+    <section className="md:mx-auto w-full max-w-2xl">
       <div className="mb-6 rounded-2xl bg-linear-to-br from-indigo-50 to-indigo-100/60 p-6 text-center sm:p-8">
         <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-sm">
           <svg className="h-7 w-7 text-indigo-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -173,7 +173,7 @@ const AddTask = () => {
           </button>
         </div>
       </form>
-    </div>
+    </section>
   );
 };
 
