@@ -3,7 +3,7 @@ import { authModel } from "../model/index.js";
 import crypto from "crypto";
 import bcrypt from "bcrypt"
 import { AppError } from "../utils/AppError.js";
-import resetPasswordTemplate from "../services/emailSender/templates/passwordReset.js";
+import resetPasswordTemplate from "../services/emailSender/templates/passwordResetTemplate.js";
 import { sendResetPasswordEmail } from "../services/emailSender/passwordResetEmail.js";
 // import { sendEmail } from "../services/email.services.js";
 const isProduction = process.env.NODE_ENV === "production";

@@ -1,14 +1,14 @@
-import { resend } from "../../config/resend.js";
-import resetPasswordTemplate from "./templates/passwordReset.js";
+import { transporter } from "../../config/mail.js";
+import passwordResetTemplate from "./templates/passwordResetTemplate.js";
 
 export const sendResetPasswordEmail = async (
   email: string,
   resetLink: string
 ) => {
-  await resend.emails.send({
-    from: "onboarding@resend.dev",
+  await transporter.sendMail({
+    from: `"Trackio" <${process.env.MAIL_USER}>`,
     to: email,
     subject: "Reset your Trackio password",
-    html: resetPasswordTemplate(resetLink),
+    html: passwordResetTemplate(resetLink),
   });
 };
