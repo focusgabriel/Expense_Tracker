@@ -7,14 +7,14 @@ import {
 } from "lucide-react";
 
 export type Transaction = {
-  _id?: string,
+  _id?: string;
   type: "income" | "expense";
   amount: number;
   category: string;
   description: string;
-  date: Date;
-  created_date: Date;
-}
+  date: string | Date;
+  created_date: string | Date;
+};
 
 export const CATEGORY_COLORS = {
   others: "pink",

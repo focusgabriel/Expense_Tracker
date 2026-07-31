@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import refreshClient from "../api/fetch";
 import { AuthContext, type User } from "../lib/AuthContext";
+import { saveAuthLocally, getStoredAuth, clearAuthLocally, isBrowserOnline } from "../lib/offlineTransactions";
 
 export function AuthProvider({
   children,
@@ -10,15 +11,31 @@ export function AuthProvider({
 }) {
   const navigate = useNavigate();
 
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(() => {
+    // Initialize from local storage for instant offline access
+    return getStoredAuth();
+  });
   const [loading, setLoading] = useState(true);
 
   const checkAuth = async () => {
     try {
       const { data } = await refreshClient.get("/auth/me");
       setUser(data.user);
+      saveAuthLocally(data.user);
     } catch {
-      setUser(null);
+      // If offline, try to use cached auth
+      if (!isBrowserOnline()) {
+        const cached = getStoredAuth();
+        if (cached) {
+          setUser(cached);
+        } else {
+          setUser(null);
+        }
+      } else {
+        // Online but request failed - clear auth
+        setUser(null);
+        clearAuthLocally();
+      }
     } finally {
       setLoading(false);
     }
@@ -26,6 +43,7 @@ export function AuthProvider({
 
   const logout = () => {
     setUser(null);
+    clearAuthLocally();
   };
 
   // Check auth when app loads
@@ -37,6 +55,7 @@ export function AuthProvider({
   useEffect(() => {
     const handleLogout = () => {
       setUser(null);
+      clearAuthLocally();
       navigate("/", { replace: true });
     };
 

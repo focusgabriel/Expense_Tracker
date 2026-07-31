@@ -1,9 +1,16 @@
 /** @format */
 
 import toast from "react-hot-toast";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import refreshClient from "../api/fetch";
 import axios from "axios";
+import OfflineStatus from "./OfflineStatus";
+import {
+  isBrowserOnline,
+  saveTransactionLocally,
+  setTransactionSyncStatus,
+  addPendingOperation,
+} from "../lib/offlineTransactions";
 
 const getTodayString = (): string => {
   const today = new Date();
@@ -20,6 +27,7 @@ const AddTask = () => {
   const Description = useRef<HTMLInputElement>(null);
   const newDate = useRef<HTMLInputElement>(null);
   const Current_date = useRef<HTMLInputElement>(null);
+  const [isOffline, setIsOffline] = useState(!isBrowserOnline());
 
   useEffect(() => {
     if (newDate.current) {
@@ -28,29 +36,58 @@ const AddTask = () => {
     if (Current_date.current) {
       Current_date.current.value = getTodayString();
     }
+
+    const updateOnlineStatus = () => {
+      setIsOffline(!isBrowserOnline());
+    };
+
+    window.addEventListener("online", updateOnlineStatus);
+    window.addEventListener("offline", updateOnlineStatus);
+
+    return () => {
+      window.removeEventListener("online", updateOnlineStatus);
+      window.removeEventListener("offline", updateOnlineStatus);
+    };
   }, []);
 
-  const handleSubmit = async(e: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const newTransaction = {
-      type: Type.current?.value.toLowerCase(),
+    const payload = {
+      type: (Type.current?.value.toLowerCase() || "expense") as "income" | "expense",
       amount: Number(Amount.current?.value.trim() ?? 0),
       category: Category.current?.value.trim().toLowerCase(),
       description: Description.current?.value.trim().toLowerCase(),
-      date: newDate.current?.value,
-      created_date: Current_date.current?.value,
+      date: newDate.current?.value || getTodayString(),
+      created_date: Current_date.current?.value || getTodayString(),
     };
-    
-    try {
-      await refreshClient.post("/addTransaction", newTransaction);
 
-      toast.success("Transaction added successfully!", {
-        position: "top-right",
-        duration: 3000,
-      });
+    const persisted = saveTransactionLocally(payload, !isBrowserOnline());
+
+    try {
+      if (isBrowserOnline()) {
+        await refreshClient.post("/addTransaction", payload);
+        setTransactionSyncStatus(persisted._id, false);
+
+        toast.success("Transaction added successfully!", {
+          position: "top-right",
+          duration: 3000,
+        });
+      } else {
+        toast.success("You're offline. Transaction saved locally.", {
+          position: "top-right",
+          duration: 3000,
+        });
+      }
     } catch (error) {
-      if(axios.isAxiosError(error)) {
+      setTransactionSyncStatus(persisted._id, true);
+      addPendingOperation({
+        id: persisted._id,
+        type: "create",
+        transaction: persisted,
+      });
+
+      if (axios.isAxiosError(error)) {
         toast.error(error.response?.data?.message ?? "Something went wrong.", {
           position: "top-right",
           duration: 3000,
@@ -63,19 +100,37 @@ const AddTask = () => {
       }
     }
 
-    Amount.current!.value = ""
-    Description.current!.value = ""
-    Category.current!.value = ""
-    newDate.current!.value = ""
+    Amount.current!.value = "";
+    Description.current!.value = "";
+    Category.current!.value = "";
+    newDate.current!.value = "";
   };
+
   return (
     <section className="md:mx-auto w-full max-w-2xl">
       <div className="mb-6 rounded-2xl bg-linear-to-br from-indigo-50 to-indigo-100/60 p-6 text-center sm:p-8">
         <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-sm">
-          <svg className="h-7 w-7 text-indigo-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M19 7V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2v-2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M21 12a2 2 0 00-2-2h-4a2 2 0 100 4h4a2 2 0 002-2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            <circle cx="16.5" cy="12" r="0.75" fill="currentColor"/>
+          <svg
+            className="h-7 w-7 text-indigo-600"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M19 7V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2v-2"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M21 12a2 2 0 00-2-2h-4a2 2 0 100 4h4a2 2 0 002-2z"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <circle cx="16.5" cy="12" r="0.75" fill="currentColor" />
           </svg>
         </div>
         <h2 className="text-xl font-bold text-indigo-900 sm:text-2xl">
@@ -86,13 +141,18 @@ const AddTask = () => {
         </p>
       </div>
 
+      <OfflineStatus isOffline={isOffline} />
+
       <form
         onSubmit={handleSubmit}
         className="grid gap-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:grid-cols-2 sm:p-7"
         action="/success"
       >
         <div className="flex flex-col gap-2">
-          <label htmlFor="type" className="text-sm font-semibold text-slate-700">
+          <label
+            htmlFor="type"
+            className="text-sm font-semibold text-slate-700"
+          >
             Type
           </label>
           <select
@@ -107,7 +167,10 @@ const AddTask = () => {
         </div>
 
         <div className="flex flex-col gap-2">
-          <label htmlFor="amount" className="text-sm font-semibold text-slate-700">
+          <label
+            htmlFor="amount"
+            className="text-sm font-semibold text-slate-700"
+          >
             Amount
           </label>
           <input
@@ -123,7 +186,10 @@ const AddTask = () => {
         </div>
 
         <div className="flex flex-col gap-2">
-          <label htmlFor="category" className="text-sm font-semibold text-slate-700">
+          <label
+            htmlFor="category"
+            className="text-sm font-semibold text-slate-700"
+          >
             Category
           </label>
           <input
@@ -137,7 +203,10 @@ const AddTask = () => {
         </div>
 
         <div className="flex flex-col gap-2">
-          <label htmlFor="description" className="text-sm font-semibold text-slate-700">
+          <label
+            htmlFor="description"
+            className="text-sm font-semibold text-slate-700"
+          >
             Description
           </label>
           <input
@@ -152,7 +221,10 @@ const AddTask = () => {
         </div>
 
         <div className="flex flex-col gap-2">
-          <label htmlFor="date" className="text-sm font-semibold text-slate-700">
+          <label
+            htmlFor="date"
+            className="text-sm font-semibold text-slate-700"
+          >
             Date
           </label>
           <input
@@ -165,10 +237,7 @@ const AddTask = () => {
         </div>
 
         <div className="flex items-end sm:col-span-2">
-          <button
-            type="submit"
-            className="button_addTask"
-          >
+          <button type="submit" className="button_addTask">
             Save Transaction
           </button>
         </div>

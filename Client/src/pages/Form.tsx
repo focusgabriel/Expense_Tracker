@@ -4,29 +4,68 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import refreshClient from "../api/fetch";
 import axios from "axios";
+import OfflineStatus from "../components/OfflineStatus";
+import {
+  isBrowserOnline,
+  getStoredTransactionById,
+  updateTransactionLocally,
+  addPendingOperation,
+} from "../lib/offlineTransactions";
 
 const EditForm = () => {
   const { id } = useParams();
+  const [isOffline, setIsOffline] = useState(!isBrowserOnline());
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!id) return;
+
+    const payload = {
+      type: formData.type as "income" | "expense",
+      amount: Number(formData.amount || 0),
+      category: formData.category,
+      description: formData.description,
+      date: formData.date || new Date().toISOString().split("T")[0],
+      created_date: new Date().toISOString().split("T")[0],
+    };
+
+    // Always save locally first
+    const updated = updateTransactionLocally(id, payload);
+
+    if (!isBrowserOnline()) {
+      toast.success("Changes saved locally. Will sync when you're back online.", {
+        position: "top-right",
+        duration: 3000,
+      });
+      return;
+    }
+
     try {
-         await refreshClient.patch(
+      await refreshClient.patch(
         `/updateTransaction/${id}`,
-        formData,
+        payload,
       );
       toast.success("Transaction updated successfully!", {
         position: "top-right",
         duration: 3000,
       });
     } catch (error) {
+      // If API fails, mark as pending operation for later sync
+      if (updated) {
+        addPendingOperation({
+          id,
+          type: "update",
+          transaction: updated,
+        });
+      }
+
       if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message ?? "couldn't update transaction.", {
+        toast.error(error.response?.data?.message ?? "Couldn't update transaction. Saved locally.", {
           position: "top-right",
           duration: 3000,
         });
       } else {
-        toast.error("couldn't update transaction.", {
+        toast.error("Couldn't update transaction. Saved locally.", {
           position: "top-right",
           duration: 3000,
         });
@@ -44,46 +83,71 @@ const EditForm = () => {
 
   useEffect(() => {
     async function fetchTransaction() {
-      if (id) {
-        refreshClient
-          .get(`/getTransactionById/${id}`)
-          .then(res =>
-            setFormData({
-              type: res.data.type,
-              amount: res.data.amount,
-              category: res.data.category,
-              description: res.data.description,
-              date: res.data.date,
-            }),
-          )
-          .catch(error => {
-            if (axios.isAxiosError(error)) {
-              toast.error(
-                error.response?.data?.message ?? "Something went wrong.",
-                {
-                  position: "top-right",
-                  duration: 3000,
-                },
-              );
-            } else {
-              toast.error("Something went wrong.", {
+      if (!id) return;
+
+      try {
+        const res = await refreshClient.get(`/getTransactionById/${id}`);
+        setFormData({
+          type: res.data.type,
+          amount: res.data.amount,
+          category: res.data.category,
+          description: res.data.description,
+          date: res.data.date,
+        });
+        setIsOffline(false);
+      } catch (error) {
+        // Try to load from local storage if offline
+        const local = getStoredTransactionById(id);
+        if (local) {
+          setFormData({
+            type: local.type,
+            amount: Number(local.amount || 0),
+            category: local.category,
+            description: local.description,
+            date: typeof local.date === "string" ? local.date.split("T")[0] : "",
+          });
+          setIsOffline(true);
+        } else {
+          if (axios.isAxiosError(error)) {
+            toast.error(
+              error.response?.data?.message ?? "Transaction not found.",
+              {
                 position: "top-right",
                 duration: 3000,
-              });
-            }
-          });
+              },
+            );
+          } else {
+            toast.error("Transaction not found.", {
+              position: "top-right",
+              duration: 3000,
+            });
+          }
+        }
       }
     }
 
     fetchTransaction();
   }, [id]);
 
+  useEffect(() => {
+    const updateOnlineStatus = () => {
+      setIsOffline(!isBrowserOnline());
+    };
+
+    window.addEventListener("online", updateOnlineStatus);
+    window.addEventListener("offline", updateOnlineStatus);
+
+    return () => {
+      window.removeEventListener("online", updateOnlineStatus);
+      window.removeEventListener("offline", updateOnlineStatus);
+    };
+  }, []);
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     setFormData({
       ...formData,
-      date: formData.date.split("T")[0],
       [e.target.name]:
         e.target.name === "amount" ? Number(e.target.value) : e.target.value,
     });
@@ -91,6 +155,7 @@ const EditForm = () => {
 
   return (
     <section className="md:mx-auto w-full md:max-w-2xl">
+      <OfflineStatus isOffline={isOffline} />
       <div className="mb-6 rounded-2xl bg-linear-to-br from-indigo-50 to-indigo-100/60 p-6 text-center sm:p-8">
         <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-sm">
           <svg

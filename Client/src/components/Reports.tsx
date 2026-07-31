@@ -5,6 +5,11 @@ import CardReview from "./CardReview";
 import refreshClient from "../api/fetch";
 import toast from "react-hot-toast";
 import axios from "axios";
+import OfflineStatus from "./OfflineStatus";
+import {
+  getLocalDashboardData,
+  isBrowserOnline,
+} from "../lib/offlineTransactions";
 
 const MonthlyReport = () => {
   const [reviewIncome, setReviewIncome] = useState<number | null>(null);
@@ -16,6 +21,8 @@ const MonthlyReport = () => {
   const [formattedBalance, setFormattedBalance] = useState<string | null>(null);
 
   const [getDate, setGetDate] = useState<any>();
+  const [isOffline, setIsOffline] = useState(!isBrowserOnline());
+
   const formatDate = (dateValue: string) => {
     const newDate = new Date(dateValue);
     return newDate.toLocaleDateString("en-US", {
@@ -25,9 +32,21 @@ const MonthlyReport = () => {
   };
 
   useEffect(() => {
-    refreshClient
-      .get("/getMonthlyIncome")
-      .then(res => {
+    async function fetchData() {
+      if (!isBrowserOnline()) {
+        const local = getLocalDashboardData();
+        setReviewIncome(local.get_income);
+        setReviewBalance(local.summary.netBalance);
+        setFormattedIncome(local.get_income.toLocaleString());
+        setFormattedExpense(local.get_expense.toLocaleString());
+        setFormattedBalance(local.summary.netBalance.toLocaleString());
+        setGetDate(local.endOfLastMonth);
+        setIsOffline(true);
+        return;
+      }
+
+      try {
+        const res = await refreshClient.get("/getMonthlyIncome");
         setReviewIncome(res.data.get_income);
         // setReviewExpense(res.data.get_expense);
         setReviewBalance(res.data.netbalance);
@@ -37,8 +56,18 @@ const MonthlyReport = () => {
         setFormattedBalance(res.data.netbalance.toLocaleString());
 
         setGetDate(res.data.endOfLastMonth);
-      })
-      .catch(error => {
+        setIsOffline(false);
+      } catch (error) {
+        // Fall back to local data on error
+        const local = getLocalDashboardData();
+        setReviewIncome(local.get_income);
+        setReviewBalance(local.summary.netBalance);
+        setFormattedIncome(local.get_income.toLocaleString());
+        setFormattedExpense(local.get_expense.toLocaleString());
+        setFormattedBalance(local.summary.netBalance.toLocaleString());
+        setGetDate(local.endOfLastMonth);
+        setIsOffline(true);
+
         if (axios.isAxiosError(error)) {
           toast.error(error.response?.data?.message ?? "Can't get data at the moment.", {
             position: "top-right",
@@ -50,7 +79,24 @@ const MonthlyReport = () => {
             duration: 3000,
           });
         }
-      });
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const updateOnlineStatus = () => {
+      setIsOffline(!isBrowserOnline());
+    };
+
+    window.addEventListener("online", updateOnlineStatus);
+    window.addEventListener("offline", updateOnlineStatus);
+
+    return () => {
+      window.removeEventListener("online", updateOnlineStatus);
+      window.removeEventListener("offline", updateOnlineStatus);
+    };
   }, []);
 
   const balancePercentage =
@@ -60,6 +106,7 @@ const MonthlyReport = () => {
 
   return (
     <div className="w-full">
+      <OfflineStatus isOffline={isOffline} />
       <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
