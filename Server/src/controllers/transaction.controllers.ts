@@ -1,10 +1,8 @@
 import express, { Request, Response, Application, NextFunction } from 'express';
 import { addTransaction, deleteTransaction, editTransaction } from "../services/transaction.services.js";
 import { ExpenseModel, authModel } from '../model/index.js';
-import mongoose from 'mongoose';
 import { CATEGORY_COLORS } from '../constants/index.js';
 import { AppError } from '../utils/AppError.js';
-import { nextTick } from 'node:process';
 
 export async function addTransactionController(req:Request, res:Response, next:NextFunction){
   try {
@@ -227,7 +225,6 @@ export async function editTransactionControler(req:Request, res:Response, next:N
       throw new AppError("Transaction not found", 404);
     }
 
-    // console.log("Transaction updated:", {type, amount, category, description, date});
     res.status(200).json(updatedTransaction)
   } catch (error) {
     next();

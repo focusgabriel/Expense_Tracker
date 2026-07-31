@@ -16,22 +16,21 @@ export async function addTransaction(type:"income" | "expense", amount:number, c
 
 export async function editTransaction(_id:string | string[], userId:string, type:"income" | "expense", amount:number, category:string, description:string, date:Date){
 
-  const transaction = await ExpenseModel.findOne({
+  await ExpenseModel.findOne({
   _id,
   userId,
 });
 
-console.log("Found:", transaction);
-    const updateTransaction = await ExpenseModel.findOneAndUpdate(
-      {
-        _id,
-        userId        
-      },
-      {
-        $set: {type, amount, category, description, date}
-      },
-      ReturnDocument
-    )
+  const updateTransaction = await ExpenseModel.findOneAndUpdate(
+    {
+      _id,
+      userId        
+    },
+    {
+      $set: {type, amount, category, description, date}
+    },
+    ReturnDocument
+  )
 
   return updateTransaction;
 }

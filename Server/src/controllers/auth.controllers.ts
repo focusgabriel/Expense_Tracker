@@ -13,8 +13,7 @@ export async function getCurrentUserController(req:Request, res:Response, next:N
       "-password -refreshToken"
     )
 
-    if(!user) {
-      console.log(user);
+    if(!user) { 
       throw new AppError("User not found", 404);
     }
 
