@@ -7,7 +7,8 @@ import { generateAccessToken, generateRefreshToken } from "../utils/jwt.js"
 import { loginSchema, registerSchema } from "../validation/auth.schema.js"
 import { AppError } from "../utils/AppError.js"
 import crypto from "crypto";
-import { sendEmail } from "../services/email.services.js"
+import { sendVerificationEmail } from "../services/emailSender/verificationEmail.js"
+// import { sendEmail } from "../services/email.services.js"
 const isProduction = process.env.NODE_ENV === "production";
 
 const cookieOptions = {
@@ -45,50 +46,7 @@ export async function RegisterController (
 
     const verificationUrl = `${process.env.CLIENT_URL}/verify-email/${verifiedToken}`;
 
-    await sendEmail({
-      to: user.email,
-      subject: "Verify Your TracKiu Account",
-      html: `
-      <!DOCTYPE html>
-      <html>
-        <head>
-        <style>
-          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background-color: #f8f9fa; padding: 20px; border-radius: 5px; }
-          .button { display: inline-block; padding: 12px 30px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
-          .footer { color: #666; font-size: 12px; margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px; }
-          .warning { color: #666; font-size: 13px; margin-top: 15px; }
-        </style>
-        </head>
-        <body>
-        <div class="container">
-          <div class="header">
-          <h1>Welcome to Trackiu!</h1>
-          <p>Thank you for signing up. We're excited to have you on board.</p>
-          </div>
-
-          <p>To complete your registration and secure your account, please verify your email address by clicking the button below:</p>
-
-          <a href="${verificationUrl}" class="button" style="color:white;">Verify Email Address</a>
-
-          <p>Or copy and paste this link in your browser:</p>
-          <p style="word-break: break-all; color: #007bff;">${verificationUrl}</p>
-
-          <div class="warning">
-          <p><strong>Security Note:</strong></p>
-          <p>This verification link will expire in 1 hour. If you did not create this account, please ignore this email or contact our support team.</p>
-          </div>
-
-          <div class="footer">
-          <p>Best regards,<br>The TracKiu Team</p>
-          <p>If you have any questions, leave a message.</p>
-          
-        </div>
-        </body>
-      </html>
-      `,
-    });
+    await sendVerificationEmail(user.email, verificationUrl);
     
     return res.status(201).json(
       {

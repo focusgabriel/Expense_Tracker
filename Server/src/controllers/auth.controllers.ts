@@ -3,7 +3,9 @@ import { authModel } from "../model/index.js";
 import crypto from "crypto";
 import bcrypt from "bcrypt"
 import { AppError } from "../utils/AppError.js";
-import { sendEmail } from "../services/email.services.js";
+import resetPasswordTemplate from "../services/emailSender/templates/passwordResetTemplate.js";
+import { sendResetPasswordEmail } from "../services/emailSender/passwordResetEmail.js";
+// import { sendEmail } from "../services/email.services.js";
 const isProduction = process.env.NODE_ENV === "production";
 
 
@@ -138,51 +140,17 @@ export const ForgotPasswordController = async(
 
     await user.save();
 
-    const verificationUrl = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
+    const resetUrl = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
     
-        await sendEmail({
-          to: user.email,
-          subject: "Reset Your TracKiu Password",
-          html: `
-            <!DOCTYPE html>
-            <html>
-              <head>
-          <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; background: #f9f9f9; }
-            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
-            .content { background: white; padding: 30px; border-radius: 0 0 8px 8px; }
-            .button { display: inline-block; padding: 12px 30px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; font-weight: bold; }
-            .footer { text-align: center; color: #666; font-size: 12px; margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px; }
-            .warning { background: #fff3cd; padding: 10px; border-left: 4px solid #ffc107; margin: 20px 0; border-radius: 3px; }
-          </style>
-              </head>
-              <body>
-          <div class="container">
-            <div class="header">
-              <h1>Password Reset Request</h1>
-            </div>
-            <div class="content">
-              <p>Hi,</p>
-              <p>We received a request to reset the password for your TracKiu account. If you didn't make this request, you can safely ignore this email.</p>
-              <p style="text-align: center;">
-                <a href="${verificationUrl}" class="button">Reset Your Password</a>
-              </p>
-              <p>Or copy and paste this link in your browser:</p>
-              <p style="word-break: break-all; background: #f5f5f5; padding: 10px; border-radius: 5px; font-size: 12px;">${verificationUrl}</p>
-              <div class="warning">
-                <strong>⚠️ Security Notice:</strong> This link will expire in 15 minutes for your protection.
-              </div>
-              <p><strong>Didn't request a password reset?</strong> Your account may be compromised. Please leave a message immediately.</p>
-            </div>
-            <div class="footer">
-              <p>&copy; 2026 Trackiu. All rights reserved.</p>
-            </div>
-          </div>
-              </body>
-            </html>
-          `,
-        });
+    try {
+      await sendResetPasswordEmail(user.email, resetUrl);
+    } catch (error) {
+      user.passwordResetToken = undefined;
+      user.passwordResetExpires = undefined;
+      await user.save();
+      throw new AppError("Failed to send reset password email. Please try again later.", 500);
+    }
+        // 
 
     return res.status(200).json({
       status: true,
