@@ -1,5 +1,6 @@
 /** @format */
 
+import { useState } from "react";
 import TrackKioLogo from "./Trackio";
 
 interface LogoProps {
@@ -7,6 +8,22 @@ interface LogoProps {
 }
 
 const Logo = ({ variant = "sidebar" }: LogoProps) => {
+  const [firstSlogan, setFirstSlogan] = useState(true);
+  const [secondSlogan, setSecondSlogan] = useState(false);
+
+  const blink = () => {
+    if(firstSlogan === true){
+      setSecondSlogan(true);
+      setFirstSlogan(false);
+    } else {
+      setFirstSlogan(true);
+      setSecondSlogan(false);
+    }
+  }
+
+  setTimeout(() => {
+    blink();
+  }, 1500);
   if (variant === "sidebar") {
     return (
       <div className="flex h-12 w-full items-center justify-center rounded-xl bg-linear-to-br from-indigo-600 to-indigo-700 text-white shadow-sm shadow-indigo-200/60">
@@ -104,7 +121,12 @@ const Logo = ({ variant = "sidebar" }: LogoProps) => {
       <div className="flex flex-col leading-tight justify-start">
         <TrackKioLogo />
           <span className="text-[12px] mt-1 font-medium uppercase tracking-[0.1em] text-indigo-600">
-          Financial clarity starts here.
+          {
+            firstSlogan ? (
+              <p>Financial clarity starts here.</p>
+            ) : secondSlogan && <p>Track it. Know it.</p>
+          }
+
         </span>
       </div>
     </div>
