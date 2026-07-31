@@ -27,7 +27,10 @@ export async function RegisterController (
     const {name, email, password, confirm_password} = req.body
 
     // the register helper function validation from Zod
-    registerSchema
+
+
+      registerSchema
+    
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
