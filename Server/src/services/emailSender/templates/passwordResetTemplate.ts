@@ -2,7 +2,7 @@ const resetPasswordTemplate = (resetLink: string) => {
   return `
     <h2>Password Reset</h2>
 
-    <p>Click the button below to reset your password.</p>
+    <p>Click the button below to reset your TracKiu password.</p>
 
     <a
       href="${resetLink}"
@@ -19,6 +19,9 @@ const resetPasswordTemplate = (resetLink: string) => {
     </a>
 
     <p>This link expires shortly.</p>
+
+    <h2>if you didn't request for this reset, that means your account has been compromised, kindly send us a message </h2>
+    
   `;
 };
 
