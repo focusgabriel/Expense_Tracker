@@ -10,8 +10,8 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const Analytics = () => {
-  const [trans, setTrans] = useState<Transaction[]>([]);
   const navigate = useNavigate();
+  const [trans, setTrans] = useState<Transaction[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [selected, setSelected] = useState<Transaction | null>(null);
   const [totalPages, setTotalPages] = useState<number>(1);
@@ -25,7 +25,6 @@ const Analytics = () => {
   const [showFiltersMobile, setShowFiltersMobile] = useState(false);
 
   const handleEdit = (id: string | undefined) => navigate(`/edit/${id}`);
-
   const handleDelete = (tx: Transaction) => {
     setSelected(tx);
     setModalOpen(true);

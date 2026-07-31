@@ -32,18 +32,21 @@ const Login = () => {
         position: "top-right",
         duration: 3000,
       });
-      await checkAuth()
-        
+      await checkAuth();
+
       setTimeout(() => {
         navigate("/overview");
       }, 500);
-
     } catch (error) {
-      if(axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message ?? "Login failed. Please verify your account.", {
-          position: "top-right",
-          duration: 3000,
-        });
+      if (axios.isAxiosError(error)) {
+        toast.error(
+          error.response?.data?.message ??
+            "Login failed. Please verify your account.",
+          {
+            position: "top-right",
+            duration: 3000,
+          },
+        );
       } else {
         toast.error("Login failed. Please try again.", {
           position: "top-right",
@@ -53,13 +56,13 @@ const Login = () => {
     } finally {
       setSignin(false);
     }
-  }
+  };
 
   return (
     <>
       <section className="md:auth-shell min-h-screen sm:px-4 sm:py-10 text-slate-900">
-        <div className="auth-shell-bg" />
-        <div className="relative md:mx-auto w-full flex md:min-h-[calc(100vh-5rem)] min-h-screen items-center justify-center">
+        <div className="md:auth-shell-bg" />
+        <div className="relative mx-auto w-full flex md:min-h-[calc(100vh-5rem)] min-h-screen items-center justify-center">
           <div className="w-full max-w-none sm:max-w-md sm:mx-auto overflow-hidden sm:rounded-[1.25rem] sm:border sm:border-slate-200 sm:bg-white p-4 sm:p-8 md:auth-card shadow-[0_40px_90px_-30px_rgba(15,23,42,0.08)]">
             <div className="mb-8 space-y-5">
               <div className="text-sm font-semibold uppercase tracking-[0.14em] text-indigo-600">
@@ -100,19 +103,17 @@ const Login = () => {
               </div>
 
               <button type="submit" className="auth-action-btn">
-                { signin ? (
+                {signin ? (
                   <>
                     <LoaderCircle size={16} className="animate-spin" />
                     Signing in...
-                  </> 
+                  </>
                 ) : (
                   <>
                     <LogIn size={16} strokeWidth={2} />
                     Login
                   </>
-                )
-              }
-                
+                )}
               </button>
             </form>
 
@@ -121,10 +122,12 @@ const Login = () => {
               <Link to="/register" className="auth-footer-link">
                 Create one
               </Link>
-              <Link to="/forgotPassword" className="auth-footer-link block mt-4">
+              <Link
+                to="/forgotPassword"
+                className="auth-footer-link block mt-4"
+              >
                 Forgot Password
               </Link>
-              
             </p>
           </div>
         </div>

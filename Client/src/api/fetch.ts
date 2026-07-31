@@ -10,12 +10,14 @@ interface CustomAxiosRequestConfig extends AxiosRequestConfig {
   _retry?: boolean;
 }
 const refreshClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  // baseURL: import.meta.env.VITE_API_URL,
+  baseURL: "http://localhost:3000/api/v1",
   withCredentials: true,
 });
 
 const tokenRefreshClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  // baseURL: import.meta.env.VITE_API_URL,
+  baseURL: "http://localhost:3000/api/v1",
   withCredentials: true,
 });
 

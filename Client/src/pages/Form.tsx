@@ -11,7 +11,7 @@ const EditForm = () => {
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await refreshClient.patch(
+         await refreshClient.patch(
         `/updateTransaction/${id}`,
         formData,
       );
@@ -19,23 +19,20 @@ const EditForm = () => {
         position: "top-right",
         duration: 3000,
       });
-      const data = response.data();
-      console.log(data);
     } catch (error) {
-      if(axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message ?? "Something went wrong.", {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message ?? "couldn't update transaction.", {
           position: "top-right",
           duration: 3000,
         });
       } else {
-        toast.error("Something went wrong.", {
+        toast.error("couldn't update transaction.", {
           position: "top-right",
           duration: 3000,
         });
       }
     }
   };
-  console.log("params:", id);
 
   const [formData, setFormData] = useState({
     type: "",
@@ -60,11 +57,14 @@ const EditForm = () => {
             }),
           )
           .catch(error => {
-            if(axios.isAxiosError(error)) {
-              toast.error(error.response?.data?.message ?? "Something went wrong.", {
-                position: "top-right",
-                duration: 3000,
-              });
+            if (axios.isAxiosError(error)) {
+              toast.error(
+                error.response?.data?.message ?? "Something went wrong.",
+                {
+                  position: "top-right",
+                  duration: 3000,
+                },
+              );
             } else {
               toast.error("Something went wrong.", {
                 position: "top-right",
@@ -72,10 +72,10 @@ const EditForm = () => {
               });
             }
           });
-        }
       }
+    }
 
-      fetchTransaction();
+    fetchTransaction();
   }, [id]);
 
   const handleChange = (
