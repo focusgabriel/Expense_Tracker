@@ -39,7 +39,6 @@ export async function RegisterController (
     const hashedToken = crypto.createHash("sha256").update(verifiedToken).digest("hex");
     const expireToken = new Date(Date.now() + 1000 * 60 * 60  );//1 hour
 
-    await sendVerificationEmail(user.email, verificationUrl);
     const user = await authModel.create({
       name,
       email,
@@ -50,6 +49,7 @@ export async function RegisterController (
 
     const verificationUrl = `${process.env.CLIENT_URL}/verify-email/${verifiedToken}`;
 
+    await sendVerificationEmail(user.email, verificationUrl);
     
     return res.status(201).json(
       {
