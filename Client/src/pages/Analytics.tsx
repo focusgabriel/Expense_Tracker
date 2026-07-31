@@ -8,7 +8,6 @@ import DeleteModal from "../components/DeleteModal";
 import refreshClient from "../api/fetch";
 import axios from "axios";
 import toast from "react-hot-toast";
-import OfflineStatus from "../components/OfflineStatus";
 import {
   getStoredTransactions,
   isBrowserOnline,
@@ -30,7 +29,7 @@ const Analytics = () => {
   const [page, setPage] = useState<number>(1);
   const [limit] = useState<number>(10);
   const [showFiltersMobile, setShowFiltersMobile] = useState(false);
-  const [isOffline, setIsOffline] = useState(!isBrowserOnline());
+  const [_isOffline, setIsOffline] = useState(!isBrowserOnline());
 
   const handleEdit = (id: string | undefined) => navigate(`/edit/${id}`);
   const handleDelete = (tx: Transaction) => {
@@ -40,10 +39,11 @@ const Analytics = () => {
 
   const handleConfirmDelete = async () => {
     if (!selected) return;
+    const tx = selected;
 
     // Always remove locally first
-    removeStoredTransaction(selected._id);
-    setTrans(prev => prev.filter(t => t._id !== selected._id));
+    removeStoredTransaction(tx._id);
+    setTrans(prev => prev.filter(t => t._id !== tx._id));
     setModalOpen(false);
     setSelected(null);
 
@@ -56,7 +56,7 @@ const Analytics = () => {
     }
 
     try {
-      await refreshClient.delete(`/deleteTransaction/${selected._id}`);
+      await refreshClient.delete(`/deleteTransaction/${tx._id}`);
       toast.success("Transaction deleted successfully.", {
         position: "top-right",
         duration: 3000,
@@ -64,9 +64,9 @@ const Analytics = () => {
     } catch (error) {
       // If API fails, add to pending operations queue
       addPendingOperation({
-        id: selected._id,
+        id: tx._id as string,
         type: "delete",
-        transaction: selected as any,
+        transaction: tx as any,
       });
 
       if (axios.isAxiosError(error)) {
@@ -113,6 +113,7 @@ const Analytics = () => {
       setTrans(res.data.data);
       setTotalPages(res.data.pagination.totalLimit);
       setIsOffline(false);
+
     } catch (error) {
       setTrans(pagedTransactions);
       setTotalPages(Math.max(1, Math.ceil(localTransactions.length / limit)));

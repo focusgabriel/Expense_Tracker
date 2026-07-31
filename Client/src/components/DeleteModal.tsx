@@ -15,7 +15,7 @@ const DeleteModal = ({
 }) => {
   if (!open || !transaction) return null;
 
-  const formatDate = (d: Date) => {
+  const formatDate = (d: Date | string) => {
     const date = new Date(d);
     return date.toLocaleDateString();
   };

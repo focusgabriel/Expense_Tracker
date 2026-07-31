@@ -3,9 +3,9 @@ import { CATEGORY_COLORS } from "../constants";
 import type { ChartData, DashboardResponse, DashboardSummary } from "../types/dashboard";
 import type { User } from "../lib/AuthContext";
 
-const STORAGE_KEY = "expense-tracker:transactions";
-const AUTH_KEY = "expense-tracker:auth";
-const PENDING_OPS_KEY = "expense-tracker:pending-ops";
+const STORAGE_KEY = "trackiu:transactions";
+const AUTH_KEY = "trackiu:auth";
+const PENDING_OPS_KEY = "trackiu:pending-ops";
 
 export type StoredTransaction = Transaction & {
   _id: string;
