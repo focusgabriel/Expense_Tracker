@@ -1,5 +1,5 @@
 import { resend } from "../../config/resend.js";
-import resetPasswordTemplate from "./templates/passwordResetTemplate.js";
+import resetPasswordTemplate from "./templates/passwordReset.js";
 
 export const sendResetPasswordEmail = async (
   email: string,
