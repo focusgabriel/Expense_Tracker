@@ -5,16 +5,17 @@ import { ForgotPasswordController, getCurrentUserController, logoutController, R
 
 import { validate } from "../middlewares/validate.middleware.js";
 import { registerSchema, loginSchema } from "../validation/auth.schema.js";
+import { authLimiter } from "../validation/authLimiter.js";
 
 const router = Router();
 
-router.post("/auth/register", validate(registerSchema), RegisterController);
-router.post("/auth/login", validate(loginSchema), loginController);
+router.post("/auth/register", authLimiter, validate(registerSchema), RegisterController);
+router.post("/auth/login", authLimiter, validate(loginSchema), loginController);
 router.post("/refresh", refreshTokenController);
 router.post("/auth/logout", authMiddleware, logoutController);
-router.get("/auth/verify-email/:token",verifyEmailController);
-router.post("/auth/forgot-password/", ForgotPasswordController);
-router.post("/auth/reset-password/:token",ResetPasswordController);
+router.get("/auth/verify-email/:token", verifyEmailController);
+router.post("/auth/forgot-password/", authLimiter, ForgotPasswordController);
+router.post("/auth/reset-password/:token", authLimiter, ResetPasswordController);
 router.get("/auth/me", authMiddleware, getCurrentUserController);
 
 export default router;
