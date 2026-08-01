@@ -30,7 +30,7 @@ const AllTransaction = ({ summary }: AllTransProps) => {
                 vs last month{" "}
               <span className={`${summary.monthlyIncome < summary.previousMonthIncome ? "text-green-500 dont-bold" : "text-red-500 font-bold"}`} >
               &#8358;{summary.previousMonthIncome.toLocaleString() ?? 0} 
-              </span>{" "} total income
+              </span>{" "} total income <span className="lg:text-2xl text-xl text-green-500">&#8593</span>;
               </span>
             ) : (
               ""

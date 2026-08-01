@@ -82,11 +82,12 @@ const Header = () => {
     };
   }, []);
 
-    let userName = user?.name;
+    let userName = user?.name.split(" ")[1] ?? user?.name.split(" ")[0];
     let userEmail = "";
 
-  const userInitial = userName?.charAt(0).toUpperCase().split(" ")[1] ?? userName?.charAt(0).toUpperCase().split(" ")[0];
+  const userInitial = userName?.charAt(0).toUpperCase();
 
+  console.log(userInitial)
   // Format today's date
   const today = new Date();
   const dateStr = today.toLocaleDateString("en-US", {
