@@ -308,18 +308,44 @@ export const syncPendingOperations = async (): Promise<{ synced: number; failed:
 
 // ==================== Dashboard Data ====================
 
-const getMonthRange = (date: Date) => {
-  const start = new Date(date.getFullYear(), date.getMonth(), 1);
-  const end = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-  return { start, end };
+const getTransactionDate = (item: StoredTransaction) => {
+  const value = item.date ?? item.created_date;
+
+  if (!value) {
+    return new Date(0);
+  }
+
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
+      const [year, month, day] = trimmed.split("-").map(Number);
+      return new Date(year, (month || 1) - 1, day || 1);
+    }
+
+    return new Date(trimmed);
+  }
+
+  return value;
 };
 
 export const getLocalDashboardData = (): DashboardResponse => {
   const transactions = getStoredTransactions();
   const now = new Date();
-  const { start: currentMonthStart } = getMonthRange(now);
-  const previousMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-  const { start: previousMonthStart, end: previousMonthEnd } = getMonthRange(previousMonth);
+  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const firstDayOfNextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+  const firstDayOfPreviousMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+  const firstDayOfCurrentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0).toISOString();
+
+  const monthlyTransactions = transactions.filter((item) => {
+    const transactionDate = getTransactionDate(item);
+    return transactionDate >= firstDayOfMonth && transactionDate < firstDayOfNextMonth;
+  });
+
+  const previousMonthTransactions = transactions.filter((item) => {
+    const transactionDate = getTransactionDate(item);
+    return transactionDate >= firstDayOfPreviousMonth && transactionDate < firstDayOfCurrentMonth;
+  });
 
   const totalIncome = transactions
     .filter((item) => item.type === "income")
@@ -329,52 +355,47 @@ export const getLocalDashboardData = (): DashboardResponse => {
     .filter((item) => item.type === "expense")
     .reduce((sum, item) => sum + Number(item.amount || 0), 0);
 
-  const monthlyIncome = transactions
-    .filter((item) => item.type === "income" && new Date(item.date ?? item.created_date ?? 0) >= currentMonthStart)
+  const monthlyIncome = monthlyTransactions
+    .filter((item) => item.type === "income")
     .reduce((sum, item) => sum + Number(item.amount || 0), 0);
 
-  const monthlyExpense = transactions
-    .filter((item) => item.type === "expense" && new Date(item.date ?? item.created_date ?? 0) >= currentMonthStart)
+  const monthlyExpense = monthlyTransactions
+    .filter((item) => item.type === "expense")
     .reduce((sum, item) => sum + Number(item.amount || 0), 0);
 
-  const previousMonthIncome = transactions
-    .filter(
-      (item) =>
-        item.type === "income" &&
-        new Date(item.date ?? item.created_date ?? 0) >= previousMonthStart &&
-        new Date(item.date ?? item.created_date ?? 0) <= previousMonthEnd
-    )
+  const previousMonthIncome = previousMonthTransactions
+    .filter((item) => item.type === "income")
     .reduce((sum, item) => sum + Number(item.amount || 0), 0);
 
-  const previousMonthExpense = transactions
-    .filter(
-      (item) =>
-        item.type === "expense" &&
-        new Date(item.date ?? item.created_date ?? 0) >= previousMonthStart &&
-        new Date(item.date ?? item.created_date ?? 0) <= previousMonthEnd
-    )
+  const previousMonthExpense = previousMonthTransactions
+    .filter((item) => item.type === "expense")
     .reduce((sum, item) => sum + Number(item.amount || 0), 0);
 
-  const recentTransactions = transactions.slice(0, 8);
+  const recentTransactions = [...transactions]
+    .sort((a, b) => {
+      const aDate = new Date(a.created_date ?? a.date ?? 0).getTime();
+      const bDate = new Date(b.created_date ?? b.date ?? 0).getTime();
+      return bDate - aDate;
+    })
+    .slice(0, 5);
 
-  const expenseBuckets = transactions.reduce<Record<string, number>>((acc, item) => {
-    if (item.type !== "expense") {
+  const groupedExpenses = monthlyTransactions
+    .filter((item) => item.type === "expense")
+    .reduce<Record<string, number>>((acc, item) => {
+      const category = (item.category || "others").toLowerCase();
+      acc[category] = (acc[category] || 0) + Number(item.amount || 0);
       return acc;
-    }
+    }, {});
 
-    const category = (item.category || "others").toLowerCase();
-    acc[category] = (acc[category] || 0) + Number(item.amount || 0);
-    return acc;
-  }, {});
+  const get_expense = monthlyExpense;
+  const get_income = monthlyIncome;
 
-  const totalCategoryExpense = Object.values(expenseBuckets).reduce((sum, value) => sum + value, 0);
-
-  const chartData: ChartData[] = Object.entries(expenseBuckets)
+  const chartData: ChartData[] = Object.entries(groupedExpenses)
     .map(([category, amount]) => ({
       category,
       amount,
       fill: (CATEGORY_COLORS as Record<string, string>)[category] || "#818CF8",
-      percentage: totalCategoryExpense > 0 ? Number(((amount / totalCategoryExpense) * 100).toFixed(1)) : 0,
+      percentage: get_income > 0 ? Number(((amount / get_income) * 100).toFixed(2)) : 0,
     }))
     .sort((a, b) => b.amount - a.amount);
 
@@ -385,7 +406,6 @@ export const getLocalDashboardData = (): DashboardResponse => {
     monthlyIncome,
     monthlyExpense,
     monthlyBalance: monthlyIncome - monthlyExpense,
-    // lastMonthNetBalance: previousMonthIncome - previousMonthExpense,
     previousMonthBalance: previousMonthIncome - previousMonthExpense,
     previousMonthIncome,
     previousMonthExpense,
@@ -399,10 +419,11 @@ export const getLocalDashboardData = (): DashboardResponse => {
     summary,
     recentTransactions,
     chartData,
-    get_expense: totalExpense,
-    get_income: totalIncome,
+    get_expense,
+    get_income,
     monthlyBalance: monthlyIncome - monthlyExpense,
-    firstDayOfCurrentMonth: new Date(now.getFullYear(), now.getMonth(), 0).toISOString(),
+    firstDayOfCurrentMonth: firstDayOfCurrentMonth.toISOString(),
+    endOfLastMonth,
   };
 };
 
@@ -421,14 +442,15 @@ export const getLocalMonthlyReport = (monthKey?: string) => {
   const startOfSelectedMonth = new Date(selectedYear, selectedMonth, 1);
   const startOfNextMonth = new Date(selectedYear, selectedMonth + 1, 1);
   const startOfPreviousMonth = new Date(selectedYear, selectedMonth - 1, 1);
+  const startOfCurrentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
   const selectedMonthTransactions = transactions.filter((item) => {
-    const value = new Date(item.date ?? item.created_date ?? 0);
+    const value = getTransactionDate(item);
     return value >= startOfSelectedMonth && value < startOfNextMonth;
   });
 
   const previousMonthTransactions = transactions.filter((item) => {
-    const value = new Date(item.date ?? item.created_date ?? 0);
+    const value = getTransactionDate(item);
     return value >= startOfPreviousMonth && value < startOfSelectedMonth;
   });
 
@@ -453,7 +475,10 @@ export const getLocalMonthlyReport = (monthKey?: string) => {
     get_income,
     netbalance: get_income - get_expense,
     lastMonthNetBalance: previousIncome - previousExpense,
-    endOfLastMonth: startOfNextMonth,
+    endOfLastMonth: startOfNextMonth.toISOString(),
     month: monthKey || `${selectedYear}-${String(selectedMonth + 1).padStart(2, "0")}`,
+    selectedMonthStart: startOfSelectedMonth.toISOString(),
+    selectedMonthEnd: startOfNextMonth.toISOString(),
+    isCurrentMonth: startOfSelectedMonth.getTime() === startOfCurrentMonth.getTime(),
   };
 };

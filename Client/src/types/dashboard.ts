@@ -36,4 +36,9 @@ export interface DashboardResponse {
   get_income: number;
   monthlyBalance: number;
   firstDayOfCurrentMonth: string;
+  endOfLastMonth?: string;
+  month?: string;
+  selectedMonthStart?: string;
+  selectedMonthEnd?: string;
+  isCurrentMonth?: boolean;
 }
