@@ -85,7 +85,7 @@ const Header = () => {
     let userName = user?.name;
     let userEmail = "";
 
-  const userInitial = userName?.charAt(0).toUpperCase();
+  const userInitial = userName?.charAt(0).toUpperCase().split(" ")[1] ?? userName?.charAt(0).toUpperCase().split(" ")[0];
 
   // Format today's date
   const today = new Date();
