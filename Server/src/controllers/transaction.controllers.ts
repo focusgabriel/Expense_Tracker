@@ -329,7 +329,7 @@ export async function dashboardController(req:Request, res:Response, next:NextFu
     
     const previousMonthBalance = previousMonthIncome - previousMonthExpense;
     
-    const monthlyExpense = await ExpenseModel.aggregate([{
+    const totalMonthlyExpense = await ExpenseModel.aggregate([{
     $match: {
       userId: req.user!.id,
       type: "expense",
@@ -340,7 +340,7 @@ export async function dashboardController(req:Request, res:Response, next:NextFu
     }
   }]);
 
-  const monthlyIncome = await ExpenseModel.aggregate([{
+  const totalMonthlyIncome = await ExpenseModel.aggregate([{
     $match: {
       userId: req.user!.id,
       type: "income",
@@ -351,23 +351,23 @@ export async function dashboardController(req:Request, res:Response, next:NextFu
     }
   }]);
 
-    const totalMonthlyIncome = monthlyIncome
+    const monthlyIncome = totalMonthlyIncome
       .reduce((sum, item) => sum + item.amount, 0);
 
-    const totalMonthlyExpense = monthlyExpense
+    const monthlyExpense = totalMonthlyExpense
       .reduce((sum, item) => sum + item.amount, 0);
 
-    const monthlyBalance = totalMonthlyIncome - totalMonthlyExpense;
+    const monthlyBalance = monthlyIncome - monthlyExpense;
 
-    const groupedExpenses = monthlyExpense
+    const groupedExpenses = totalMonthlyExpense
       .reduce<Record<string, number>>((acc, item) => {
         acc[item.category] = (acc[item.category] || 0) + item.amount;
         return acc;
       }, {});
 
-      const get_expense = monthlyExpense.map((item, index) => item.amount).reduce((value, sum) => value + sum, 0);
+      const get_expense = totalMonthlyExpense.map((item, index) => item.amount).reduce((value, sum) => value + sum, 0);
 
-      const get_income = monthlyIncome.map((item, index) => item.amount).reduce((value, sum) => value + sum, 0);
+      const get_income = totalMonthlyIncome.map((item, index) => item.amount).reduce((value, sum) => value + sum, 0);
     
     // const getIncome =  
 
