@@ -405,3 +405,55 @@ export const getLocalDashboardData = (): DashboardResponse => {
     firstDayOfCurrentMonth: new Date(now.getFullYear(), now.getMonth(), 0).toISOString(),
   };
 };
+
+export const getLocalMonthlyReport = (monthKey?: string) => {
+  const transactions = getStoredTransactions();
+  const now = new Date();
+  let selectedYear = now.getFullYear();
+  let selectedMonth = now.getMonth();
+
+  if (monthKey && /^\d{4}-\d{2}$/.test(monthKey)) {
+    const [year, month] = monthKey.split("-").map(Number);
+    selectedYear = year;
+    selectedMonth = month - 1;
+  }
+
+  const startOfSelectedMonth = new Date(selectedYear, selectedMonth, 1);
+  const startOfNextMonth = new Date(selectedYear, selectedMonth + 1, 1);
+  const startOfPreviousMonth = new Date(selectedYear, selectedMonth - 1, 1);
+
+  const selectedMonthTransactions = transactions.filter((item) => {
+    const value = new Date(item.date ?? item.created_date ?? 0);
+    return value >= startOfSelectedMonth && value < startOfNextMonth;
+  });
+
+  const previousMonthTransactions = transactions.filter((item) => {
+    const value = new Date(item.date ?? item.created_date ?? 0);
+    return value >= startOfPreviousMonth && value < startOfSelectedMonth;
+  });
+
+  const get_expense = selectedMonthTransactions
+    .filter((item) => item.type === "expense")
+    .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+
+  const get_income = selectedMonthTransactions
+    .filter((item) => item.type === "income")
+    .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+
+  const previousIncome = previousMonthTransactions
+    .filter((item) => item.type === "income")
+    .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+
+  const previousExpense = previousMonthTransactions
+    .filter((item) => item.type === "expense")
+    .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+
+  return {
+    get_expense,
+    get_income,
+    netbalance: get_income - get_expense,
+    lastMonthNetBalance: previousIncome - previousExpense,
+    endOfLastMonth: startOfNextMonth,
+    month: monthKey || `${selectedYear}-${String(selectedMonth + 1).padStart(2, "0")}`,
+  };
+};
