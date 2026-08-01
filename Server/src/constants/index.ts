@@ -48,7 +48,7 @@ export const CATEGORY_COLORS = {
   food: "darkorange",
   transportation: "blueviolet",
   shopping: "lightgreen",
-  bills: "indianred",
+  bill: "indianred",
   housing: "teal",
   healthcare: "crimson",
   entertainment: "goldenrod",
