@@ -326,6 +326,7 @@ export async function dashboardController(req:Request, res:Response, next:NextFu
       .filter(item => item.type === "expense")
       .reduce((sum, item) => sum + item.amount, 0);
 
+    
     const previousMonthBalance = previousMonthIncome - previousMonthExpense;
     
 
@@ -391,7 +392,8 @@ export async function dashboardController(req:Request, res:Response, next:NextFu
         monthlyExpense,
         monthlyBalance,
 
-        previousMonthBalance,
+        // previousMonthBalance,
+        previousMonthIncome
       },
       get_expense,
       get_income,

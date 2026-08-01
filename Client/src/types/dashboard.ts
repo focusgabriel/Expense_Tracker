@@ -9,7 +9,7 @@ export interface DashboardSummary {
   monthlyExpense: number;
   monthlyBalance: number;
 
-  previousMonthBalance: number;
+  previousMonthIncome: number;
 }
 
 export interface User {
