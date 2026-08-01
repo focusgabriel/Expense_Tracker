@@ -259,6 +259,7 @@ export async function deleteTransactionController(req:Request, res:Response, nex
 }
 
 export async function dashboardController(req:Request, res:Response, next:NextFunction) {
+  
   try {
     const authenticatedUser = await authModel.findById(req.user!.id).select("name email");
     const userId = req.user!.id;
@@ -406,6 +407,8 @@ export async function dashboardController(req:Request, res:Response, next:NextFu
   } catch {
     next();
   }
+
+  
 }
 
 // export async function getAllUserDataController(req: Request, res: Response) {
