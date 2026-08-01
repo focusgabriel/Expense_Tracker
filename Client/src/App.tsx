@@ -114,7 +114,7 @@ const App = () => {
                     monthlyIncome: 0,
                     monthlyExpense: 0,
                     monthlyBalance: 0,
-                    previousMonthBalance: 0,
+                    previousMonthIncome: 0,
                   }}
                 />
               </ProtectedRoutes>
