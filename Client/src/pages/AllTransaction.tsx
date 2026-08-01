@@ -22,7 +22,7 @@ const AllTransaction = ({ summary }: AllTransProps) => {
           amount={summary.previousMonthBalance.toLocaleString()}
           content={
             <span
-              className={`inline-flex items-center gap-1 text-[11px] font-semibold sm:text-sm ${balanceTrendUp ? "text-emerald-600" : "text-red-500"}`}
+              className={`inline-flex items-center gap-1 text-[14px] font-semibold sm:text-sm ${balanceTrendUp ? "text-emerald-600" : "text-red-500"}`}
             >
               {balanceTrendUp ? (
                 <ArrowUp size={14} className="shrink-0" />
@@ -41,7 +41,7 @@ const AllTransaction = ({ summary }: AllTransProps) => {
           amount={summary.monthlyIncome.toLocaleString()}
           content={
             <span
-              className={`inline-flex items-center gap-1 text-[11px] font-semibold sm:text-sm ${incomeTrendUp ? "text-emerald-600" : "text-red-500"}`}
+              className={`inline-flex items-center gap-1 text-[14px] font-semibold sm:text-sm ${incomeTrendUp ? "text-emerald-600" : "text-red-500"}`}
             >
               {incomeTrendUp ? (
                 <ArrowUp size={14} className="shrink-0" />
@@ -60,7 +60,7 @@ const AllTransaction = ({ summary }: AllTransProps) => {
           amount={summary.monthlyExpense.toLocaleString()}
           content={
             <span
-              className={`inline-flex items-center gap-1 text-[11px] font-semibold sm:text-sm ${expenseTrendDown ? "text-emerald-600" : "text-red-500"}`}
+              className={`inline-flex items-center gap-1 text-[14px] font-semibold sm:text-sm ${expenseTrendDown ? "text-emerald-600" : "text-red-500"}`}
             >
               {expenseTrendDown ? (
                 <ArrowDown size={14} className="shrink-0" />
@@ -79,7 +79,7 @@ const AllTransaction = ({ summary }: AllTransProps) => {
           amount={summary.monthlyBalance.toLocaleString()}
           content={
             <span
-              className={`inline-flex items-center gap-1 text-[11px] font-semibold sm:text-sm ${balanceTrendUp ? "text-emerald-600" : "text-red-500"}`}
+              className={`inline-flex items-center gap-1 text-[14px] font-semibold sm:text-sm ${balanceTrendUp ? "text-emerald-600" : "text-red-500"}`}
             >
               {balanceTrendUp ? (
                 <ArrowUp size={14} className="shrink-0" />

@@ -7,8 +7,10 @@
 
 export default function TrackKioLogo({
   className = "",
+  trackTextClassName = "text-[#050B17]",
 }: {
   className?: string;
+  trackTextClassName?: string;
 }) {
   return (
     <div
@@ -17,7 +19,7 @@ export default function TrackKioLogo({
       {/* Logo Text & Vector Wrapper — larger default size */}
       <div className="flex items-center justify-start font-bold text-[clamp(1.5rem,7vw,2.75rem)] leading-none">
         {/* "Track" Text */}
-        <span className="text-[#050B17] text-3xl tracking-tight font-sans">
+        <span className={`${trackTextClassName} text-3xl tracking-tight font-sans`}>
           Trac
         </span>
 

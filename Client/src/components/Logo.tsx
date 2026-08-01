@@ -76,7 +76,7 @@ const Logo = ({ variant = "sidebar" }: LogoProps) => {
             <circle cx="16.5" cy="12" r="0.75" fill="currentColor" />
           </svg>
           <div className="w-[50%] font-medium text-white">
-            <TrackKioLogo />
+            <TrackKioLogo trackTextClassName="text-white" />
           </div>
         </span>
       </div>
