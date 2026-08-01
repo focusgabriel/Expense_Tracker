@@ -115,6 +115,8 @@ const App = () => {
                     monthlyExpense: 0,
                     monthlyBalance: 0,
                     previousMonthIncome: 0,
+                    lastMonthNetBalance:0,
+                    previousMonthExpense:0
                   }}
                 />
               </ProtectedRoutes>

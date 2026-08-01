@@ -372,7 +372,8 @@ export async function dashboardController(req:Request, res:Response, next:NextFu
 
       const get_income = totalMonthlyIncome.map((item, index) => item.amount).reduce((value, sum) => value + sum, 0);
     
-    // const getIncome =  
+    // const getBalance = get_income - get_expense;
+    console.log("get balance:", monthlyBalance);
 
     const chartData = Object.entries(groupedExpenses).map(
       ([category, amount]) => ({
@@ -395,10 +396,13 @@ export async function dashboardController(req:Request, res:Response, next:NextFu
         monthlyBalance,
 
         // previousMonthBalance,
-        previousMonthIncome
+        previousMonthIncome,  
+        previousMonthExpense,
+        previousMonthBalance
       },
       get_expense,
       get_income,
+      // getBalance
       monthlyBalance,
       endOfLastMonth,
 

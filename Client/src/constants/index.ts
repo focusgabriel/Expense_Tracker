@@ -16,7 +16,7 @@ export type Transaction = {
   created_date: string | Date;
 };
 
-export const EXPENSE_CATEGORIES = [
+export const EXPENSE_CATEGORIES:any = [
   "food",
   "transportation",
   "shopping",
@@ -29,7 +29,7 @@ export const EXPENSE_CATEGORIES = [
   "others",
 ] as const;
 
-export const INCOME_CATEGORIES = [
+export const INCOME_CATEGORIES:any = [
   "salary",
   "freelance",
   "passive income",
@@ -42,7 +42,7 @@ export const INCOME_CATEGORIES = [
   "others",
 ] as const;
 
-export const CATEGORY_COLORS = {
+export const CATEGORY_COLORS:any = {
   others: "pink",
   food: "darkorange",
   transportation: "blueviolet",
@@ -55,7 +55,7 @@ export const CATEGORY_COLORS = {
   personal: "mediumseagreen",
   salary: "forestgreen",
   freelance: "dodgerblue",
-  "passive income": "mediumpurple",
+  passive: "mediumpurple",
   business: "saddlebrown",
   investment: "darkcyan",
   gift: "hotpink",

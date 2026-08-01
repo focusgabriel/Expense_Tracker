@@ -346,14 +346,14 @@ export const getLocalDashboardData = (): DashboardResponse => {
     )
     .reduce((sum, item) => sum + Number(item.amount || 0), 0);
 
-  // const previousMonthExpense = transactions
-  //   .filter(
-  //     (item) =>
-  //       item.type === "expense" &&
-  //       new Date(item.date ?? item.created_date ?? 0) >= previousMonthStart &&
-  //       new Date(item.date ?? item.created_date ?? 0) <= previousMonthEnd
-  //   )
-  //   .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+  const previousMonthExpense = transactions
+    .filter(
+      (item) =>
+        item.type === "expense" &&
+        new Date(item.date ?? item.created_date ?? 0) >= previousMonthStart &&
+        new Date(item.date ?? item.created_date ?? 0) <= previousMonthEnd
+    )
+    .reduce((sum, item) => sum + Number(item.amount || 0), 0);
 
   const recentTransactions = transactions.slice(0, 8);
 
@@ -385,8 +385,10 @@ export const getLocalDashboardData = (): DashboardResponse => {
     monthlyIncome,
     monthlyExpense,
     monthlyBalance: monthlyIncome - monthlyExpense,
-    // previousMonthBalance: previousMonthIncome - previousMonthExpense,
+    // lastMonthNetBalance: previousMonthIncome - previousMonthExpense,
+    previousMonthBalance: previousMonthIncome - previousMonthExpense,
     previousMonthIncome,
+    previousMonthExpense,
   };
 
   return {
