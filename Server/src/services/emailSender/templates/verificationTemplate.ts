@@ -26,16 +26,14 @@ const verificationTemplate = (verificationLink: string, newUser: string) => {
             </a>
           </div>
 
-          <p style="margin:0; word-break:break-all; font-size:13px; color:#4f46e5;">${verificationLink}</p>
-
           <p style="margin:20px 0 0; font-size:13px; color:#6b7280;">
             If you did not create this account, you can safely ignore this email.
           </p>
-
-          <div class="text-align: center; padding: 20px; color: #6b7280; font-size: 12px;">
-            <p>This is an automated message. Please do not reply.</p>
-          </div>
+          
         </div>
+      </div>
+      <div class="text-align:center; padding:20px; color:#6b7280; font-size:12px;">
+        <p>This is an automated message. Please do not reply.</p>
       </div>
     </div>
   `;
