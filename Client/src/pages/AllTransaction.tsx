@@ -45,7 +45,7 @@ const AllTransaction = ({ summary }: AllTransProps) => {
 
         <TranscCard
           title="Monthly Expense"
-          amount={summary.monthlyBalance.toLocaleString()}
+          amount={summary.monthlyExpense.toLocaleString()}
           content="monthly expense roundup"
           icon="/expense.png"
           alternate="expense"
@@ -53,7 +53,7 @@ const AllTransaction = ({ summary }: AllTransProps) => {
 
         <TranscCard
           title="Net Balance"
-          amount={summary.netBalance.toLocaleString()}
+          amount={summary.monthlyBalance.toLocaleString()}
           content="available balance"
           icon="/bal.png"
           alternate="balance"

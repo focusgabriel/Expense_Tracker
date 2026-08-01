@@ -276,6 +276,9 @@ export async function dashboardController(req:Request, res:Response, next:NextFu
       .reduce((sum, item) => sum + item.amount, 0);
 
     const netBalance = totalIncome - totalExpense;
+    console.log("Net balance:", netBalance);
+    console.log("total income:", totalIncome);
+    console.log("total expense:", totalExpense);
 
     const now = new Date();
 
