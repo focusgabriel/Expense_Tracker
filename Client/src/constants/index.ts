@@ -16,7 +16,7 @@ export type Transaction = {
   created_date: string | Date;
 };
 
-export const EXPENSE_CATEGORIES:any = [
+export const EXPENSE_CATEGORIES = [
   "food",
   "transportation",
   "shopping",
@@ -29,7 +29,7 @@ export const EXPENSE_CATEGORIES:any = [
   "others",
 ] as const;
 
-export const INCOME_CATEGORIES:any = [
+export const INCOME_CATEGORIES = [
   "salary",
   "freelance",
   "passive income",

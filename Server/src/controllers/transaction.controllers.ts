@@ -380,7 +380,7 @@ export async function dashboardController(req:Request, res:Response, next:NextFu
         category,
         amount,
         percentage: (amount / get_income) * 100,
-        fill: CATEGORY_COLORS[category] ?? "#07023A"
+        fill: CATEGORY_COLORS[category as keyof typeof CATEGORY_COLORS] ?? "#07023A"
       })
     );
 
