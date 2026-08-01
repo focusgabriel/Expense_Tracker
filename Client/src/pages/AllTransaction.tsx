@@ -23,8 +23,9 @@ const AllTransaction = ({ summary }: AllTransProps) => {
                 <span
                   className={`${summary.monthlyBalance >= summary.previousMonthIncome ? "text-red-500 font-bold" : "text-indigo-600 font-bold"}`}
                 >
-                  &#8358;{summary.previousMonthIncome.toLocaleString()} total income
+                  &#8358;{summary.previousMonthIncome.toLocaleString()} 
                 </span>{" "}
+                total income
               </span>
             ) : (
               ""
@@ -36,7 +37,7 @@ const AllTransaction = ({ summary }: AllTransProps) => {
 
         <TranscCard
           title="Monthly Income"
-          amount={summary.totalIncome.toLocaleString()}
+          amount={summary.monthlyIncome.toLocaleString()}
           content="diverse or single source"
           icon="/dollar.png"
           alternate="dollar"
@@ -44,7 +45,7 @@ const AllTransaction = ({ summary }: AllTransProps) => {
 
         <TranscCard
           title="Monthly Expense"
-          amount={summary.totalExpense.toLocaleString()}
+          amount={summary.monthlyBalance.toLocaleString()}
           content="monthly expense roundup"
           icon="/expense.png"
           alternate="expense"

@@ -329,7 +329,6 @@ export async function dashboardController(req:Request, res:Response, next:NextFu
     
     const previousMonthBalance = previousMonthIncome - previousMonthExpense;
     
-
     const monthlyExpense = await ExpenseModel.aggregate([{
     $match: {
       userId: req.user!.id,
