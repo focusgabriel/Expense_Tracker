@@ -27,9 +27,6 @@ const resetPasswordTemplate = (resetLink: string, userName:string) => {
             <p>This link will expire in 1 hour.</p>
             <p>Best regards,<br>TracKiu Team</p>
           </div>
-          <div class="footer">
-            <p>This is an automated message. Please do not reply.</p>
-          </div>
         </div>
       </body>
       </html>
