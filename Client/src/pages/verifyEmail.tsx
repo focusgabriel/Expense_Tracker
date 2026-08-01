@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import refreshClient from "../api/fetch";
+import toast from "react-hot-toast";
 
 const VerifyEmail = () => {
   const [loading, setLoading] = useState(true);
@@ -21,10 +22,16 @@ const VerifyEmail = () => {
         }
 
         setSuccess(true);
+        if(success){
+          toast.success("you will be redirected to the login field, where you can login", {
+            position:"top-center",
+            duration: 3000
+          })
+        }
 
         setTimeout(() => {
           navigate("/");
-        }, 3000);
+        }, 4000);
 
       } catch (error) {
 
@@ -47,10 +54,10 @@ const VerifyEmail = () => {
       <div className="rounded-lg bg-white p-8 shadow-lg">
         <h1
           className={`text-2xl font-bold ${
-            success ? "text-black-600" : "text-red-600"
+            success ? "text-green-600" : "text-red-600"
           }`}
         >
-          {success ? `${<span className="text-green-500 text-2xl">Verification Successful</span>}, you would be redirected to the login field`  : `Opps! ${errorMsg}`}
+          {success ? "Success!"  : `Opps! ${errorMsg}`}
         </h1>
       </div>
     </section>
