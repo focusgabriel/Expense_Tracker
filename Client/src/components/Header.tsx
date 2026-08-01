@@ -92,7 +92,6 @@ const Header = () => {
     userName?.split(" ")[1]?.charAt(0).toUpperCase() ??
     userName?.split(" ")[0]?.charAt(0).toUpperCase();
 
-  console.log(userInitial);
   // Format today's date
   const today = new Date();
   const dateStr = today.toLocaleDateString("en-US", {
