@@ -53,6 +53,15 @@ const MonthlyReport = () => {
   const formatDate = (dateValue: string | Date | null | undefined) => {
     if (!dateValue) return "Select a month";
 
+    if (typeof dateValue === "string" && /^\d{4}-\d{2}$/.test(dateValue)) {
+      const [year, month] = dateValue.split("-").map(Number);
+      const parsed = new Date(year, (month || 1) - 1, 1);
+      return parsed.toLocaleDateString("en-US", {
+        month: "long",
+        year: "numeric",
+      });
+    }
+
     const newDate = new Date(dateValue);
     return newDate.toLocaleDateString("en-US", {
       month: "long",
@@ -73,7 +82,7 @@ const MonthlyReport = () => {
       setFormattedIncome(local.get_income.toLocaleString());
       setFormattedExpense(local.get_expense.toLocaleString());
       setFormattedBalance(local.netbalance.toLocaleString());
-      setGetDate(local.endOfLastMonth);
+      setGetDate(monthKey);
       setIsOffline(true);
       setIsLoading(false);
       return;
@@ -90,7 +99,7 @@ const MonthlyReport = () => {
       setFormattedIncome((res.data.get_income ?? 0).toLocaleString());
       setFormattedExpense((res.data.get_expense ?? 0).toLocaleString());
       setFormattedBalance((res.data.netbalance ?? 0).toLocaleString());
-      setGetDate(res.data.endOfLastMonth ?? monthKey);
+      setGetDate(monthKey);
       setIsOffline(false);
     } catch (error) {
       const local = getLocalMonthlyReport(monthKey);
@@ -100,7 +109,7 @@ const MonthlyReport = () => {
       setFormattedIncome(local.get_income.toLocaleString());
       setFormattedExpense(local.get_expense.toLocaleString());
       setFormattedBalance(local.netbalance.toLocaleString());
-      setGetDate(local.endOfLastMonth);
+      setGetDate(monthKey);
       setIsOffline(true);
 
       if (axios.isAxiosError(error)) {
@@ -145,10 +154,12 @@ const MonthlyReport = () => {
   }, [selectedMonth]);
 
   const handleNavigate = (direction: -1 | 1) => {
-    const nextIndex = Math.max(
-      0,
-      Math.min(monthOptions.length - 1, selectedIndex + direction),
-    );
+    const nextIndex = selectedIndex + direction;
+
+    if (nextIndex < 0 || nextIndex >= monthOptions.length) {
+      return;
+    }
+
     setSelectedIndex(nextIndex);
     setSelectedMonth(monthOptions[nextIndex].key);
   };
@@ -167,7 +178,7 @@ const MonthlyReport = () => {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-xl font-bold text-slate-900 sm:text-2xl">
-              Monthly Summary
+              {formatDate(selectedMonth)}
             </h1>
             <p className="text-sm font-medium text-slate-500">
               {formatDate(getDate)}
@@ -177,7 +188,7 @@ const MonthlyReport = () => {
           <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 p-1">
             <button
               type="button"
-              onClick={() => handleNavigate(-1)}
+              onClick={() => handleNavigate(1)}
               disabled={selectedIndex === monthOptions.length - 1}
               className="rounded-full px-3 py-1.5 text-sm font-semibold text-slate-600 transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-50"
             >
@@ -188,7 +199,7 @@ const MonthlyReport = () => {
             </div>
             <button
               type="button"
-              onClick={() => handleNavigate(1)}
+              onClick={() => handleNavigate(-1)}
               disabled={selectedIndex === 0}
               className="rounded-full px-3 py-1.5 text-sm font-semibold text-slate-600 transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-50"
             >
