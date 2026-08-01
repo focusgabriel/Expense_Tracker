@@ -47,10 +47,10 @@ const VerifyEmail = () => {
       <div className="rounded-lg bg-white p-8 shadow-lg">
         <h1
           className={`text-2xl font-bold ${
-            success ? "text-green-600" : "text-red-600"
+            success ? "text-black-600" : "text-red-600"
           }`}
         >
-          {success ? "Success!" : `Opps! ${errorMsg}`}
+          {success ? `${<span className="text-green-500 text-2xl">Verification Successful</span>}, you would be redirected to the login field`  : `Opps! ${errorMsg}`}
         </h1>
       </div>
     </section>
