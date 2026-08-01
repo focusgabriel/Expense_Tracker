@@ -63,8 +63,8 @@ const AddTask = () => {
     const payload = {
       type: (Type.current?.value.toLowerCase() || "expense") as "income" | "expense",
       amount: Number(Amount.current?.value.trim() ?? 0),
-      category: Category.current?.value.trim().toLowerCase(),
-      description: Description.current?.value.trim().toLowerCase(),
+      category: Category.current?.value.trim().toLowerCase() || "others",
+      description: Description.current?.value.trim().toLowerCase() || "",
       date: newDate.current?.value || getTodayString(),
       created_date: Current_date.current?.value || getTodayString(),
     };
