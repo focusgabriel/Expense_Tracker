@@ -127,82 +127,90 @@ export async function getTransactionController(req:Request, res:Response, next:N
 };
 
 export async function getMonthlyIncomeController(req:Request, res:Response, next:NextFunction) {
-// getting the first day of the previous month and the first day of the next month
-const now = new Date()
-const startOfPrevMonth = new Date(
-  now.getFullYear(),
-  now.getMonth() - 1
-)
-const endOfLastMonth = new Date(
-  now.getFullYear(),
-  now.getMonth(),
-)
-const startOfNextMonth = new Date(
-  now.getFullYear(),
-  now.getMonth() + 1,
-)
-// console.log("new Month:", startOfNextMonth)
-// aggregating the monthly expense based on gte and lt which would be based on the highest date(last day of the month) and the beginning of the new month.
-try {
-  const getMonthlyExpense = await ExpenseModel.aggregate([{
-    $match: {
-      userId: req.user!.id,
-      type: "expense",
-      date: {
-        $gte: endOfLastMonth,
-        $lt: startOfNextMonth
+  const monthQuery = typeof req.query.month === 'string' ? req.query.month : undefined;
+  const now = new Date();
+  let selectedYear = now.getFullYear();
+  let selectedMonth = now.getMonth();
+
+  if (monthQuery && /^\d{4}-\d{2}$/.test(monthQuery)) {
+    const [year, month] = monthQuery.split('-').map(Number);
+    selectedYear = year!;
+    selectedMonth = month! - 1;
+  }
+
+  const startOfSelectedMonth = new Date(selectedYear, selectedMonth, 1);
+  const startOfNextMonth = new Date(selectedYear, selectedMonth + 1, 1);
+  const startOfPreviousMonth = new Date(selectedYear, selectedMonth - 1, 1);
+  const startOfCurrentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+  try {
+    const getMonthlyExpense = await ExpenseModel.aggregate([{
+      $match: {
+        userId: req.user!.id,
+        type: "expense",
+        date: {
+          $gte: startOfSelectedMonth,
+          $lt: startOfNextMonth
+        }
       }
-    }
-  }])
-  console.log()
-  const getMonthlyIncome = await ExpenseModel.aggregate([{
-    $match: {
-      userId: req.user!.id,
-      type: "income",
-      date: {
-        $gte: endOfLastMonth,
-        $lt: startOfNextMonth
+    }])
+
+    const getMonthlyIncome = await ExpenseModel.aggregate([{
+      $match: {
+        userId: req.user!.id,
+        type: "income",
+        date: {
+          $gte: startOfSelectedMonth,
+          $lt: startOfNextMonth
+        }
       }
-    }
-  }])
+    }])
 
-  const getPrevMonthlyIncome = await ExpenseModel.aggregate([{
-    $match: {
-      userId: req.user!.id,
-      type: "income",
-      date: {
-        $gte: startOfPrevMonth,
-        $lt: endOfLastMonth
+    const getPrevMonthlyIncome = await ExpenseModel.aggregate([{
+      $match: {
+        userId: req.user!.id,
+        type: "income",
+        date: {
+          $gte: startOfPreviousMonth,
+          $lt: startOfSelectedMonth
+        }
       }
-    }
-  }])
+    }])
 
-  const getPrevMonthlyExpense = await ExpenseModel.aggregate([{
-    $match: {
-      userId: req.user!.id,
-      type: "expense",
-      date: {
-        $gte: startOfPrevMonth,
-        $lt: endOfLastMonth
+    const getPrevMonthlyExpense = await ExpenseModel.aggregate([{
+      $match: {
+        userId: req.user!.id,
+        type: "expense",
+        date: {
+          $gte: startOfPreviousMonth,
+          $lt: startOfSelectedMonth
+        }
       }
-    }
-  }])
+    }])
 
-  // calculating for the previous month
-  const lastMonthIncome = getPrevMonthlyIncome.map((item, index) => item.amount).reduce((value, sum) => value + sum, 0)
-  const lastMonthExpense = getPrevMonthlyExpense.map((item, index) => item.amount).reduce((value, sum) => value + sum, 0)
-  const lastMonthNetBalance = lastMonthIncome - lastMonthExpense;
+    const lastMonthIncome = getPrevMonthlyIncome.map((item) => item.amount).reduce((value, sum) => value + sum, 0)
+    const lastMonthExpense = getPrevMonthlyExpense.map((item) => item.amount).reduce((value, sum) => value + sum, 0)
+    const lastMonthNetBalance = lastMonthIncome - lastMonthExpense;
 
-  // calculating for the current month
-  const get_expense = getMonthlyExpense.map((item, index) => item.amount).reduce((value, sum) => value + sum, 0)
-  const get_income = getMonthlyIncome.map((item, index) => item.amount).reduce((value, sum) => value + sum, 0)
-  const netbalance = get_income - get_expense;
+    const get_expense = getMonthlyExpense.map((item) => item.amount).reduce((value, sum) => value + sum, 0)
+    const get_income = getMonthlyIncome.map((item) => item.amount).reduce((value, sum) => value + sum, 0)
+    const netbalance = get_income - get_expense;
 
-  res.status(200).json({get_expense, get_income, netbalance, lastMonthNetBalance, getMonthlyExpense, endOfLastMonth});
-  
-} catch (error) {
-  next();
-}
+    res.status(200).json({
+      get_expense,
+      get_income,
+      netbalance,
+      lastMonthNetBalance,
+      getMonthlyExpense,
+      endOfLastMonth: startOfNextMonth,
+      month: monthQuery || `${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}`,
+      selectedMonthStart: startOfSelectedMonth,
+      selectedMonthEnd: startOfNextMonth,
+      isCurrentMonth: startOfSelectedMonth.getTime() === startOfCurrentMonth.getTime(),
+    });
+  } catch (error) {
+    next();
+  }
 };
 
 export async function editTransactionControler(req:Request, res:Response, next:NextFunction) {
