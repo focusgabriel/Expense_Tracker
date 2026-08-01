@@ -8,7 +8,6 @@ import toast from "react-hot-toast";
 const VerifyEmail = () => {
   const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
-  const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState<string | null>("");
   const { token } = useParams();
   const navigate = useNavigate();
@@ -23,13 +22,11 @@ const VerifyEmail = () => {
         }
 
         setSuccess(true);
-        setSuccessMsg("you would be rediredcted to the login field, where you can login")
-        // if(success){
+        
           toast.success("you will be redirected to the login field, where you can login", {
             position:"top-center",
             duration: 3000
           })
-        // }
 
         setTimeout(() => {
           navigate("/");
@@ -59,7 +56,7 @@ const VerifyEmail = () => {
             success ? "text-green-600" : "text-red-600 break-all"
           }`}
         >
-          {success ? `Success ${successMsg}`!  : `Opps! ${errorMsg}`}
+          {success ? `Success`!  : `Opps! ${errorMsg}`}
         </h1>
       </div>
     </section>

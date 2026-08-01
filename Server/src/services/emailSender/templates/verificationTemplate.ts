@@ -32,8 +32,8 @@ const verificationTemplate = (verificationLink: string, newUser: string) => {
 
         </div>
       </div>
-      <div class="display:flex; justify-content:center; align-items:center">
-        < class="text-align:center; padding:20px; color:#6b7280; font-size:12px;">This is an automated message. Please do not reply.</p>
+      <div class="display:flex; justify-content:center; align-items:center color:darkblue">
+        <p>This is an automated message. Please do not reply.</p>
       </div>
     </div>
   `;
