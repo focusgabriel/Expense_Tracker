@@ -19,7 +19,9 @@ export default function TrackKioLogo({
       {/* Logo Text & Vector Wrapper — larger default size */}
       <div className="flex items-center justify-start font-bold text-[clamp(1.5rem,7vw,2.75rem)] leading-none">
         {/* "Track" Text */}
-        <span className={`${trackTextClassName} text-3xl tracking-tight font-sans`}>
+        <span
+          className={`${trackTextClassName} text-3xl tracking-tight font-sans`}
+        >
           Trac
         </span>
 
@@ -98,7 +100,11 @@ export default function TrackKioLogo({
                 />
               </g>
             </svg>
-          </span><span className="inline-flex items-baseline text-3xl" style={{ marginLeft: 0 }}>
+          </span>
+          <span
+            className="inline-flex items-baseline text-3xl"
+            style={{ marginLeft: 0 }}
+          >
             <span className="text-transparent bg-clip-text bg-linear-to-b from-[#00C6FF] via-[#0072FF] to-[#003BFF] ">
               i
               <span className="text-transparent bg-clip-text bg-linear-to-tr from-[#003BFF] via-[#0072FF] to-[#00E5FF] ">

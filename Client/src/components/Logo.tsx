@@ -12,14 +12,14 @@ const Logo = ({ variant = "sidebar" }: LogoProps) => {
   const [secondSlogan, setSecondSlogan] = useState(false);
 
   const blink = () => {
-    if(firstSlogan === true){
+    if (firstSlogan === true) {
       setSecondSlogan(true);
       setFirstSlogan(false);
     } else {
       setFirstSlogan(true);
       setSecondSlogan(false);
     }
-  }
+  };
 
   setTimeout(() => {
     blink();
@@ -116,17 +116,20 @@ const Logo = ({ variant = "sidebar" }: LogoProps) => {
   return (
     <div className="flex items-center gap-3">
       <div className="flex h-14 w-14 items-center justify-center rounded-xl shadow-md">
-        <img src="/logo.png" alt="trackio_logo" className="h-14 w-14 rounded-lg shadow-md" />
+        <img
+          src="/logo.png"
+          alt="trackio_logo"
+          className="h-14 w-14 rounded-lg shadow-md"
+        />
       </div>
       <div className="flex flex-col leading-tight justify-start">
         <TrackKioLogo />
-          <span className="text-[12px] mt-1 font-medium uppercase tracking-[0.1em] text-indigo-600">
-          {
-            firstSlogan ? (
-              <p>Financial clarity starts here.</p>
-            ) : secondSlogan && <p>Track it. Know it.</p>
-          }
-
+        <span className="text-[12px] mt-1 font-medium uppercase tracking-[0.1em] text-indigo-600">
+          {firstSlogan ? (
+            <p>Financial clarity starts here.</p>
+          ) : (
+            secondSlogan && <p>Track it. Know it.</p>
+          )}
         </span>
       </div>
     </div>
