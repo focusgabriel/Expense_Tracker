@@ -14,23 +14,9 @@ const AllTransaction = ({ summary }: AllTransProps) => {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 ">
         {/* <span className="text-green-600">{prevMonth}</span> */}
         <TranscCard
-          title="Total Balance"
-          amount={summary.netBalance.toLocaleString()}
-          content={
-            summary.monthlyBalance !== null || summary.previousMonthBalance !== null ? (
-              <span>
-                vs last month{" "}
-                <span
-                  className={`${summary.monthlyBalance >= summary.previousMonthBalance ? "text-red-500 font-bold" : "text-green-600 font-bold"}`}
-                >
-                  &#8358;{summary.previousMonthBalance.toLocaleString() ?? 0} 
-                </span>{" "}
-                net savings
-              </span>
-            ) : (
-              ""
-            )
-          }
+          title="Net Savings"
+          amount={summary.previousMonthBalance.toLocaleString()}
+          content="balance of last month"
           icon="/wallet.png"
           alternate="wallet"
         />
