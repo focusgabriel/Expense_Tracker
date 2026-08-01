@@ -40,26 +40,24 @@ const AllTransaction = ({ summary }: AllTransProps) => {
           title="Monthly Income"
           amount={summary.monthlyIncome.toLocaleString()}
           content={
-            <span
-              className={`inline-flex items-center gap-1 text-[14px] font-semibold sm:text-sm ${incomeTrendUp ? "text-emerald-600" : "text-red-500"}`}
-            >
-              {incomeTrendUp ? (
-                <ArrowUp size={14} className="shrink-0" />
-              ) : (
-                <ArrowDown size={14} className="shrink-0" />
-              )}
-              <span>{summary.monthlyIncome !== null || summary.previousMonthIncome ? (
-              <span>
+                summary.monthlyIncome !== null || summary.previousMonthIncome ? (
+                  <span>
                 vs last month{" "}
               <span className={`${summary.monthlyIncome < summary.previousMonthIncome ? "text-green-500 dont-bold" : "text-red-500 font-bold"}`} >
               &#8358;{summary.previousMonthIncome.toLocaleString() ?? 0} 
-              </span>{" "} total income <span className="lg:text-2xl text-xl text-green-500">&#8593</span>;
+              </span>{" "} total income
+
+              <span>
+              {incomeTrendUp ? (
+                <ArrowUp size={14} className={`shrink-0 inline-flex items-center gap-1 text-[14px] font-semibold sm:text-sm ${incomeTrendUp && "text-emerald-600" }`} />
+              ) : (
+                <ArrowDown size={14} className={`shrink-0 inline-flex items-center gap-1 text-[14px] font-semibold sm:text-sm ${incomeTrendUp && "text-red-600" }`} />
+              )} </span>
               </span>
             ) : (
               ""
-            )}</span>
-            </span>
-          }
+            ) }
+             
           icon="/dollar.png"
           alternate="dollar"
         />
