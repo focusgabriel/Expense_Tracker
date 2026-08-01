@@ -41,7 +41,7 @@ const AllTransaction = ({ summary }: AllTransProps) => {
           amount={summary.monthlyIncome.toLocaleString()}
           content={
             <span
-              className={`inline-flex items-center gap-1 text-[14px] font-semibold sm:text-sm ${incomeTrendUp ? "text-emerald-600" : "text-red-500"}`}
+              className={`inline-flex items-center gap-1 text-[14px] font-semibold sm:text-sm ${incomeTrendUp ? "text-red-600" : "text-green-500"}`}
             >
               {incomeTrendUp ? (
                 <ArrowUp size={14} className="shrink-0" />
