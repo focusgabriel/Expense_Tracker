@@ -404,7 +404,7 @@ export async function dashboardController(req:Request, res:Response, next:NextFu
       get_income,
       // getBalance
       monthlyBalance,
-      endOfLastMonth,
+      firstDayOfCurrentMonth,
 
       recentTransactions,
       chartData,

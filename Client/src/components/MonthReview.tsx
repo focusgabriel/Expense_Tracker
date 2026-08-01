@@ -6,14 +6,14 @@ type MonthReviewProps = {
   get_income: number;
   get_expense: number;
   monthlyBalance: number;
-  endOfLastMonth: string;
+  firstDayOfCurrentMonth: string;
 };
 
 const MonthReview = ({
   get_income,
   get_expense,
   monthlyBalance,
-  endOfLastMonth,
+  firstDayOfCurrentMonth,
 }: MonthReviewProps) => {
   const formatDate = (dateValue: string) => {
     const newDate = new Date(dateValue);
@@ -37,7 +37,7 @@ const MonthReview = ({
               Monthly Summary
             </h1>
             <p className="text-sm font-medium text-slate-500">
-              {formatDate(endOfLastMonth)}
+              {formatDate(firstDayOfCurrentMonth)}
             </p>
           </div>
           <span className="inline-flex items-center gap-1.5 rounded-full bg-green-50 px-3 py-1 text-xs font-semibold text-green-600">

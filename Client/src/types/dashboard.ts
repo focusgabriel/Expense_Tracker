@@ -35,5 +35,5 @@ export interface DashboardResponse {
   get_expense: number;
   get_income: number;
   monthlyBalance: number;
-  endOfLastMonth: string;
+  firstDayOfCurrentMonth: string;
 }
