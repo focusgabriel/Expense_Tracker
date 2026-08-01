@@ -7,7 +7,6 @@ import { errorHandler } from './middlewares/error.middleware.js';
 import { limiter } from './validation/limiter.js';
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
-import { authLimiter } from './validation/authLimiter.js';
 
 // dotenv.config();
 
@@ -38,7 +37,7 @@ app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser());
 
 app.use("/api/v1/", limiter, transactionRouter);
-app.use("/api/v1/", authLimiter, userRouter);
+app.use("/api/v1/", userRouter);
 app.use(errorHandler);
 
 app.get("/health", async(_req:Request, res:Response) => {
