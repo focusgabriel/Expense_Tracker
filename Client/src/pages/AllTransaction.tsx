@@ -28,7 +28,7 @@ const AllTransaction = ({ summary }: AllTransProps) => {
             summary.monthlyIncome !== null || summary.previousMonthIncome ? (
               <span>
                 vs last month{" "}
-              <span className={`${summary.monthlyIncome >= summary.previousMonthIncome ? "text-green-500 dont-bold" : "text-red-500 font-bold"}`} >
+              <span className={`${summary.monthlyIncome < summary.previousMonthIncome ? "text-green-500 dont-bold" : "text-red-500 font-bold"}`} >
               &#8358;{summary.previousMonthIncome.toLocaleString() ?? 0} 
               </span>{" "} total income
               </span>
@@ -49,9 +49,9 @@ const AllTransaction = ({ summary }: AllTransProps) => {
         />
 
         <TranscCard
-          title="Net Balance"
+          title="Monthly Balance"
           amount={summary.monthlyBalance.toLocaleString()}
-          content="available balance"
+          content="this month's available balance"
           icon="/bal.png"
           alternate="balance"
         />
