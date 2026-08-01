@@ -5,6 +5,7 @@ import { useRef, useEffect, useState } from "react";
 import refreshClient from "../api/fetch";
 import axios from "axios";
 import OfflineStatus from "./OfflineStatus";
+import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from "../constants";
 import {
   isBrowserOnline,
   saveTransactionLocally,
@@ -23,11 +24,17 @@ const getTodayString = (): string => {
 const AddTask = () => {
   const Type = useRef<HTMLSelectElement>(null);
   const Amount = useRef<HTMLInputElement>(null);
-  const Category = useRef<HTMLInputElement>(null);
+  const Category = useRef<HTMLSelectElement>(null);
   const Description = useRef<HTMLInputElement>(null);
   const newDate = useRef<HTMLInputElement>(null);
   const Current_date = useRef<HTMLInputElement>(null);
   const [isOffline, setIsOffline] = useState(!isBrowserOnline());
+  const [selectedType, setSelectedType] = useState<"income" | "expense">(
+    "expense",
+  );
+
+  const categories =
+    selectedType === "income" ? INCOME_CATEGORIES : EXPENSE_CATEGORIES;
 
   useEffect(() => {
     if (newDate.current) {
@@ -54,12 +61,12 @@ const AddTask = () => {
     e.preventDefault();
 
     const payload = {
-      type: (Type.current!.value.toLowerCase() || "expense") as "income" | "expense",
-      amount: Number(Amount.current!.value.trim() ?? 0),
-      category: Category.current!.value.trim().toLowerCase(),
-      description: Description.current!.value.trim().toLowerCase(),
-      date: newDate.current!.value || getTodayString(),
-      created_date: Current_date.current!.value || getTodayString(),
+      type: (Type.current?.value.toLowerCase() || "expense") as "income" | "expense",
+      amount: Number(Amount.current?.value.trim() ?? 0),
+      category: Category.current?.value.trim().toLowerCase(),
+      description: Description.current?.value.trim().toLowerCase(),
+      date: newDate.current?.value || getTodayString(),
+      created_date: Current_date.current?.value || getTodayString(),
     };
 
     const persisted = saveTransactionLocally(payload, !isBrowserOnline());
@@ -159,6 +166,13 @@ const AddTask = () => {
             id="type"
             name="type"
             ref={Type}
+            value={selectedType}
+            onChange={e => {
+              setSelectedType(e.target.value as "income" | "expense");
+              if (Category.current) {
+                Category.current.value = "";
+              }
+            }}
             className="min-h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
           >
             <option value="income">INCOME</option>
@@ -192,14 +206,27 @@ const AddTask = () => {
           >
             Category
           </label>
-          <input
+          <select
             id="category"
-            className="min-h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
-            type="text"
-            placeholder="Enter the category"
-            ref={Category}
             name="category"
-          />
+            ref={Category}
+            defaultValue=""
+            className="min-h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
+          >
+            <option value="" disabled>
+              Select a {selectedType} category
+            </option>
+            {categories.map(cat => (
+              <option key={cat} value={cat}>
+                {cat.charAt(0).toUpperCase() + cat.slice(1)}
+              </option>
+            ))}
+          </select>
+          <p className="text-xs text-slate-400">
+            {selectedType === "income"
+              ? "e.g. Salary, Freelance, Passive income"
+              : "e.g. Food, Transportation, Bills"}
+          </p>
         </div>
 
         <div className="flex flex-col gap-2">

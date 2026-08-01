@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import refreshClient from "../api/fetch";
 import axios from "axios";
 import OfflineStatus from "../components/OfflineStatus";
+import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from "../constants";
 import {
   isBrowserOnline,
   getStoredTransactionById,
@@ -81,6 +82,9 @@ const EditForm = () => {
     date: "",
   });
 
+  const categories =
+    formData.type === "income" ? INCOME_CATEGORIES : EXPENSE_CATEGORIES;
+
   useEffect(() => {
     async function fetchTransaction() {
       if (!id) return;
@@ -153,6 +157,14 @@ const EditForm = () => {
     });
   };
 
+  const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFormData({
+      ...formData,
+      type: e.target.value,
+      category: "",
+    });
+  };
+
   return (
     <section className="md:mx-auto w-full md:max-w-2xl">
       <OfflineStatus isOffline={isOffline} />
@@ -203,7 +215,7 @@ const EditForm = () => {
             id="type"
             name="type"
             value={formData.type}
-            onChange={handleChange}
+            onChange={handleTypeChange}
             className="min-h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
           >
             <option value="income">INCOME</option>
@@ -238,15 +250,27 @@ const EditForm = () => {
           >
             Category
           </label>
-          <input
+          <select
             id="category"
-            className="min-h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
-            type="text"
-            placeholder="Enter the category"
+            name="category"
             value={formData.category}
             onChange={handleChange}
-            name="category"
-          />
+            className="min-h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
+          >
+            <option value="" disabled>
+              Select a {formData.type || "expense"} category
+            </option>
+            {categories.map(cat => (
+              <option key={cat} value={cat}>
+                {cat.charAt(0).toUpperCase() + cat.slice(1)}
+              </option>
+            ))}
+          </select>
+          <p className="text-xs text-slate-400">
+            {formData.type === "income"
+              ? "e.g. Salary, Freelance, Passive income"
+              : "e.g. Food, Transportation, Bills"}
+          </p>
         </div>
 
         <div className="flex flex-col gap-2">

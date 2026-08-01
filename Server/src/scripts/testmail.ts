@@ -1,4 +1,3 @@
-import "dotenv/config";
 import { BrevoClient, Brevo } from "@getbrevo/brevo";
 
 console.log(process.env.BREVO_API_KEY)
@@ -33,8 +32,8 @@ async function run() {
       email: "charlesuchendu750@gmail.com",
     },
       to: [{"email":"focusgabriel002@gmail.com"}],
-      subject: "Hello and welcome",
-      htmlContent: "Hello from charles!",
+      subject: "SMTP Test",
+      htmlContent: "Hello from Brevo!",
     });
 
     console.log(info);

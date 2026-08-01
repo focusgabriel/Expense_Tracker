@@ -16,13 +16,52 @@ export type Transaction = {
   created_date: string | Date;
 };
 
+export const EXPENSE_CATEGORIES = [
+  "food",
+  "transportation",
+  "shopping",
+  "bills",
+  "housing",
+  "healthcare",
+  "entertainment",
+  "education",
+  "personal",
+  "others",
+] as const;
+
+export const INCOME_CATEGORIES = [
+  "salary",
+  "freelance",
+  "passive income",
+  "business",
+  "investment",
+  "gift",
+  "refund",
+  "allowance",
+  "bonus",
+  "others",
+] as const;
+
 export const CATEGORY_COLORS = {
   others: "pink",
   food: "darkorange",
   transportation: "blueviolet",
   shopping: "lightgreen",
-  bill: "indianred",
-
+  bills: "indianred",
+  housing: "teal",
+  healthcare: "crimson",
+  entertainment: "goldenrod",
+  education: "steelblue",
+  personal: "mediumseagreen",
+  salary: "forestgreen",
+  freelance: "dodgerblue",
+  "passive income": "mediumpurple",
+  business: "saddlebrown",
+  investment: "darkcyan",
+  gift: "hotpink",
+  refund: "olive",
+  allowance: "slateblue",
+  bonus: "orangered",
 } as const;
 
 export const navItems = [
