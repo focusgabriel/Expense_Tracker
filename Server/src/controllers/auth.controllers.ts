@@ -3,10 +3,9 @@ import { authModel } from "../model/index.js";
 import crypto from "crypto";
 import bcrypt from "bcrypt"
 import { AppError } from "../utils/AppError.js";
-import resetPasswordTemplate from "../services/emailSender/templates/passwordResetTemplate.js";
 import { sendResetPasswordEmail } from "../services/emailSender/passwordResetEmail.js";
 // import { sendEmail } from "../services/email.services.js";
-const isProduction = process.env.NODE_ENV === "production";
+// const isProduction = process.env.NODE_ENV === "production";
 
 
 export async function getCurrentUserController(req:Request, res:Response, next:NextFunction) {
@@ -34,15 +33,15 @@ export async function logoutController(req:Request, res:Response, next:NextFunct
 
    res.clearCookie("accessToken", {
     httpOnly: true,
-    secure: isProduction,
-    sameSite: isProduction ? "none" as const: "lax" as const,
+    secure: true,
+    sameSite: "none" as const,
     path: "/",
   });
 
   res.clearCookie("refreshToken", {
     httpOnly: true,
-    secure: isProduction,
-    sameSite: isProduction ? "none" as const: "lax" as const,
+    secure: true,
+    sameSite: "none" as const,
     path: "/",
   });
     

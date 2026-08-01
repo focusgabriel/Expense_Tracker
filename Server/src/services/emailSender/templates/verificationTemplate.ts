@@ -29,11 +29,11 @@ const verificationTemplate = (verificationLink: string, newUser: string) => {
           <p style="margin:20px 0 0; font-size:13px; color:#6b7280;">
             If you did not create this account, you can safely ignore this email.
           </p>
-          
+
         </div>
       </div>
-      <div class="text-align:center; padding:20px; color:#6b7280; font-size:12px;">
-        <p>This is an automated message. Please do not reply.</p>
+      <div class="display:flex; justify-content:center; align-items:center">
+        < class="text-align:center; padding:20px; color:#6b7280; font-size:12px;">This is an automated message. Please do not reply.</p>
       </div>
     </div>
   `;

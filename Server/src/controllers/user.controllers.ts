@@ -9,12 +9,12 @@ import { AppError } from "../utils/AppError.js"
 import crypto from "crypto";
 import { sendVerificationEmail } from "../services/emailSender/verificationEmail.js"
 // import { sendEmail } from "../services/email.services.js"
-const isProduction = process.env.NODE_ENV === "production";
+// const isProduction = process.env.NODE_ENV === "production";
 
 const cookieOptions = {
   httpOnly: true,
-  secure: isProduction,
-  sameSite: isProduction ? "none" as const: "lax" as const,
+  secure: true,
+  sameSite: "none" as const,
   path: "/",
 };
 
@@ -29,7 +29,7 @@ export async function RegisterController (
     // the register helper function validation from Zod
 
 
-      registerSchema
+      registerSchema.safeParse(req.body);
     
 
     const salt = await bcrypt.genSalt(10);
@@ -69,7 +69,7 @@ export async function loginController(req: Request<{}, {}, LoginRequestBody>,res
   const {email, password} = req.body;
   
   // the register helper function validation from Zod
-  loginSchema
+  loginSchema.safeParse(req.body);
 
   const user = await authModel.findOne({email});
   if (!user) {
