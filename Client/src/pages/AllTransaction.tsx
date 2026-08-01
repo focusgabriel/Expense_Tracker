@@ -29,7 +29,7 @@ const AllTransaction = ({ summary }: AllTransProps) => {
               ) : (
                 <ArrowDown size={14} className="shrink-0" />
               )}
-              <span>vs last month</span>
+              <span>vs last month balance</span>
             </span>
           }
           icon="/wallet.png"
@@ -48,7 +48,16 @@ const AllTransaction = ({ summary }: AllTransProps) => {
               ) : (
                 <ArrowDown size={14} className="shrink-0" />
               )}
-              <span>vs last month</span>
+              <span>{summary.monthlyIncome !== null || summary.previousMonthIncome ? (
+              <span>
+                vs last month{" "}
+              <span className={`${summary.monthlyIncome < summary.previousMonthIncome ? "text-green-500 dont-bold" : "text-red-500 font-bold"}`} >
+              &#8358;{summary.previousMonthIncome.toLocaleString() ?? 0} 
+              </span>{" "} total income <span className="lg:text-2xl text-xl text-green-500">&#8593</span>;
+              </span>
+            ) : (
+              ""
+            )}</span>
             </span>
           }
           icon="/dollar.png"
@@ -67,7 +76,7 @@ const AllTransaction = ({ summary }: AllTransProps) => {
               ) : (
                 <ArrowUp size={14} className="shrink-0" />
               )}
-              <span>vs last month</span>
+              <span>monthly expense roundup</span>
             </span>
           }
           icon="/expense.png"
@@ -86,7 +95,7 @@ const AllTransaction = ({ summary }: AllTransProps) => {
               ) : (
                 <ArrowDown size={14} className="shrink-0" />
               )}
-              <span>current month</span>
+              <span>current month balance</span>
             </span>
           }
           icon="/bal.png"
