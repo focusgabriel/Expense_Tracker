@@ -402,6 +402,6 @@ export const getLocalDashboardData = (): DashboardResponse => {
     get_expense: totalExpense,
     get_income: totalIncome,
     monthlyBalance: monthlyIncome - monthlyExpense,
-    endOfLastMonth: new Date(now.getFullYear(), now.getMonth(), 0).toISOString(),
+    firstDayOfCurrentMonth: new Date(now.getFullYear(), now.getMonth(), 0).toISOString(),
   };
 };

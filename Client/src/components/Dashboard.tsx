@@ -73,7 +73,7 @@ const Dashboard = () => {
         get_income={dashboardData.get_income}
         get_expense={dashboardData.get_expense}
         monthlyBalance={dashboardData.monthlyBalance}
-        endOfLastMonth={dashboardData.endOfLastMonth}
+        firstDayOfCurrentMonth={dashboardData.firstDayOfCurrentMonth}
       />
     </div>
   );

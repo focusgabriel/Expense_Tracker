@@ -40,7 +40,7 @@ const MonthlyReport = () => {
         setFormattedIncome(local.get_income.toLocaleString());
         setFormattedExpense(local.get_expense.toLocaleString());
         setFormattedBalance(local.summary.netBalance.toLocaleString());
-        setGetDate(local.endOfLastMonth);
+        setGetDate(local.firstDayOfCurrentMonth);
         setIsOffline(true);
         return;
       }
@@ -65,7 +65,7 @@ const MonthlyReport = () => {
         setFormattedIncome(local.get_income.toLocaleString());
         setFormattedExpense(local.get_expense.toLocaleString());
         setFormattedBalance(local.summary.netBalance.toLocaleString());
-        setGetDate(local.endOfLastMonth);
+        setGetDate(local.firstDayOfCurrentMonth);
         setIsOffline(true);
 
         if (axios.isAxiosError(error)) {
