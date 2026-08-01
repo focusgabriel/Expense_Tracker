@@ -29,7 +29,7 @@ const AllTransaction = ({ summary }: AllTransProps) => {
               ) : (
                 <ArrowDown size={14} className="shrink-0" />
               )}
-              <span>previous month balance</span>
+              <span>last month balance</span>
             </span>
           }
           icon="/wallet.png"
@@ -48,9 +48,9 @@ const AllTransaction = ({ summary }: AllTransProps) => {
               ) : (
                 <ArrowDown size={14} className="shrink-0" />
               )}
-              <span>
+              <span className="text-gray-500">
                 vs last month{" "}
-                <span className="font-semibold text-slate-700">
+                <span className={incomeTrendUp ? "text-emerald-600" : "text-red-500"}>
                   &#8358;{summary.previousMonthIncome.toLocaleString() ?? 0}
                 </span>{" "}
                 total income
