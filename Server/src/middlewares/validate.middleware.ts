@@ -12,7 +12,7 @@ export const validate =
 
         res.status(400).json({
           success: false,
-          message: "Validation failed",
+          message: result.error.flatten().fieldErrors ?? "Validation failed",
           errors: fieldErrors,
         });
         return;
@@ -24,7 +24,7 @@ export const validate =
       if (error instanceof ZodError) {
         res.status(400).json({
           success: false,
-          message: "Validation failed",
+          message: error.flatten().fieldErrors ?? "Validation failed",
           errors: error.flatten().fieldErrors,
         });
         return;

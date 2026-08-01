@@ -26,12 +26,16 @@ export async function RegisterController (
   try {
     const {name, email, password, confirm_password} = req.body
 
-    // the register helper function validation from Zod
+    if(confirm_password !== password){
+      throw new AppError("Password must match.", 400);
+    }
 
-
-      registerSchema.safeParse(req.body);
+    const parsed = registerSchema.safeParse(req.body);
+    if (!parsed.success) {
+      const issueMessage = parsed.error.issues[0]?.message ?? "Invalid registration data.";
+      throw new AppError(issueMessage, 400);
+    }
     
-
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     
@@ -65,56 +69,62 @@ export async function RegisterController (
 }
 
 
-export async function loginController(req: Request<{}, {}, LoginRequestBody>,res: Response) {
-  const {email, password} = req.body;
-  
-  // the register helper function validation from Zod
-  loginSchema.safeParse(req.body);
-
-  const user = await authModel.findOne({email});
-  if (!user) {
-  throw new AppError(
-    "Invalid Credentials.",
-    401
-  );
-}
-
-  if (!user.isVerified) {
-    throw new AppError(
-      "Please verify your email before logging in.",
-      401
-    );
-  }
-  const isMatch = await bcrypt.compare(password, user.password)
-  if(!isMatch){
-    throw new AppError("Invalid Credentials", 400);
-  }
-
-  const accessToken = generateAccessToken( user._id.toString() );
-  const refreshToken = generateRefreshToken( user._id.toString() );
-  user.refreshToken = refreshToken;
-  await user.save();
-
-  res.cookie("accessToken", accessToken, {
-    ...cookieOptions,
-    maxAge:  15 * 60 * 1000,
-  });
-
-
-  res.cookie("refreshToken", refreshToken, {
-    ...cookieOptions,
-    maxAge:  7 * 24 * 60 * 60 * 1000,
-  });
-
-  return res.status(200).json({
-    success: true,
-    message: "Login Successful",
-    user: {
-      id: user._id,
-      email: user.email
+export async function loginController(req: Request<{}, {}, LoginRequestBody>,res: Response, next: NextFunction) {
+  try {
+    const {email, password} = req.body;
+    
+    const parsed = loginSchema.safeParse(req.body);
+    if (!parsed.success) {
+      const issueMessage = parsed.error.issues[0]?.message ?? "Invalid login data.";
+      throw new AppError(issueMessage, 400);
     }
-  })
-  
+
+    const user = await authModel.findOne({email});
+    if (!user) {
+      throw new AppError(
+        "Invalid Credentials.",
+        401
+      );
+    }
+
+    if (!user.isVerified) {
+      throw new AppError(
+        "Please verify your email before logging in.",
+        401
+      );
+    }
+    const isMatch = await bcrypt.compare(password, user.password)
+    if(!isMatch){
+      throw new AppError("Invalid Credentials", 400);
+    }
+
+    const accessToken = generateAccessToken( user._id.toString() );
+    const refreshToken = generateRefreshToken( user._id.toString() );
+    user.refreshToken = refreshToken;
+    await user.save();
+
+    res.cookie("accessToken", accessToken, {
+      ...cookieOptions,
+      maxAge:  15 * 60 * 1000,
+    });
+
+
+    res.cookie("refreshToken", refreshToken, {
+      ...cookieOptions,
+      maxAge:  7 * 24 * 60 * 60 * 1000,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Login Successful",
+      user: {
+        id: user._id,
+        email: user.email
+      }
+    })
+  } catch (error) {
+    next(error);
+  }
 }
 
 export async function refreshTokenController(req: Request<{}, {}, RefreshRequestBody>, res:Response, next:NextFunction) {
