@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken"
 import {LoginRequestBody, RefreshRequestBody, RegisterRequestBody} from "../types/express/users.types.js"
 import { authModel } from "../model/index.js"
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt.js"
-import { loginSchema, registerSchema } from "../validation/auth.schema.js"
 import { AppError } from "../utils/AppError.js"
 import crypto from "crypto";
 import { sendVerificationEmail } from "../services/emailSender/verificationEmail.js"
@@ -24,18 +23,8 @@ export async function RegisterController (
   next:NextFunction
 ) {
   try {
-    const {name, email, password, confirm_password} = req.body
+    const {name, email, password} = req.body
 
-    if(confirm_password !== password){
-      throw new AppError("Password must match.", 400);
-    }
-
-    const parsed = registerSchema.safeParse(req.body);
-    if (!parsed.success) {
-      const issueMessage = parsed.error.issues[0]?.message ?? "Invalid registration data.";
-      throw new AppError(issueMessage, 400);
-    }
-    
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     
@@ -72,12 +61,6 @@ export async function RegisterController (
 export async function loginController(req: Request<{}, {}, LoginRequestBody>,res: Response, next: NextFunction) {
   try {
     const {email, password} = req.body;
-    
-    const parsed = loginSchema.safeParse(req.body);
-    if (!parsed.success) {
-      const issueMessage = parsed.error.issues[0]?.message ?? "Invalid login data.";
-      throw new AppError(issueMessage, 400);
-    }
 
     const user = await authModel.findOne({email});
     if (!user) {

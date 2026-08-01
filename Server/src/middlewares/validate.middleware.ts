@@ -1,6 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { ZodSchema, ZodError } from "zod";
 
+const firstErrorMessage = (error: ZodError): string =>
+  error.issues[0]?.message ?? "Validation failed";
+
 export const validate =
   (schema: ZodSchema) =>
   (req: Request, res: Response, next: NextFunction): void => {
@@ -8,12 +11,10 @@ export const validate =
       const result = schema.safeParse(req.body);
 
       if (!result.success) {
-        const fieldErrors = result.error.flatten().fieldErrors;
-
         res.status(400).json({
           success: false,
-          message: result.error.flatten().fieldErrors ?? "Validation failed",
-          errors: fieldErrors,
+          message: firstErrorMessage(result.error),
+          errors: result.error.flatten().fieldErrors,
         });
         return;
       }
@@ -24,7 +25,7 @@ export const validate =
       if (error instanceof ZodError) {
         res.status(400).json({
           success: false,
-          message: error.flatten().fieldErrors ?? "Validation failed",
+          message: firstErrorMessage(error),
           errors: error.flatten().fieldErrors,
         });
         return;
