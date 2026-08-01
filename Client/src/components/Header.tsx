@@ -20,7 +20,10 @@ import { useAuth } from "../lib/useAuth";
 const PAGE_TITLES: Record<string, { title: string; subtitle: string }> = {
   "/overview": { title: "Overview", subtitle: "Your financial snapshot" },
   "/insights": { title: "Insights", subtitle: "Smart financial intelligence" },
-  "/analytics": { title: "Analytics", subtitle: "Track your spending patterns" },
+  "/analytics": {
+    title: "Analytics",
+    subtitle: "Track your spending patterns",
+  },
   "/transaction": { title: "Transactions", subtitle: "All your records" },
   "/task": { title: "Add Transaction", subtitle: "Record a new entry" },
   "/success": { title: "Success", subtitle: "Transaction completed" },
@@ -82,12 +85,14 @@ const Header = () => {
     };
   }, []);
 
-    let userName = user?.name;
-    let userEmail = "";
+  let userName = user?.name;
+  let userEmail = "";
 
-  const userInitial = userName.split(" ")[1] ?? userName.split(" ")[0]?.charAt(0).toUpperCase();
+  const userInitial =
+    userName.split(" ")[1]?.charAt(0).toUpperCase() ??
+    userName.split(" ")[0]?.charAt(0).toUpperCase();
 
-  console.log(userInitial)
+  console.log(userInitial);
   // Format today's date
   const today = new Date();
   const dateStr = today.toLocaleDateString("en-US", {
@@ -128,7 +133,6 @@ const Header = () => {
 
           {/* ── Right: Actions ── */}
           <div className="flex items-center gap-1 sm:gap-2">
-            
             <Link
               to="/task"
               className="hidden sm:inline-flex items-center gap-1.5 rounded-xl bg-linear-to-br from-indigo-600 to-indigo-700 px-3.5 py-2 text-sm font-semibold text-white shadow-sm shadow-indigo-200 transition-all duration-200 hover:from-indigo-700 hover:to-indigo-800 hover:shadow-md hover:shadow-indigo-200 active:scale-[0.97]"
@@ -151,7 +155,7 @@ const Header = () => {
             {/* ── User Avatar ── */}
             <div className="relative" ref={profileRef}>
               <button
-                onClick={() => setProfileOpen((p) => !p)}
+                onClick={() => setProfileOpen(p => !p)}
                 className="group flex items-center gap-2 rounded-xl px-1.5 py-1 transition-all duration-200 hover:bg-slate-100 active:scale-95 sm:px-2"
               >
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-linear-to-br from-indigo-500 to-indigo-600 text-xs font-bold text-white shadow-sm ring-2 ring-white transition-all duration-200 group-hover:ring-indigo-200 sm:h-9 sm:w-9">
@@ -236,7 +240,10 @@ const Header = () => {
                       </div>
 
                       {/* Scrollable content */}
-                      <div className="overflow-y-auto px-2 pb-6" style={{ maxHeight: "calc(100dvh - 130px)" }}>
+                      <div
+                        className="overflow-y-auto px-2 pb-6"
+                        style={{ maxHeight: "calc(100dvh - 130px)" }}
+                      >
                         {/* User info */}
                         <div className="flex items-center gap-3 px-4 pb-4 border-b border-slate-100">
                           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-indigo-500 to-indigo-600 text-base font-bold text-white shadow-sm">
@@ -247,7 +254,9 @@ const Header = () => {
                               {userName}
                             </p>
                             {userEmail && (
-                              <p className="text-sm text-slate-400 truncate">{userEmail}</p>
+                              <p className="text-sm text-slate-400 truncate">
+                                {userEmail}
+                              </p>
                             )}
                           </div>
                         </div>
@@ -255,7 +264,11 @@ const Header = () => {
                         {/* Profile */}
                         <div className="border-b border-slate-100">
                           <button className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-700 transition-colors hover:bg-slate-50">
-                            <User size={17} strokeWidth={1.5} className="text-slate-400 shrink-0" />
+                            <User
+                              size={17}
+                              strokeWidth={1.5}
+                              className="text-slate-400 shrink-0"
+                            />
                             Profile
                           </button>
                         </div>
@@ -263,7 +276,11 @@ const Header = () => {
                         {/* Settings + Sign out side by side */}
                         <div className="grid grid-cols-2 gap-2 py-2">
                           <button className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm text-slate-700 transition-colors hover:bg-slate-50 border border-slate-100">
-                            <Settings size={16} strokeWidth={1.5} className="text-slate-400 shrink-0" />
+                            <Settings
+                              size={16}
+                              strokeWidth={1.5}
+                              className="text-slate-400 shrink-0"
+                            />
                             Settings
                           </button>
                           <Link
@@ -271,7 +288,11 @@ const Header = () => {
                             onClick={() => setProfileOpen(false)}
                             className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-rose-600 transition-colors hover:bg-rose-50 border border-red-100"
                           >
-                            <LogOut size={16} strokeWidth={1.5} className="shrink-0" />
+                            <LogOut
+                              size={16}
+                              strokeWidth={1.5}
+                              className="shrink-0"
+                            />
                             Sign out
                           </Link>
                         </div>
