@@ -143,7 +143,7 @@ export const ForgotPasswordController = async(
     const resetUrl = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
     
     try {
-      await sendResetPasswordEmail(user.email, resetUrl);
+      await sendResetPasswordEmail(user.email, resetUrl, user.name);
     } catch (error) {
       user.passwordResetToken = undefined;
       user.passwordResetExpires = undefined;

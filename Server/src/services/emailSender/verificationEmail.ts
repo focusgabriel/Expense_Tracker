@@ -18,9 +18,11 @@
 import apiInstance from "../../config/brevo.js";
 import verificationTemplate from "./templates/verificationTemplate.js";
 
+
 export const sendVerificationEmail = async (
   email: string,
-  verificationLink: string
+  verificationLink: string,
+  newUser:string
 ) => {
   await apiInstance.sendTransacEmail({
     sender: {
@@ -29,6 +31,6 @@ export const sendVerificationEmail = async (
     },
     to: [{ email }],
     subject: "Verify your Trackio account",
-    htmlContent: verificationTemplate(verificationLink),
+    htmlContent: verificationTemplate(verificationLink, newUser),
   });
 };

@@ -49,7 +49,7 @@ export async function RegisterController (
 
     const verificationUrl = `${process.env.CLIENT_URL}/verify-email/${verifiedToken}`;
 
-    await sendVerificationEmail(user.email, verificationUrl);
+    await sendVerificationEmail(user.email, verificationUrl, user.name);
     
     return res.status(201).json(
       {

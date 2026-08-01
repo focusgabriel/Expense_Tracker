@@ -19,15 +19,17 @@ import passwordResetTemplate from "./templates/passwordResetTemplate.js";
 
 export const sendResetPasswordEmail = async (
   email: string,
-  resetLink: string
+  resetLink: string,
+  newUser:string
 ) => {
   await apiInstance.sendTransacEmail({
     sender: {
       name: "Trackio",
       email: "charlesuchendu750@gmail.com",
+      
     },
     to: [{ email }],
     subject: "Reset your Trackio Password",
-    htmlContent: passwordResetTemplate(resetLink),
+    htmlContent: passwordResetTemplate(resetLink, newUser),
   });
 };
