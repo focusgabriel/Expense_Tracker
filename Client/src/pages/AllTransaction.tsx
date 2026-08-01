@@ -44,13 +44,13 @@ const AllTransaction = ({ summary }: AllTransProps) => {
               className={`inline-flex items-center gap-1 text-[14px] font-semibold sm:text-sm ${incomeTrendUp ? "text-red-600" : "text-green-500"}`}
             >
               {incomeTrendUp ? (
-                <ArrowUp size={14} className="shrink-0" />
-              ) : (
                 <ArrowDown size={14} className="shrink-0" />
+              ) : (
+                <ArrowUp size={14} className="shrink-0" />
               )}
               <span className="text-gray-500">
                 vs last month{" "}
-                <span className={incomeTrendUp ? "text-emerald-600" : "text-red-500"}>
+                <span className={incomeTrendUp ? "text-red-600" : "text-green-500"}>
                   &#8358;{summary.previousMonthIncome.toLocaleString() ?? 0}
                 </span>{" "}
                 total income
