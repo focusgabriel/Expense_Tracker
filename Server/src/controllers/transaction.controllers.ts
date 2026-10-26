@@ -3,25 +3,21 @@ import { addTransaction, deleteTransaction, editTransaction } from "../services/
 import { ExpenseModel, authModel } from '../model/index.js';
 import { CATEGORY_COLORS } from '../constants/index.js';
 import { AppError } from '../utils/AppError.js';
+// import { newTransaction } from '../repository/transaction.repository.js';
 
 export async function addTransactionController(req:Request, res:Response, next:NextFunction){
   try {
     const {type, amount, category, description, date= new Date(), created_date=new Date()} = req.body
     
-    if(amount < 100){
-      return res.status(400).json({
-        message: "Amount should be greater than 100",
-      })
-    } 
-    const transaction = await ExpenseModel.create({
-      userId: req.user!.id,
+    const transaction = await addTransaction(
+      req.user!.id,
       type,
       amount,
       category,
       description,
       date,
-      created_date,
-    });
+      created_date
+    );
     res.status(201).json(transaction);
 
   } catch (error) {
@@ -216,22 +212,15 @@ export async function getMonthlyIncomeController(req:Request, res:Response, next
 export async function editTransactionControler(req:Request, res:Response, next:NextFunction) {
   const { id } = req.params;
   const userId = req.user!.id;
+  const created_date = new Date();
   const {type, amount, category, description, date} = req.body
 
   try {
     if (!id ) {
       return res.status(400).json({ error: "Transaction ID is required" });
     }
-
-    if(amount < 100){
-      return res.status(400).json({error: "Amount should be greater than 100"});
-    }
     
-    const updatedTransaction = await editTransaction(id, userId, type, amount, category, description, date);
-    
-    if (!updatedTransaction) {
-      throw new AppError("Transaction not found", 404);
-    }
+    const updatedTransaction = await editTransaction(id, userId, type, amount, category, description, date, created_date);
 
     res.status(200).json(updatedTransaction)
   } catch (error) {
@@ -257,9 +246,7 @@ export async function deleteTransactionController(req:Request, res:Response, nex
   try {
     // const {id} = req.params
     const delTransaction = await deleteTransaction(req.params.id, req.user!.id);
-    if(!delTransaction) {
-      throw new AppError("couldn't find transaction", 404);
-    }
+    
     res.status(200).json(delTransaction)
   } catch (error:any) {
     next();
