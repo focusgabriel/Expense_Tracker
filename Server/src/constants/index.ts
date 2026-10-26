@@ -12,6 +12,16 @@
 
 // } as const;
 
+export type Transaction = {
+  _id?: string | string[]
+  userId: string;
+  type: "income" | "expense";
+  amount: number;
+  category: string;
+  description: string;
+  date: string | Date;
+  created_date: string | Date;
+};
 
 export const EXPENSE_CATEGORIES = [
   "food",
