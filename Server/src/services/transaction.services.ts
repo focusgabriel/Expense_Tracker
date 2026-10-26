@@ -9,7 +9,7 @@ export async function addTransaction(type:"income" | "expense", amount:number, c
     category,
     description, 
     date, 
-    created_date,
+    created_date
   })
   }
 

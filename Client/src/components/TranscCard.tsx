@@ -1,6 +1,6 @@
 import type { JSX } from "react/jsx-runtime";
 
-type transcCardProps = {
+interface transcCardProps {
   title: string;
   amount: number | string;
   content: string | JSX.Element | boolean;

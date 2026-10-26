@@ -1,6 +1,6 @@
 import { BrevoClient, Brevo } from "@getbrevo/brevo";
 
-console.log(process.env.BREVO_API_KEY)
+// console.log(process.env.BREVO_API_KEY)
 const apiKey = process.env.BREVO_API_KEY;
 
 if (!apiKey) {

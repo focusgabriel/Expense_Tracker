@@ -24,8 +24,12 @@ app.set('trust proxy', 1);
 
 app.use(helmet());
 
+// let urls = [
+//   process.env.CLIENT_URL,
+//   process.env.OFFLINE_CLIENT_URL
+// ]
 app.use(cors({
-  origin: process.env.CLIENT_URL,
+  origin: process.env.CLIENT_URL || process.env.OFFLINE_CLIENT_URL,
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
