@@ -12,6 +12,13 @@
 
 // } as const;
 
+export interface filterTransDto {
+  filter: any,
+  sortOption: any,
+  skip: number,
+  limitNumber: number
+}
+
 export type Transaction = {
   _id?: string | string[]
   userId: string;
