@@ -1,22 +1,23 @@
-import express, { Request, Response, Application, NextFunction } from 'express';
-import { addTransaction, deleteTransaction, editTransaction } from "../services/transaction.services.js";
-import { ExpenseModel, authModel } from '../model/index.js';
+import { Request, Response, NextFunction } from 'express';
+import { addTransaction, deleteTransaction, documents, editTransaction, filterTransactions, getAllTrans, getMonthExpense, getMonthIncome, getPrevMonthlyExpenseandIncome, getPrevMonthTransactions, getRecentTransactions, getTotalTransactions, getTransactionsById } from "../services/transaction.services.js";
 import { CATEGORY_COLORS } from '../constants/index.js';
-import { AppError } from '../utils/AppError.js';
-// import { newTransaction } from '../repository/transaction.repository.js';
+import { getUser } from '../services/auth.services.js';
+
 
 export async function addTransactionController(req:Request, res:Response, next:NextFunction){
   try {
+    const userId = req.user!.id
     const {type, amount, category, description, date= new Date(), created_date=new Date()} = req.body
     
     const transaction = await addTransaction(
-      req.user!.id,
+      {
+      userId,
       type,
       amount,
       category,
       description,
       date,
-      created_date
+      created_date}
     );
     res.status(201).json(transaction);
 
@@ -26,21 +27,13 @@ export async function addTransactionController(req:Request, res:Response, next:N
 };
 
 export async function totalTransactionController(req:Request, res:Response, next:NextFunction){
+
+  const userId = req.user!.id;
   try {
-    const income = await ExpenseModel.aggregate([{
-      $match: {
-        userId: req.user!.id,
-        type: "income"
-      }
-    }])
+    const income = await getAllTrans(userId, "income")
     const Total_income = income.reduce((value, sum) => value + sum.amount, 0);
     
-    const expense = await ExpenseModel.aggregate([{
-      $match: {
-        userId: req.user!.id,
-        type: "expense"
-      }
-    }])
+    const expense = await getAllTrans(userId, "expense")
     const Total_expense = expense.reduce((value, sum) => value + sum.amount, 0);
     
     const NetBalance = Total_income - Total_expense;
@@ -99,13 +92,16 @@ export async function getTransactionController(req:Request, res:Response, next:N
     const limitNumber = Number(limit);
 
     const skip = (pageNumber - 1) * limitNumber;
-    const transactions = await ExpenseModel
-      .find(filter)
-      .sort(sortOption)
-      .skip(skip)
-      .limit(limitNumber);
+    const transactions = await filterTransactions(
+      {
+        filter,
+        sortOption,
+        skip,
+        limitNumber
+    }
+    )
 
-    const total = await ExpenseModel.countDocuments(filter);
+    const total = await documents(filter);
 
     res.status(200).json({
       data: transactions,
@@ -123,6 +119,8 @@ export async function getTransactionController(req:Request, res:Response, next:N
 };
 
 export async function getMonthlyIncomeController(req:Request, res:Response, next:NextFunction) {
+
+  const userId = req.user!.id;
   const monthQuery = typeof req.query.month === 'string' ? req.query.month : undefined;
   const now = new Date();
   let selectedYear = now.getFullYear();
@@ -140,49 +138,23 @@ export async function getMonthlyIncomeController(req:Request, res:Response, next
   const startOfCurrentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
   try {
-    const getMonthlyExpense = await ExpenseModel.aggregate([{
-      $match: {
-        userId: req.user!.id,
-        type: "expense",
-        date: {
-          $gte: startOfSelectedMonth,
-          $lt: startOfNextMonth
-        }
-      }
-    }])
+    const getMonthlyExpense = await getPrevMonthlyExpenseandIncome(userId, "expense", startOfSelectedMonth, startOfNextMonth)
 
-    const getMonthlyIncome = await ExpenseModel.aggregate([{
-      $match: {
-        userId: req.user!.id,
-        type: "income",
-        date: {
-          $gte: startOfSelectedMonth,
-          $lt: startOfNextMonth
-        }
-      }
-    }])
+    const getMonthlyIncome = await getPrevMonthlyExpenseandIncome(userId, "income", startOfSelectedMonth, startOfNextMonth)
 
-    const getPrevMonthlyIncome = await ExpenseModel.aggregate([{
-      $match: {
-        userId: req.user!.id,
-        type: "income",
-        date: {
-          $gte: startOfPreviousMonth,
-          $lt: startOfSelectedMonth
-        }
-      }
-    }])
+    const getPrevMonthlyExpense = await getPrevMonthlyExpenseandIncome(userId, "expense", startOfPreviousMonth, startOfSelectedMonth)
 
-    const getPrevMonthlyExpense = await ExpenseModel.aggregate([{
-      $match: {
-        userId: req.user!.id,
-        type: "expense",
-        date: {
-          $gte: startOfPreviousMonth,
-          $lt: startOfSelectedMonth
-        }
-      }
-    }])
+    const getPrevMonthlyIncome = await getPrevMonthlyExpenseandIncome(userId, "income", startOfPreviousMonth, startOfSelectedMonth);
+    // await ExpenseModel.aggregate([{
+    //   $match: {
+    //     userId: req.user!.id,
+    //     type: "expense",
+    //     date: {
+    //       $gte: startOfPreviousMonth,
+    //       $lt: startOfSelectedMonth
+    //     }
+    //   }
+    // }])
 
     const lastMonthIncome = getPrevMonthlyIncome.map((item) => item.amount).reduce((value, sum) => value + sum, 0)
     const lastMonthExpense = getPrevMonthlyExpense.map((item) => item.amount).reduce((value, sum) => value + sum, 0)
@@ -229,7 +201,10 @@ export async function editTransactionControler(req:Request, res:Response, next:N
 }
 
 export async function getTransactionByIdController(req:Request, res:Response, next:NextFunction) {
-  const transactionId = await ExpenseModel.findOne({_id:req.params.id, userId:req.user!.id})
+
+  const { id } = req.params;
+  const userId = req.user!.id;
+  const transactionId = await getTransactionsById(id, userId)
 
   try {
     if(!transactionId) {
@@ -256,11 +231,11 @@ export async function deleteTransactionController(req:Request, res:Response, nex
 export async function dashboardController(req:Request, res:Response, next:NextFunction) {
   
   try {
-    const authenticatedUser = await authModel.findById(req.user!.id).select("name email");
     const userId = req.user!.id;
-    const recentTransactions = await ExpenseModel.find({userId}).sort({created_date: -1}).limit(5)
+    const authenticatedUser = await getUser(userId);
+    const recentTransactions = await getRecentTransactions(userId);
     
-    const totalTransactions = await ExpenseModel.find({userId})
+    const totalTransactions = await getTotalTransactions(userId)
 
     const totalIncome = totalTransactions
       .filter(item => item.type === "income")
@@ -305,13 +280,7 @@ export async function dashboardController(req:Request, res:Response, next:NextFu
       0
     ).toISOString();
 
-    const previousMonthTransactions = await ExpenseModel.find({
-      userId,
-      date: {
-        $gte: firstDayOfPreviousMonth,
-        $lt: firstDayOfCurrentMonth,
-      },
-    });
+    const previousMonthTransactions = await getPrevMonthTransactions(userId, firstDayOfPreviousMonth, firstDayOfCurrentMonth);
 
     const previousMonthIncome = previousMonthTransactions
       .filter(item => item.type === "income")
@@ -324,31 +293,13 @@ export async function dashboardController(req:Request, res:Response, next:NextFu
     
     const previousMonthBalance = previousMonthIncome - previousMonthExpense;
     
-    const totalMonthlyExpense = await ExpenseModel.aggregate([{
-    $match: {
-      userId: req.user!.id,
-      type: "expense",
-      date: {
-        $gte: firstDayOfMonth,
-        $lt: firstDayOfNextMonth
-      }
-    }
-  }]);
+    const totalMonthlyExpense = await getMonthExpense(userId, "expense", firstDayOfMonth, firstDayOfNextMonth);
 
-  const totalMonthlyIncome = await ExpenseModel.aggregate([{
-    $match: {
-      userId: req.user!.id,
-      type: "income",
-      date: {
-        $gte: firstDayOfMonth,
-        $lt: firstDayOfNextMonth
-      }
-    }
-  }]);
-
+  const totalMonthlyIncome = await getMonthIncome(userId, "income", firstDayOfMonth, firstDayOfNextMonth)
+  
     const monthlyIncome = totalMonthlyIncome
-      .reduce((sum, item) => sum + item.amount, 0);
-
+      .reduce((sum:any, item:any) => sum + item.amount, 0);
+ 
     const monthlyExpense = totalMonthlyExpense
       .reduce((sum, item) => sum + item.amount, 0);
 
@@ -362,7 +313,7 @@ export async function dashboardController(req:Request, res:Response, next:NextFu
 
       const get_expense = totalMonthlyExpense.map((item, index) => item.amount).reduce((value, sum) => value + sum, 0);
 
-      const get_income = totalMonthlyIncome.map((item, index) => item.amount).reduce((value, sum) => value + sum, 0);
+      const get_income = totalMonthlyIncome.map((item:any, index:any) => item.amount).reduce((value:any, sum:any) => value + sum, 0);
     
     // const getBalance = get_income - get_expense;
 
