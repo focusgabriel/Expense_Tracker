@@ -102,7 +102,7 @@ export async function getTotalTransactions(userId:string) {
 
 export async function getRecentTransactions(userId:string) {
   if(userId){
-    throw new AppError("Can't find Transaction for this User", 404)
+    throw new AppError("Can't get recent Transaction for this User", 404)
   }
 
   return await transactions(userId);
@@ -113,7 +113,7 @@ export async function getTransactionsById(_id:any, userId:string){
   let trans = await transactionsById(_id, userId);
 
   if(!trans){
-    throw new AppError("UserId and Id are required", 401)
+    throw new AppError("Can't get Transaction for this User", 401)
   }
 
   return trans;
