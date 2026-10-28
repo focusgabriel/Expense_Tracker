@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { allTrans, createTransaction, document, filterTrans, modifyTransaction, MonthExpense, MonthIncome, prevMonthlyExpenseandIncome, prevMonthTransactions, removeTransaction, transactions, transactionsById } from "../repository/transaction.repository.js";
+import { allTrans, createTransaction, document, filterTrans, modifyTransaction, MonthExpense, MonthIncome, prevMonthlyExpenseandIncome, prevMonthTransactions, recentTransact, removeTransaction, transactions, transactionsById } from "../repository/transaction.repository.js";
 import { AppError } from "../utils/AppError.js";
 import { filterTransDto, Transaction } from "../constants/index.js";
 export async function addTransaction({userId, type, amount, category, description, date, created_date}: Transaction){
@@ -67,32 +67,49 @@ export async function getAllTrans(userId:string, type:"income" | "expense") {
 
 
 export async function getMonthIncome(userId:string, type:"income"|"expense", firstDayOfMonth:Date, firstDayOfNextMonth:Date){
-  if(!userId || !type || !firstDayOfMonth || firstDayOfNextMonth){
-    throw new AppError("Month Income not Found.", 404)
-  }
-  return await MonthIncome(userId, type,firstDayOfMonth,firstDayOfNextMonth);
+  // if(!userId || !type || !firstDayOfMonth || firstDayOfNextMonth){
+  //   throw new AppError("Month Income not Found.", 404)
+  // }
+  let monthIncome = await MonthIncome(userId, type,firstDayOfMonth,firstDayOfNextMonth);
 
+  if(!monthIncome){
+    throw new AppError("Month Income not Found.", 404);
+  }
+
+  return monthIncome
 }
   
 export async function getMonthExpense(userId:string, type:"income"|"expense", firstDayOfMonth:Date, firstDayOfNextMonth:Date){
-  if(!userId || !type || !firstDayOfMonth || firstDayOfNextMonth){
-    throw new AppError("No Month Income Found.", 404)
+  // if(!userId || !type || !firstDayOfMonth || firstDayOfNextMonth){
+  //   throw new AppError("No Month Income Found.", 404)
+  // }
+  let monthExpense = await MonthExpense(userId, type,firstDayOfMonth,firstDayOfNextMonth);
+
+  if(!monthExpense) {
+    throw new AppError("Month Income not Found.", 404);
   }
-  return await MonthExpense(userId, type,firstDayOfMonth,firstDayOfNextMonth)
+
+  return monthExpense;
 }
 
 
 export async function getPrevMonthTransactions(userId:string, firstDayOfPreviousMonth:Date, firstDayOfCurrentMonth:Date){
-  if(!userId || !firstDayOfPreviousMonth || !firstDayOfCurrentMonth) {
-    throw new AppError("No Previous Transactions Found.", 404)
+  // if(!userId || !firstDayOfPreviousMonth || !firstDayOfCurrentMonth) {
+  //   throw new AppError("No Previous Transactions Found.", 404)
+  // }
+
+  let prevMonth = await prevMonthTransactions(userId, firstDayOfPreviousMonth, firstDayOfCurrentMonth);
+
+  if(!prevMonth) {
+    throw new AppError("No Previous Transactions Found.", 404);
   }
 
-  return await prevMonthTransactions(userId, firstDayOfPreviousMonth, firstDayOfCurrentMonth);
+  return prevMonth;
 }
 
 
 export async function getTotalTransactions(userId:string) {
-  if(userId){
+  if(!userId){
     throw new AppError("Can't find Transaction for this User", 404)
   }
 
@@ -101,11 +118,11 @@ export async function getTotalTransactions(userId:string) {
 
 
 export async function getRecentTransactions(userId:string) {
-  if(userId){
+  if(!userId){
     throw new AppError("Can't get recent Transaction for this User", 404)
   }
 
-  return await transactions(userId);
+  return await recentTransact(userId);
 }
 
 export async function getTransactionsById(_id:any, userId:string){
