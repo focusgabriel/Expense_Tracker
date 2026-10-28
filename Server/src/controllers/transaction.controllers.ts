@@ -284,7 +284,7 @@ export async function dashboardController(req:Request, res:Response, next:NextFu
     
     const totalMonthlyExpense = await getMonthExpense(userId, "expense", firstDayOfMonth, firstDayOfNextMonth);
 
-  const totalMonthlyIncome = await getMonthIncome(userId, "income", firstDayOfMonth, firstDayOfNextMonth)
+    const totalMonthlyIncome = await getMonthIncome(userId, "income", firstDayOfMonth, firstDayOfNextMonth)
   
     const monthlyIncome = totalMonthlyIncome
       .reduce((sum:any, item:any) => sum + item.amount, 0);
