@@ -145,17 +145,6 @@ export async function getMonthlyIncomeController(req:Request, res:Response, next
     const getPrevMonthlyExpense = await getPrevMonthlyExpenseandIncome(userId, "expense", startOfPreviousMonth, startOfSelectedMonth)
 
     const getPrevMonthlyIncome = await getPrevMonthlyExpenseandIncome(userId, "income", startOfPreviousMonth, startOfSelectedMonth);
-    // await ExpenseModel.aggregate([{
-    //   $match: {
-    //     userId: req.user!.id,
-    //     type: "expense",
-    //     date: {
-    //       $gte: startOfPreviousMonth,
-    //       $lt: startOfSelectedMonth
-    //     }
-    //   }
-    // }])
-
     const lastMonthIncome = getPrevMonthlyIncome.map((item) => item.amount).reduce((value, sum) => value + sum, 0)
     const lastMonthExpense = getPrevMonthlyExpense.map((item) => item.amount).reduce((value, sum) => value + sum, 0)
     const lastMonthNetBalance = lastMonthIncome - lastMonthExpense;
