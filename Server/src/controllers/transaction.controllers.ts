@@ -224,17 +224,17 @@ export async function dashboardController(req:Request, res:Response, next:NextFu
     const authenticatedUser = await getUser(userId);
     const recentTransactions = await getRecentTransactions(userId);
     
-    const totalTransactions = await getTotalTransactions(userId)
+    // const totalTransactions = await getTotalTransactions(userId)
 
-    const totalIncome = totalTransactions
-      .filter(item => item.type === "income")
-      .reduce((sum, item) => sum + item.amount, 0);
+    // const totalIncome = totalTransactions
+    //   .filter(item => item.type === "income")
+    //   .reduce((sum, item) => sum + item.amount, 0);
 
-    const totalExpense = totalTransactions
-      .filter(item => item.type === "expense")
-      .reduce((sum, item) => sum + item.amount, 0);
+    // const totalExpense = totalTransactions
+    //   .filter(item => item.type === "expense")
+    //   .reduce((sum, item) => sum + item.amount, 0);
 
-    const netBalance = totalIncome - totalExpense;
+    // const netBalance = totalIncome - totalExpense;
     
     const now = new Date();
 
@@ -318,9 +318,9 @@ export async function dashboardController(req:Request, res:Response, next:NextFu
 
     return res.status(200).json({
       summary: {
-        totalIncome,
-        totalExpense,
-        netBalance,
+        // totalIncome,
+        // totalExpense,
+        // netBalance,
 
         monthlyIncome,
         monthlyExpense,
