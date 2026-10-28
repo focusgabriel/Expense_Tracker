@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { allTrans, createTransaction, document, filterTrans, modifyTransaction, MonthExpense, MonthIncome, prevMonthlyExpenseandIncome, prevMonthTransactions, removeTransaction, transactions, transactionsById } from "../repository/transaction.repository.js";
+import { allTrans, createTransaction, document, filterTrans, modifyTransaction, MonthExpense, MonthIncome, prevMonthlyExpenseandIncome, prevMonthTransactions, recentTransact, removeTransaction, transactions, transactionsById } from "../repository/transaction.repository.js";
 import { AppError } from "../utils/AppError.js";
 import { filterTransDto, Transaction } from "../constants/index.js";
 export async function addTransaction({userId, type, amount, category, description, date, created_date}: Transaction){
@@ -105,7 +105,7 @@ export async function getRecentTransactions(userId:string) {
     throw new AppError("Can't find Transaction for this User", 404)
   }
 
-  return await transactions(userId);
+  return await recentTransact(userId);
 }
 
 export async function getTransactionsById(_id:any, userId:string){
