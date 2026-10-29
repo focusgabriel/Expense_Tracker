@@ -19,6 +19,12 @@ export interface filterTransDto {
   limitNumber: number
 }
 
+export interface budgetDto {
+  userId: string,
+  budgetCategory: string,
+  budgetAmount: number
+}
+
 export type Transaction = {
   _id?: string | string[]
   userId: string;

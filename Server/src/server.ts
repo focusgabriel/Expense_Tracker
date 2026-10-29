@@ -2,7 +2,7 @@ import express, { Request, Response, Application } from 'express';
 // import dotenv from 'dotenv'
 import mongoose from "mongoose";
 import cors from "cors";
-import { transactionRouter, userRouter } from './routes/index.js';
+import { transactionRouter, userRouter, budgetRouter } from './routes/index.js';
 import { errorHandler } from './middlewares/error.middleware.js';
 import { limiter } from './validation/limiter.js';
 import helmet from "helmet";
@@ -30,7 +30,7 @@ app.use(helmet());
 //   process.env.OFFLINE_CLIENT_URL
 // ]
 app.use(cors({
-  origin: process.env.CLIENT_URL || process.env.OFFLINE_CLIENT_URL,
+  origin: process.env.OFFLINE_CLIENT_URL,
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
@@ -42,6 +42,7 @@ app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser());
 
 app.use("/api/v1/", limiter, transactionRouter);
+app.use("/api/v1/", budgetRouter);
 app.use("/api/v1/", userRouter);
 app.use(errorHandler);
 
