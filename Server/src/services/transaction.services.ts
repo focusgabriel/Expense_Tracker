@@ -70,6 +70,7 @@ export async function getMonthIncome(userId:string, type:"income"|"expense", fir
   if(!userId || !type || !firstDayOfMonth || !firstDayOfNextMonth){
     throw new AppError("Month Income not Found.", 404)
   }
+  
   return await MonthIncome(userId, type,firstDayOfMonth,firstDayOfNextMonth);
 
 }
@@ -78,6 +79,7 @@ export async function getMonthExpense(userId:string, type:"income"|"expense", fi
   if(!userId || !type || !firstDayOfMonth || !firstDayOfNextMonth){
     throw new AppError("No Month Income Found.", 404)
   }
+
   return await MonthExpense(userId, type,firstDayOfMonth,firstDayOfNextMonth)
 }
 
