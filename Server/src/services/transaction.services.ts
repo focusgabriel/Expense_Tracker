@@ -71,7 +71,6 @@ export async function getMonthIncome(userId:string, type:"income"|"expense", fir
     throw new AppError("Month Income not Found.", 404)
   }
   return await MonthIncome(userId, type,firstDayOfMonth,firstDayOfNextMonth);
-
 }
   
 export async function getMonthExpense(userId:string, type:"income"|"expense", firstDayOfMonth:Date, firstDayOfNextMonth:Date){
@@ -86,7 +85,6 @@ export async function getPrevMonthTransactions(userId:string, firstDayOfPrevious
   if(!userId || !firstDayOfPreviousMonth || !firstDayOfCurrentMonth) {
     throw new AppError("No Previous Transactions Found.", 404)
   }
-
   return await prevMonthTransactions(userId, firstDayOfPreviousMonth, firstDayOfCurrentMonth);
 }
 
@@ -130,7 +128,6 @@ export async function getPrevMonthlyExpenseandIncome(userId:string, type:"income
 
   return prev
 }
-
 
 export async function filterTransactions({filter, sortOption, skip, limitNumber}: filterTransDto){
   let filterTransact = await filterTrans({
