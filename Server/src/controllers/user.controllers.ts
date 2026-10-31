@@ -7,6 +7,7 @@ import { generateAccessToken, generateRefreshToken } from "../utils/jwt.js"
 import { AppError } from "../utils/AppError.js"
 import crypto from "crypto";
 import { sendVerificationEmail } from "../services/emailSender/verificationEmail.js"
+import { getRefreshToken, loginUser, registerUser } from "../services/auth.services.js"
 // import { sendEmail } from "../services/email.services.js"
 // const isProduction = process.env.NODE_ENV === "production";
 
@@ -32,10 +33,18 @@ export async function RegisterController (
     const hashedToken = crypto.createHash("sha256").update(verifiedToken).digest("hex");
     const expireToken = new Date(Date.now() + 1000 * 60 * 60  );//1 hour
 
-    const user = await authModel.create({
+    // const user = await authModel.create({
+    //   name,
+    //   email,
+    //   password:hashedPassword,
+    //   verificationToken: hashedToken,
+    //   verificationTokenExpires: expireToken
+    // })
+
+    const user = await registerUser({
       name,
       email,
-      password:hashedPassword,
+      password: hashedPassword,
       verificationToken: hashedToken,
       verificationTokenExpires: expireToken
     })
@@ -62,7 +71,7 @@ export async function loginController(req: Request<{}, {}, LoginRequestBody>,res
   try {
     const {email, password} = req.body;
 
-    const user = await authModel.findOne({email});
+    const user = await loginUser(email);
     if (!user) {
       throw new AppError(
         "Invalid Credentials.",
@@ -126,7 +135,9 @@ export async function refreshTokenController(req: Request<{}, {}, RefreshRequest
       throw new AppError("Invalid token", 400);
     }
 
-    const user = await authModel.findOne({_id: decoded.sub, refreshToken});
+    // const user = await authModel.findOne({_id: decoded.sub, refreshToken});
+
+    const user = await getRefreshToken(decoded.sub, refreshToken)
     if (!user) {
       throw new AppError("Invalid refresh token", 400);
     }

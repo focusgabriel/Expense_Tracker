@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import { addTransaction, deleteTransaction, documents, editTransaction, filterTransactions, getAllTrans, getMonthExpense, getMonthIncome, getPrevMonthlyExpenseandIncome, getPrevMonthTransactions, getRecentTransactions, getTotalTransactions, getTransactionsById } from "../services/transaction.services.js";
 import { CATEGORY_COLORS } from '../constants/index.js';
 import { getUser } from '../services/auth.services.js';
+import { authModel, ExpenseModel } from '../model/index.js';
+import mongoose from 'mongoose';
 
 
 export async function addTransactionController(req:Request, res:Response, next:NextFunction){
@@ -284,7 +286,7 @@ export async function dashboardController(req:Request, res:Response, next:NextFu
     
     const totalMonthlyExpense = await getMonthExpense(userId, "expense", firstDayOfMonth, firstDayOfNextMonth);
 
-  const totalMonthlyIncome = await getMonthIncome(userId, "income", firstDayOfMonth, firstDayOfNextMonth)
+    const totalMonthlyIncome = await getMonthIncome(userId, "income", firstDayOfMonth, firstDayOfNextMonth)
   
     const monthlyIncome = totalMonthlyIncome
       .reduce((sum:any, item:any) => sum + item.amount, 0);
@@ -383,4 +385,140 @@ export async function dashboardController(req:Request, res:Response, next:NextFu
 //     console.error("Error fetching user data:", error);
 //     res.status(500).json({ message: "Error fetching user data" });
 //   }
+// }
+
+
+
+// export async function dashboardController(req:Request, res:Response, next:NextFunction) {
+  
+//   try {
+//     const userId = req.user!.id;
+//     // const UserID = new mongoose.Types.ObjectId(userId as string)
+//     const authenticatedUser = await getUser(userId);
+//     const recentTransactions = await getRecentTransactions(userId);
+    
+//     const totalTransactions = await getTotalTransactions(userId)
+
+//     const totalIncome = totalTransactions
+//       .filter(item => item.type === "income")
+//       .reduce((sum, item) => sum + item.amount, 0);
+
+//     const totalExpense = totalTransactions
+//       .filter(item => item.type === "expense")
+//       .reduce((sum, item) => sum + item.amount, 0);
+
+//     const netBalance = totalIncome - totalExpense;
+    
+//     const now = new Date();
+
+//     const firstDayOfMonth = new Date(
+//       now.getFullYear(),
+//       now.getMonth(),
+//       1
+//     );
+
+//     const firstDayOfNextMonth = new Date(
+//       now.getFullYear(),
+//       now.getMonth() + 1,
+//       1
+//     );
+
+//     const firstDayOfPreviousMonth = new Date(
+//       now.getFullYear(),
+//       now.getMonth() - 1,
+//       1
+//     );
+
+//     const firstDayOfCurrentMonth = new Date(
+//       now.getFullYear(),
+//       now.getMonth(),
+//       1
+//     );
+
+//     // Date for display — last day of previous month (matches what getMonthlyIncomeController returns)
+//     const endOfLastMonth = new Date(
+//       now.getFullYear(),
+//       now.getMonth(),
+//       0
+//     ).toISOString();
+
+//     const previousMonthTransactions = await getPrevMonthTransactions(userId, firstDayOfPreviousMonth, firstDayOfCurrentMonth);
+
+//     const previousMonthIncome = previousMonthTransactions
+//       .filter(item => item.type === "income")
+//       .reduce((sum, item) => sum + item.amount, 0);
+
+//     const previousMonthExpense = previousMonthTransactions
+//       .filter(item => item.type === "expense")
+//       .reduce((sum, item) => sum + item.amount, 0);
+
+    
+//     const previousMonthBalance = previousMonthIncome - previousMonthExpense;
+    
+//     const totalMonthlyExpense = await getMonthExpense(userId, "expense", firstDayOfMonth, firstDayOfNextMonth);
+
+//     const totalMonthlyIncome = await getMonthIncome(userId, "income", firstDayOfMonth, firstDayOfNextMonth);
+
+//     const monthlyIncome = totalMonthlyIncome
+//       .reduce((sum, item) => sum + item.amount, 0);
+
+//     const monthlyExpense = totalMonthlyExpense
+//       .reduce((sum, item) => sum + item.amount, 0);
+
+//     const monthlyBalance = monthlyIncome - monthlyExpense;
+
+//     const groupedExpenses = totalMonthlyExpense
+//       .reduce<Record<string, number>>((acc, item) => {
+//         acc[item.category] = (acc[item.category] || 0) + item.amount;
+//         return acc;
+//       }, {});
+
+//     const get_expense = totalMonthlyExpense.map((item, index) => item.amount).reduce((value, sum) => value + sum, 0);
+
+//     const get_income = totalMonthlyIncome.map((item, index) => item.amount).reduce((value, sum) => value + sum, 0);
+    
+//     // const getBalance = get_income - get_expense;
+
+//     const chartData = Object.entries(groupedExpenses).map(
+//       ([category, amount]) => ({
+//         category,
+//         amount,
+//         percentage: (amount / get_income) * 100,
+//         fill: CATEGORY_COLORS[category as keyof typeof CATEGORY_COLORS] ?? "#07023A"
+//       })
+//     );
+
+
+//     return res.status(200).json({
+//       summary: {
+//         totalIncome,
+//         totalExpense,
+//         netBalance,
+
+//         monthlyIncome,
+//         monthlyExpense,
+//         monthlyBalance,
+
+//         // previousMonthBalance,
+//         previousMonthIncome,  
+//         previousMonthExpense,
+//         previousMonthBalance
+//       },
+//       get_expense,
+//       get_income,
+//       // getBalance
+//       monthlyBalance,
+//       firstDayOfCurrentMonth,
+
+//       recentTransactions,
+//       chartData,
+
+//       authenticatedUser
+//     })
+    
+//   } catch {
+//     next();
+//   }
+
+  
 // }

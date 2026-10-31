@@ -77,13 +77,20 @@ export async function getMonthExpense(userId:string, type:"income"|"expense", fi
   if(!userId || !type || !firstDayOfMonth || !firstDayOfNextMonth){
     throw new AppError("No Month Income Found.", 404)
   }
-  return await MonthExpense(userId, type,firstDayOfMonth,firstDayOfNextMonth)
+
+  return monthExpense;
 }
 
 
 export async function getPrevMonthTransactions(userId:string, firstDayOfPreviousMonth:Date, firstDayOfCurrentMonth:Date){
   if(!userId || !firstDayOfPreviousMonth || !firstDayOfCurrentMonth) {
     throw new AppError("No Previous Transactions Found.", 404)
+  }
+
+  let prevMonth = await prevMonthTransactions(userId, firstDayOfPreviousMonth, firstDayOfCurrentMonth);
+
+  if(!prevMonth) {
+    throw new AppError("No Previous Transactions Found.", 404);
   }
   return await prevMonthTransactions(userId, firstDayOfPreviousMonth, firstDayOfCurrentMonth);
 }
@@ -111,7 +118,7 @@ export async function getTransactionsById(_id:any, userId:string){
   let trans = await transactionsById(_id, userId);
 
   if(!trans){
-    throw new AppError("UserId and Id are required", 401)
+    throw new AppError("Can't get Transaction for this User", 401)
   }
 
   return trans;

@@ -4,15 +4,19 @@ import crypto from "crypto";
 import bcrypt from "bcrypt"
 import { AppError } from "../utils/AppError.js";
 import { sendResetPasswordEmail } from "../services/emailSender/passwordResetEmail.js";
+import { getCurrentUser, getForgotPassword, getLogoutUser, getResetPassword, getVerifyEmail } from "../services/auth.services.js";
 // import { sendEmail } from "../services/email.services.js";
 // const isProduction = process.env.NODE_ENV === "production";
 
 
 export async function getCurrentUserController(req:Request, res:Response, next:NextFunction) {
   
-    const user = await authModel.findById(req.user!.id).select(
-      "-password -refreshToken"
-    )
+  try {
+      // const user = await authModel.findById(req.user!.id).select(
+    //   "-password -refreshToken"
+    // )
+
+  const user = await getCurrentUser(req.user!.id);
 
     if(!user) { 
       throw new AppError("User not found", 404);
@@ -21,12 +25,17 @@ export async function getCurrentUserController(req:Request, res:Response, next:N
     return res.status(200).json({
       user,
     });
+  } catch (error) {
+    next(error)
+  }
 }
 
 export async function logoutController(req:Request, res:Response, next:NextFunction) {
   try {
 
-    const user = await authModel.findById(req.user!.id);
+    // const user = await authModel.findById(req.user!.id);
+
+    const user = await getLogoutUser(req.user!.id);
     if (!user) {
       throw new AppError("User not found", 404);
     }
@@ -79,12 +88,14 @@ export const verifyEmailController = async (
       .digest("hex");
       
 
-    const user = await authModel.findOne({
-      verificationToken: hashedToken,
-      verificationTokenExpires: {
-        $gt: new Date(),
-      },
-    });
+    // const user = await authModel.findOne({
+    //   verificationToken: hashedToken,
+    //   verificationTokenExpires: {
+    //     $gt: new Date(),
+    //   },
+    // });
+
+    const user = await getVerifyEmail(hashedToken)
 
     if (!user) {
       throw new AppError(
@@ -119,7 +130,9 @@ export const ForgotPasswordController = async(
   const { email } = req.body;
   try {
 
-    const user = await authModel.findOne({ email });
+    // const user = await authModel.findOne({ email });
+
+    const user = await getForgotPassword(email);
 
     if (!user) {
       return res.status(200).json({
@@ -175,12 +188,14 @@ export const ResetPasswordController = async(
     
     const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
 
-    const user = await authModel.findOne({
-      passwordResetToken: hashedToken,
-      passwordResetExpires: {
-        $gt: new Date()
-      }
-    })
+    // const user = await authModel.findOne({
+    //   passwordResetToken: hashedToken,
+    //   passwordResetExpires: {
+    //     $gt: new Date()
+    //   }
+    // })
+
+    const user = await getResetPassword(hashedToken)
 
     if (!user) {
       throw new AppError(
