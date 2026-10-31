@@ -25,6 +25,8 @@ export interface budgetDto {
   budgetAmount: number
 }
 
+// export interface 
+
 export type Transaction = {
   _id?: string | string[]
   userId: string;
