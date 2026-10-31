@@ -78,9 +78,9 @@ export async function recentTransact(userId:string){
   return await ExpenseModel.find({userId}).sort({created_date: -1}).limit(5);
 }
 
-export async function transactionsById(_id:any, userId:string){
+export async function transactionsById(id:any, userId:string){
   return await ExpenseModel.findOne({
-    _id,
+    _id:id,
     userId
   });
 }

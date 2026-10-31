@@ -7,7 +7,7 @@ type budgetSchema = {
   budgetAmount: number
 }
 
-export const bugdet = new mongoose.Schema<budgetSchema>({
+export const budget = new mongoose.Schema<budgetSchema>({
   userId: {
     type: String,
     ref: "Users",
