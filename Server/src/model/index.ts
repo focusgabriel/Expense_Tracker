@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv"
 import cors from "cors";
-import { ExpenseProps } from './schema.js';
+import { ExpenseProps } from './transaction.js';
 import { UserProps } from './users.js';
+import { bugdet } from "./budget.js";
 
 dotenv.config();
 
@@ -15,3 +16,4 @@ mongoose.connect(mongo_uri)
 
 export const ExpenseModel = mongoose.model("expenseRecords", ExpenseProps);
 export const authModel = mongoose.model("Users", UserProps);
+export const bugdetModel = mongoose.model("Budgets", bugdet)
