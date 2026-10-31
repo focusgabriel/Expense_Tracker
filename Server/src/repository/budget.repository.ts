@@ -1,24 +1,24 @@
 import { budgetDto } from "../constants/index.js";
-import { bugdetModel, ExpenseModel } from "../model/index.js";
+import { budgetModel, ExpenseModel } from "../model/index.js";
 
 export async function createBudget({userId, budgetCategory, budgetAmount}: budgetDto) {
-  return await bugdetModel.create({
+  return await budgetModel.create({
     userId,
     budgetCategory,
     budgetAmount
   });
 }
 
-export async function BudgetCalculation(userId:string, type:string, category:string, startOfThisMonth:Date, startOfPrevMonth:Date) {
+export async function retrieveBudget(userId:string) {
+  return await budgetModel.find({userId});
+}
+
+export async function BudgetCalculation(userId:string, type:string, category:string) {
   return ExpenseModel.aggregate([{
     $match: {
       userId,
       type,
       category,
-      date: {
-        gte: startOfThisMonth,
-        lt: startOfPrevMonth
-      }
     }
   }])
 }
