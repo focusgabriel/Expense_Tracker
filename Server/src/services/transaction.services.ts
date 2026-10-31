@@ -67,7 +67,7 @@ export async function getAllTrans(userId:string, type:"income" | "expense") {
 
 
 export async function getMonthIncome(userId:string, type:"income"|"expense", firstDayOfMonth:Date, firstDayOfNextMonth:Date){
-  if(!userId || !type || !firstDayOfMonth || firstDayOfNextMonth){
+  if(!userId || !type || !firstDayOfMonth || !firstDayOfNextMonth){
     throw new AppError("Month Income not Found.", 404)
   }
   return await MonthIncome(userId, type,firstDayOfMonth,firstDayOfNextMonth);
@@ -75,7 +75,7 @@ export async function getMonthIncome(userId:string, type:"income"|"expense", fir
 }
   
 export async function getMonthExpense(userId:string, type:"income"|"expense", firstDayOfMonth:Date, firstDayOfNextMonth:Date){
-  if(!userId || !type || !firstDayOfMonth || firstDayOfNextMonth){
+  if(!userId || !type || !firstDayOfMonth || !firstDayOfNextMonth){
     throw new AppError("No Month Income Found.", 404)
   }
   return await MonthExpense(userId, type,firstDayOfMonth,firstDayOfNextMonth)
@@ -92,7 +92,7 @@ export async function getPrevMonthTransactions(userId:string, firstDayOfPrevious
 
 
 export async function getTotalTransactions(userId:string) {
-  if(userId){
+  if(!userId){
     throw new AppError("Can't find Transaction for this User", 404)
   }
 
@@ -101,7 +101,7 @@ export async function getTotalTransactions(userId:string) {
 
 
 export async function getRecentTransactions(userId:string) {
-  if(userId){
+  if(!userId){
     throw new AppError("Can't find Transaction for this User", 404)
   }
 
