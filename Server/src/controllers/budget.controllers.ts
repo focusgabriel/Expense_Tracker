@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { budgetDto } from "../constants/index.js";
 import { AppError } from "../utils/AppError.js";
 import { getBudgetCalculation, getCreateBudget, getRetrieveBudget } from "../services/budget.services.js";
+import { exit } from "process";
 
 export async function getCreateBudgetController(req:Request, res:Response, next: NextFunction) {
   const userId = req.user!.id
@@ -29,7 +30,7 @@ export async function getCreateBudgetController(req:Request, res:Response, next:
 export async function getBudgetCalculationController(req:Request, res:Response, next:NextFunction){
   const user = req.user!.id;
   const type = "expense";
-  const category = "bill";
+  const category = "transportation";
 
   // const now = new Date();
 
@@ -53,14 +54,26 @@ export async function getBudgetCalculationController(req:Request, res:Response, 
 
 
   let budgetDerivation = await getBudgetCalculation(user, type, category);
-  // let budget = await 
+  let budget = await getRetrieveBudget(user);
 
+  // if(category === )
+
+  // try using an array to get the indexed value from the definite category indexed number.
+  // let GetAmount = budget.find(item => item.budgetAmount)
+  let getAmount = budget.map((item) =>  item.budgetCategory.toLowerCase() === category ? item.budgetAmount : 0)[0];
   console.log(budgetDerivation);
+  console.log(getAmount);
   let mappedBudget = budgetDerivation
     .map((item) => item.amount)
     .reduce((value, sum) => value + sum, 0);
 
-  return res.status(200).json({mappedBudget, budgetDerivation});
+  console.log("mapped:", mappedBudget);
+
+  let percentage = ((mappedBudget / getAmount! ) * 100).toFixed(2)
+
+  console.log("percentage", percentage)
+
+  return res.status(200).json({mappedBudget, percentage});
 
 }
 
