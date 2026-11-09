@@ -21,11 +21,11 @@ export async function getCreateBudget({userId, budgetCategory, budgetAmount}: bu
 }
 
 
-export async function getBudgetCalculation(userId: string, type: string, category: string){
+export async function getBudgetCalculation(userId: string, type: string, category: string, firstDayOfMonth:Date, firstDayOfNextMonth:Date){
   if(!userId || type === "" || category === "") {
     throw new Error("Fields are Required...");
   }
-  let calc = await BudgetCalculation(userId, type, category);
+  let calc = await BudgetCalculation(userId, type, category, firstDayOfMonth, firstDayOfNextMonth);
 
   if(!calc) {
     throw new Error("nothing to display")
