@@ -10,15 +10,19 @@ export async function createBudget({userId, budgetCategory, budgetAmount}: budge
 }
 
 export async function retrieveBudget(userId:string) {
-  return await budgetModel.find({userId});
+  return await budgetModel.find({userId})
 }
 
-export async function BudgetCalculation(userId:string, type:string, category:string) {
+export async function BudgetCalculation(userId:string, type:string, category:string, firstDayOfMonth:Date, firstDayOfNextMonth:Date) {
   return ExpenseModel.aggregate([{
     $match: {
       userId,
       type,
       category,
+      date: {
+        $gte: firstDayOfMonth,
+        $lt: firstDayOfNextMonth
+      }
     }
   }])
 }
