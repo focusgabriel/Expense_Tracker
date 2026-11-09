@@ -30,50 +30,59 @@ export async function getCreateBudgetController(req:Request, res:Response, next:
 export async function getBudgetCalculationController(req:Request, res:Response, next:NextFunction){
   const user = req.user!.id;
   const type = "expense";
-  const category = "transportation";
+  const category = "bill";
+ try {
 
-  // const now = new Date();
+  const now = new Date();
 
-  //   const startOfThisMonth = new Date(
-  //     now.getFullYear(),
-  //     now.getMonth(),
-  //     1
-  //   );
+    const firstDayOfMonth = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      1
+    );
 
-  //   const startOfPrevMonth = new Date(
-  //     now.getFullYear(),
-  //     now.getMonth() + 1,
-  //     1
-  //   );
-
-  //   const firstDayOfPreviousMonth = new Date(
-  //     now.getFullYear(),
-  //     now.getMonth() - 1,
-  //     1
-  //   );
+    const firstDayOfNextMonth = new Date(
+      now.getFullYear(),
+      now.getMonth() + 1,
+      1
+    );
 
 
-  let budgetDerivation = await getBudgetCalculation(user, type, category);
+  console.log("month now", firstDayOfMonth)
+  console.log("month prev", firstDayOfNextMonth)
+  let budgetDerivation = await getBudgetCalculation(user, type, category, firstDayOfMonth, firstDayOfNextMonth );
   let budget = await getRetrieveBudget(user);
 
   // if(category === )
 
   // try using an array to get the indexed value from the definite category indexed number.
   // let GetAmount = budget.find(item => item.budgetAmount)
-  let getAmount = budget.map((item) =>  item.budgetCategory.toLowerCase() === category ? item.budgetAmount : 0)[0];
-  console.log(budgetDerivation);
-  console.log(getAmount);
-  let mappedBudget = budgetDerivation
-    .map((item) => item.amount)
-    .reduce((value, sum) => value + sum, 0);
 
-  console.log("mapped:", mappedBudget);
+  // console.log()
+  for(let i=0; i<budget.length; i++){
+    const currentBudget = budget[i];
+    if(currentBudget?.budgetCategory.toLowerCase() === category){
+      let getAmount = budget.map((item) =>  item.budgetCategory.toLowerCase() === category ? item.budgetAmount : 0)[i];
+      console.log(budgetDerivation);
+      console.log(getAmount);
+      let mappedBudget = budgetDerivation
+        .map((item) => item.amount)
+        .reduce((value, sum) => value + sum, 0);
 
-  let percentage = ((mappedBudget / getAmount! ) * 100).toFixed(2)
+      console.log("mapped:", mappedBudget);
 
-  console.log("percentage", percentage)
+      let percentage = ((mappedBudget / getAmount! ) * 100).toFixed(2)
 
-  return res.status(200).json({mappedBudget, percentage});
+      console.log("percentage", percentage)
+
+      return res.status(200).json({mappedBudget, percentage});
+    } 
+
+  }
+ } catch (error) {
+   next(error);
+   throw new AppError("Nothing Found", 404);
+ }
 
 }
 
