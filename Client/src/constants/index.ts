@@ -16,6 +16,12 @@ export type Transaction = {
   created_date: string | Date;
 };
 
+export interface budgetDto {
+  userId: string,
+  budgetCategory: string,
+  budgetAmount: number
+}
+
 export const EXPENSE_CATEGORIES = [
   "food",
   "transportation",
