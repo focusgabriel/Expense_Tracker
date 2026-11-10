@@ -20,6 +20,7 @@ import NewPassword from "./services/auth/NewPassword";
 import MonthlyReport from "./components/Reports";
 import Insight from "./components/Insight";
 import { PUBLIC_ROUTES } from "./constants";
+import AddBudget from "./pages/AddBudget";
 
 const App = () => {
   const location = useLocation();
@@ -83,6 +84,14 @@ const App = () => {
             element={
               <ProtectedRoutes>
                 <AddTask />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/budget"
+            element={
+              <ProtectedRoutes>
+                <AddBudget />
               </ProtectedRoutes>
             }
           />
