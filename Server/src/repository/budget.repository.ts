@@ -13,12 +13,11 @@ export async function retrieveBudget(userId:string) {
   return await budgetModel.find({userId})
 }
 
-export async function BudgetCalculation(userId:string, type:string, category:string, firstDayOfMonth:Date, firstDayOfNextMonth:Date) {
+export async function BudgetCalculation(userId:string, type:string, firstDayOfMonth:Date, firstDayOfNextMonth:Date) {
   return ExpenseModel.aggregate([{
     $match: {
       userId,
       type,
-      category,
       date: {
         $gte: firstDayOfMonth,
         $lt: firstDayOfNextMonth
