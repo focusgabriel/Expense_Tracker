@@ -214,7 +214,7 @@ const AddTask = () => {
             className="min-h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
           >
             <option value="" disabled>
-              Select a {selectedType} category
+              Select an {selectedType} category
             </option>
             {categories.map(cat => (
               <option key={cat} value={cat}>
