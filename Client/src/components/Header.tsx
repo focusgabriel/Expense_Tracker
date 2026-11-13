@@ -25,6 +25,8 @@ const PAGE_TITLES: Record<string, { title: string; subtitle: string }> = {
     subtitle: "Track your spending patterns",
   },
   "/transaction": { title: "Transactions", subtitle: "All your records" },
+  "/reports": {title: "Reports", subtitle: "Monthly Reports"},
+"/getBudget": { title: "Budget", subtitle:"View Budget"},
   "/task": { title: "Add Transaction", subtitle: "Record a new entry" },
   "/success": { title: "Success", subtitle: "Transaction completed" },
 };

@@ -1,6 +1,6 @@
 /** @format */
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Transaction } from "../constants";
 import Card from "../components/Card";
@@ -13,6 +13,7 @@ import {
   isBrowserOnline,
   removeStoredTransaction,
   addPendingOperation,
+  type StoredTransaction,
 } from "../lib/offlineTransactions";
 
 const Analytics = () => {
@@ -29,7 +30,7 @@ const Analytics = () => {
   const [page, setPage] = useState<number>(1);
   const [limit] = useState<number>(10);
   const [showFiltersMobile, setShowFiltersMobile] = useState(false);
-  const [_isOffline, setIsOffline] = useState(!isBrowserOnline());
+  const [isOffline, setIsOffline] = useState<boolean>(() => !isBrowserOnline());
 
   const handleEdit = (id: string | undefined) => navigate(`/edit/${id}`);
   const handleDelete = (tx: Transaction) => {
@@ -62,18 +63,31 @@ const Analytics = () => {
         duration: 3000,
       });
     } catch (error) {
-      // If API fails, add to pending operations queue
+      const pendingTransaction: StoredTransaction = {
+        ...tx,
+        _id: tx._id ?? "",
+        pending: true,
+        createdAt: new Date(
+          tx.created_date ?? tx.date ?? new Date(),
+        ).toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
       addPendingOperation({
         id: tx._id as string,
         type: "delete",
-        transaction: tx as any,
+        transaction: pendingTransaction,
       });
 
       if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message ?? "Failed to delete item. Will retry when online.", {
-          position: "top-right",
-          duration: 3000,
-        });
+        toast.error(
+          error.response?.data?.message ??
+            "Failed to delete item. Will retry when online.",
+          {
+            position: "top-right",
+            duration: 3000,
+          },
+        );
       } else {
         toast.error("Failed to delete item. Will retry when online.", {
           position: "top-right",
@@ -83,7 +97,39 @@ const Analytics = () => {
     }
   };
 
-  const onSubmit = async () => {
+  const getFilteredTransactions = useCallback(
+    (source: Transaction[]) => {
+      const query = search.trim().toLowerCase();
+      const filtered = source.filter(item => {
+        const matchesSearch =
+          !query ||
+          [item.category, item.description, item.type].some(value =>
+            value?.toLowerCase().includes(query),
+          );
+        const matchesType = !type || item.type === type;
+        const matchesCategory =
+          !category ||
+          item.category.toLowerCase().includes(category.trim().toLowerCase());
+        return matchesSearch && matchesType && matchesCategory;
+      });
+
+      const sorted = [...filtered].sort((a, b) => {
+        const aDate = new Date(a.created_date ?? a.date ?? 0).getTime();
+        const bDate = new Date(b.created_date ?? b.date ?? 0).getTime();
+
+        if (sort === "amount") {
+          return order === "asc" ? a.amount - b.amount : b.amount - a.amount;
+        }
+
+        return order === "asc" ? aDate - bDate : bDate - aDate;
+      });
+
+      return sorted;
+    },
+    [category, order, search, sort, type],
+  );
+
+  const onSubmit = useCallback(async () => {
     const localTransactions = getFilteredTransactions(getStoredTransactions());
     const pagedTransactions = localTransactions.slice(
       (page - 1) * limit,
@@ -113,7 +159,6 @@ const Analytics = () => {
       setTrans(res.data.data);
       setTotalPages(res.data.pagination.totalLimit);
       setIsOffline(false);
-
     } catch (error) {
       setTrans(pagedTransactions);
       setTotalPages(Math.max(1, Math.ceil(localTransactions.length / limit)));
@@ -134,40 +179,24 @@ const Analytics = () => {
         });
       }
     }
-  };
-
-  const getFilteredTransactions = (source: Transaction[]) => {
-    const query = search.trim().toLowerCase();
-    const filtered = source.filter(item => {
-      const matchesSearch =
-        !query ||
-        [item.category, item.description, item.type].some(value =>
-          value?.toLowerCase().includes(query),
-        );
-      const matchesType = !type || item.type === type;
-      const matchesCategory =
-        !category ||
-        item.category.toLowerCase().includes(category.trim().toLowerCase());
-      return matchesSearch && matchesType && matchesCategory;
-    });
-
-    const sorted = [...filtered].sort((a, b) => {
-      const aDate = new Date(a.created_date ?? a.date ?? 0).getTime();
-      const bDate = new Date(b.created_date ?? b.date ?? 0).getTime();
-
-      if (sort === "amount") {
-        return order === "asc" ? a.amount - b.amount : b.amount - a.amount;
-      }
-
-      return order === "asc" ? aDate - bDate : bDate - aDate;
-    });
-
-    return sorted;
-  };
+  }, [
+    category,
+    getFilteredTransactions,
+    limit,
+    order,
+    page,
+    search,
+    sort,
+    type,
+  ]);
 
   useEffect(() => {
-    void onSubmit();
-  }, [search, type, category, sort, order, page, limit]);
+    const timeoutId = window.setTimeout(() => {
+      void onSubmit();
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [onSubmit]);
 
   useEffect(() => {
     const updateOnlineStatus = () => {
@@ -175,7 +204,9 @@ const Analytics = () => {
       setIsOffline(!online);
 
       if (online) {
-        void onSubmit();
+        queueMicrotask(() => {
+          void onSubmit();
+        });
       }
     };
 
@@ -186,14 +217,21 @@ const Analytics = () => {
       window.removeEventListener("online", updateOnlineStatus);
       window.removeEventListener("offline", updateOnlineStatus);
     };
-  }, [search, type, category, sort, order, page, limit]);
+  }, [onSubmit]);
 
   return (
     <section className="w-full sm:rounded-lg sm:border sm:border-slate-200 sm:shadow-sm sm:flex sm:flex-col">
       <div className="border-b border-slate-100 px-3 py-2">
-        <h2 className="text-xs font-semibold uppercase tracking-wide">
-          All Transactions
-        </h2>
+        <div className="flex items-center justify-between gap-2">
+          <h2 className="text-xs font-semibold uppercase tracking-wide">
+            All Transactions
+          </h2>
+          {isOffline && (
+            <span className="rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.2em] text-amber-700">
+              Offline
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Filter Section */}
