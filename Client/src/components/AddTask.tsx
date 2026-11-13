@@ -152,7 +152,7 @@ const AddTask = () => {
 
       <form
         onSubmit={handleSubmit}
-        className="grid gap-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:grid-cols-2 sm:p-7"
+        className="grid gap-5 rounded-2xl lg:border lg:border-slate-200 bg-white p-5 shadow-sm sm:grid-cols-2 sm:p-7"
         action="/success"
       >
         <div className="flex flex-col gap-2">

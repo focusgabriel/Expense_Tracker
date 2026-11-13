@@ -21,6 +21,7 @@ import MonthlyReport from "./components/Reports";
 import Insight from "./components/Insight";
 import { PUBLIC_ROUTES } from "./constants";
 import AddBudget from "./pages/AddBudget";
+import GetBudget from "./pages/GetBudget";
 
 const App = () => {
   const location = useLocation();
@@ -88,10 +89,18 @@ const App = () => {
             }
           />
           <Route
-            path="/budget"
+            path="/addBudget"
             element={
               <ProtectedRoutes>
                 <AddBudget />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/getBudget"
+            element={
+              <ProtectedRoutes>
+                <GetBudget />
               </ProtectedRoutes>
             }
           />
