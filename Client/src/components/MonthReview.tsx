@@ -29,7 +29,7 @@ const MonthReview = ({
       : null;
 
   return (
-    <div className="w-full">
+    <div className="w-full mb-[2%]">
       <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>

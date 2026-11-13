@@ -4,6 +4,7 @@ import { PieChart, Pie, ResponsiveContainer } from "recharts";
 import AllTrans from "./AllTrans";
 import type { ChartData } from "../types/dashboard";
 import type { Transaction } from "../constants";
+import { Link } from "react-router-dom";
 
 interface spendingProps {
   recentTransactions: Transaction[];
@@ -39,7 +40,15 @@ const SpendingChart = ({ chartData, recentTransactions }: spendingProps) => {
     <div className="sm:rounded-2xl sm:border sm:border-slate-200 sm:bg-white sm:p-4 sm:shadow-sm">
       <div className="flex w-full flex-col gap-5 lg:h-85 lg:flex-row lg:items-stretch lg:justify-between lg:overflow-hidden">
         <div className="relative h-72 w-full lg:h-full lg:w-[34%]">
-          <h2 className="p-2 font-bold text-slate-900">Spending Overview</h2>
+          <div className="flex justify-between items-center">
+            <h2 className="p-2 font-bold text-slate-900">Spending Overview</h2>
+            <h2 className="p-2 font-bold text-indigo-900">
+              <Link to="/getBudget">
+                view Budget report
+
+              </Link>
+            </h2>
+          </div>
           <div className="relative h-[calc(100%-2rem)]">
 
             {/* the pie chart gotten from rechartjs for the analytical analysis of the expenses */}
@@ -63,6 +72,7 @@ const SpendingChart = ({ chartData, recentTransactions }: spendingProps) => {
                 &#8358;{formatAmount(totalExpense)}
               </span>
             </div>
+
           </div>
         </div>
 
@@ -93,8 +103,10 @@ const SpendingChart = ({ chartData, recentTransactions }: spendingProps) => {
               No expenses recorded yet
             </div>
           )}
+          
         </div>
 
+          {/* <GetBudget /> */}
         <AllTrans recentTransactions={recentTransactions} />
       </div>
     </div>

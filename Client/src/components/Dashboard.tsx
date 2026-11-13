@@ -13,12 +13,38 @@ import {
   syncPendingOperations,
 } from "../lib/offlineTransactions";
 import OfflineStatus from "./OfflineStatus";
+// import GetBudget from "../pages/GetBudget";
+// import BudgetCard from "./BudgetCard";
+// interface BudgetProps {
+//   amount: number;
+//   budgetCategory: string;
+//   percentage: number;
+//   budgetAmount: number;
+// }
 
 const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState<DashboardResponse | null>(
     null,
   );
   const [offline, setOffline] = useState(!isBrowserOnline());
+
+  // const [budgets, setBudgets] = useState<BudgetProps[]>([]);
+  // const [isLoading, setIsLoading] = useState(true);
+
+  // const fetchBudgets = async () => {
+  //   try {
+  //     const response = await refreshClient.get("/budgetExpense");
+  //     setBudgets(response.data);
+  //   } catch (error) {
+  //     console.error("Failed to fetch budgets:", error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchBudgets();
+  // }, []);
 
   useEffect(() => {
     const getDashboard = async () => {
@@ -34,6 +60,7 @@ const Dashboard = () => {
           // Refresh dashboard data after sync
           const refreshed = await refreshClient.get("/dashboard/");
           setDashboardData(refreshed.data);
+          
         }
       } catch {
         setDashboardData(getLocalDashboardData());
@@ -61,6 +88,13 @@ const Dashboard = () => {
   }, []);
 
   if (!dashboardData) return <DashboardSkeleton />;
+  // if(budgets.length === 0){
+  //   return (
+  //     <div>
+  //       <p>No Budgets to display</p>
+  //     </div>
+  //   )
+  // }
   return (
     <div className="space-y-6">
       <OfflineStatus isOffline={offline} />
@@ -69,13 +103,26 @@ const Dashboard = () => {
         chartData={dashboardData.chartData}
         recentTransactions={dashboardData.recentTransactions}
       />
-      <MonthReview
-        get_income={dashboardData.get_income}
-        get_expense={dashboardData.get_expense}
-        monthlyBalance={dashboardData.monthlyBalance}
-        firstDayOfCurrentMonth={dashboardData.firstDayOfCurrentMonth}
-      />
-    </div>
+        <MonthReview
+          get_income={dashboardData.get_income}
+          get_expense={dashboardData.get_expense}
+          monthlyBalance={dashboardData.monthlyBalance}
+          firstDayOfCurrentMonth={dashboardData.firstDayOfCurrentMonth}
+        />
+        {/* <GetBudget /> */}
+        {/* <div className="md:col-span-2 lg:col-span-2 space-y-4">
+          {budgets.map((item) => (
+            <BudgetCard
+              key={item.budgetCategory}
+              amount={item.amount}
+              category={item.budgetCategory}
+              budgetted={item.budgetAmount}
+              remains={item.percentage}
+            />
+          ))}
+        </div> */}
+      </div>
+     
   );
 };
 
