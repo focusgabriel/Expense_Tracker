@@ -41,8 +41,8 @@ app.use(express.urlencoded({ extended: false }))
 
 app.use(cookieParser());
 
-app.use("/api/v1/", limiter, transactionRouter);
 app.use("/api/v1/", budgetRouter);
+app.use("/api/v1/", limiter, transactionRouter);
 app.use("/api/v1/", userRouter);
 app.use(errorHandler);
 

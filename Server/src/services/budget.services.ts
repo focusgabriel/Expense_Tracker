@@ -1,5 +1,5 @@
 import { budgetDto } from "../constants/index.js";
-import { BudgetCalculation, createBudget, retrieveBudget } from "../repository/budget.repository.js";
+import { BudgetCalculation, createBudget, removeBudget, retrieveBudget } from "../repository/budget.repository.js";
 
 export async function getCreateBudget({userId, budgetCategory, budgetAmount}: budgetDto) {
 
@@ -40,4 +40,12 @@ export async function getRetrieveBudget(userId:string) {
   }
 
   return await retrieveBudget(userId);
+}
+
+export async function getRemoveBudget(id:any, userId:string) {
+if(!id || !userId) {
+  throw new Error("User Id and Id is required")
+}
+
+return await removeBudget(id, userId)
 }

@@ -23,5 +23,16 @@ export async function BudgetCalculation(userId:string, type:string, firstDayOfMo
         $lt: firstDayOfNextMonth
       }
     }
+  }, {
+    $group: {
+      _id: "$category",
+      amount: { $sum: "$amount" }
+    }
   }])
+}
+
+export async function removeBudget(id:string | string[], userId:string){
+  return await budgetModel.findOneAndDelete({
+    _id:id, userId
+  });
 }

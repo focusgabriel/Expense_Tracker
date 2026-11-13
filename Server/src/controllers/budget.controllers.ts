@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { AppError } from "../utils/AppError.js";
-import { getBudgetCalculation, getCreateBudget, getRetrieveBudget } from "../services/budget.services.js";
+import { getBudgetCalculation, getCreateBudget, getRemoveBudget, getRetrieveBudget } from "../services/budget.services.js";
+import { string } from "zod";
 
 export async function getCreateBudgetController(req:Request, res:Response, next: NextFunction) {
   const userId = req.user!.id
@@ -27,66 +28,54 @@ export async function getCreateBudgetController(req:Request, res:Response, next:
 
 export async function getBudgetCalculationController(req:Request, res:Response, next:NextFunction){
   const user = req.user!.id;
-  // const { type } = req.params;
-  // const { category } = req.query;
   const type = "expense";
-  // const category = "bill";
-  let mappedBudget: any;
-  let percentage: any;
-  let retrievedBudget: any;
- try {
-  const now = new Date();
-  const firstDayOfMonth = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    1
-  );
+  try {
+    const now = new Date();
+    const firstDayOfMonth = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      1
+    );
 
-  const firstDayOfNextMonth = new Date(
-    now.getFullYear(),
-    now.getMonth() + 1,
-    1
-  );
+    const firstDayOfNextMonth = new Date(
+      now.getFullYear(),
+      now.getMonth() + 1,
+      1
+    );
 
+    const [budgets, expensesByCategory] = await Promise.all([
+      getRetrieveBudget(user),
+      getBudgetCalculation(user, type, firstDayOfMonth, firstDayOfNextMonth)
+    ]);
 
-  console.log("month now", firstDayOfMonth)
-  console.log("month prev", firstDayOfNextMonth)
-  let budgetDerivation = await getBudgetCalculation(user, type, firstDayOfMonth, firstDayOfNextMonth );
-  let budget = await getRetrieveBudget(user);
+    const expenseMap = new Map<string, number>(
+      expensesByCategory.map((item: any) => [item._id.toLowerCase(), item.amount])
+    );
 
-  // if(category === )
+    const result = budgets.map((budget: any) => {
+      const budgetId = budget._id;
+      const category = budget.budgetCategory;
+      const budgetAmount = budget.budgetAmount;
+      const spent = expenseMap.get(category.toLowerCase()) || 0;
+      const percentage = budgetAmount > 0
+        ? parseFloat(((spent / budgetAmount) * 100).toFixed(2))
+        : 0;
 
-  // try using an array to get the indexed value from the definite category indexed number.
-  // let GetAmount = budget.find(item => item.budgetAmount)
+      return {
+        budgetId,
+        budgetCategory: category,
+        amount: spent,
+        percentage,
+        budgetAmount
+      };
+    });
 
-  // console.log()
-  for(let i=0; i<budget.length; i++){
-    const currentBudget = budget[i];
-    if(currentBudget?.budgetCategory.toLowerCase()){
-      let getAmount = budget.map((item) =>  item.budgetCategory.toLowerCase() ? item.budgetAmount : 0)[i];
-      console.log("budgetDerivation:", budgetDerivation);
-      console.log("getAmount:", getAmount);
-      mappedBudget = budgetDerivation
-        .map((item) => item.amount)
-        .reduce((value, sum) => value + sum, 0);
-
-      console.log("mapped:", mappedBudget);
-
-      percentage = ((mappedBudget / getAmount! ) * 100).toFixed(2)
-
-      console.log("percentage", percentage);
-
-      retrievedBudget = await getRetrieveBudget(user);
-
-    } 
-    
-  }
-  return res.status(200).json({retrievedBudget, mappedBudget, percentage});
- } catch (error) {
-   next(error);
-   throw new AppError("Nothing Found", 404);
- }
-
+    console.log(result)
+    return res.status(200).json(result);
+  } catch (error) {
+    next(error);
+    throw new AppError("Nothing Found", 404);
+}
 }
 
 
@@ -103,5 +92,21 @@ export async function getRetrieveBudgetController(req:Request, res:Response, nex
       success: false,
       message: "couldn't find Budgets."
     })
+  }
+}
+
+export async function getRemoveBudgetController(req:Request, res:Response, next:NextFunction) {
+  try {
+    const userId = req.user!.id;
+    const {id} = req.params
+
+    await getRemoveBudget(id, userId);
+
+    return res.status(200).json({
+      success:true,
+      message: "item deleted Successfully"
+    });
+  } catch (error) {
+    next(error)
   }
 }
