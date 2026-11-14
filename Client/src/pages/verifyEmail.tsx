@@ -34,6 +34,7 @@ const VerifyEmail = () => {
 
       } catch (error) {
 
+        console.log(error)
         setErrorMsg("Verification Failed...");
 
       } finally {
