@@ -24,6 +24,7 @@ export interface budgetDto {
 }
 
 export interface BudgetProps {
+  budgetId: string;
   amount: number;
   budgetCategory: string;
   percentage: number;
