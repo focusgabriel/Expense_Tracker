@@ -29,7 +29,7 @@ const categoryIcon = (category?: string) => {
       return <DollarSign size={18} />;
     case "food":
       return <Utensils size={18} />;
-    case "food":
+    case "shopping":
       return <ShoppingBag size={18} />;
     case "health":
     case "fitness":
