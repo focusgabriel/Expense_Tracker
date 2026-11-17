@@ -7,37 +7,34 @@ import type { BudgetProps } from "../constants";
 import DeleteBudget from "../components/DeleteBudget";
 import toast from "react-hot-toast";
 
-const GetBudget = () => {
+const RetrieveBudget = () => {
   const [budgets, setBudgets] = useState<BudgetProps[]>([]);
   const [budget, setBudget] = useState<BudgetProps | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [modal, setModal] = useState(false);
 
   useEffect(() => {
+    let isMounted = true;
 
-  let isMounted = true;
-  
-  const fetchBudgets = async () => {
-    try {
-      const response = await refreshClient.get("/budgetExpense");
-      if(isMounted) {
-        setBudgets(Array.isArray(response.data) ? response.data : []);
+    const fetchBudgets = async () => {
+      try {
+        const response = await refreshClient.get("/budgetExpense");
+        if (isMounted) {
+          setBudgets(Array.isArray(response.data) ? response.data : []);
+        }
+      } catch (error) {
+        console.error("Failed to fetch budgets:", error);
+        if (isMounted) setBudgets([]);
+      } finally {
+        if (isMounted) setIsLoading(false);
       }
-    } catch (error) {
-      console.error("Failed to fetch budgets:", error);
-      if(isMounted) setBudgets([]);
-    } finally {
-      if(isMounted) setIsLoading(false);
-    }
-  };
+    };
 
+    fetchBudgets();
 
-  fetchBudgets();
-
-  return () => {
-    isMounted = false;
-  }
-
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const totalBudgeted = budgets.reduce(
@@ -51,39 +48,37 @@ const GetBudget = () => {
   const totalPercentage =
     totalBudgeted > 0 ? (totalSpent / totalBudgeted) * 100 : 0;
 
-    const handleDelete = async (bud: BudgetProps) => {
+  const handleDelete = async (bud: BudgetProps) => {
+    setBudget(bud);
+    setModal(true);
+  };
 
-      setBudget(bud);
-      setModal(true);
-    }
+  // if(del) {
+  //   toast.success("Budget Successfully Deleted.", {
+  //     position:"top-right",
+  //     duration: 3000
+  //   })
 
-      // if(del) {
-      //   toast.success("Budget Successfully Deleted.", {
-      //     position:"top-right",
-      //     duration: 3000
-      //   })
+  // }
+  // // setTimeout(() => {
 
-      // }
-      // // setTimeout(() => {
-        
-      //   navigate("/getBudget");
-      // // }, 2000);
+  //   navigate("/getBudget");
+  // // }, 2000);
 
-    const handleConfirmDelete = async () => {
+  const handleConfirmDelete = async () => {
+    if (!budget) return;
 
-      if(!budget) return;
-
-      const bud = budget
-      try {
-       await refreshClient.delete(`/deleteBudget/${bud?.budgetId}`);
-       toast.success("Budget deleted successfully.", {
+    const bud = budget;
+    try {
+      await refreshClient.delete(`/deleteBudget/${bud?.budgetId}`);
+      toast.success("Budget deleted successfully.", {
         position: "top-right",
         duration: 3000,
       });
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   if (isLoading) {
     return (
@@ -294,12 +289,12 @@ const GetBudget = () => {
             </div>
           </aside>
 
-          <DeleteBudget 
+          <DeleteBudget
             open={modal}
             budget={budget}
             onClose={() => {
               setModal(false);
-              setBudget(null)
+              setBudget(null);
             }}
             onConfirm={handleConfirmDelete}
           />
@@ -309,4 +304,4 @@ const GetBudget = () => {
   );
 };
 
-export default GetBudget;
+export default RetrieveBudget;
