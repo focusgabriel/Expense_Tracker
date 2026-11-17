@@ -49,7 +49,7 @@ const tokenRefreshClient = axios.create({
 
       return refreshClient(originalRequest)
 
-    } catch(err) {
+    } catch(error) {
         // toast.error(err.response?.data?.message ?? "Session expired. Please log in again.", {
         //   position: "top-right",
         //   duration: 5000
