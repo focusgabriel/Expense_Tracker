@@ -149,7 +149,7 @@ const RetrieveBudget = () => {
   return (
     <div className="min-h-screen bg-slate-50 px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl space-y-8">
-        <header className="flex flex-col gap-4 rounded-[2rem] border border-slate-200 bg-white p-5 shadow-[0_30px_80px_-40px_rgba(15,23,42,0.22)] sm:flex-row sm:items-center sm:justify-between sm:p-6">
+        <header className="flex flex-col gap-4 lg:rounded-[2rem] lg:border lg:border-slate-200 lg:bg-white p-5 lg:shadow-[0_30px_80px_-40px_rgba(15,23,42,0.22)] sm:flex-row sm:items-center sm:justify-between sm:p-6">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600">
               Budget planner
@@ -197,7 +197,7 @@ const RetrieveBudget = () => {
             ))}
           </section>
 
-          <aside className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-[0_30px_75px_-40px_rgba(15,23,42,0.25)] lg:sticky lg:top-24 lg:h-fit">
+          <aside className="lg:rounded-[2rem] lg:border lg:border-slate-200 lg:bg-white p-5 lg:shadow-[0_30px_75px_-40px_rgba(15,23,42,0.25)] lg:sticky lg:top-24 lg:h-fit">
             <div className="mb-5 flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600">
                 <svg
