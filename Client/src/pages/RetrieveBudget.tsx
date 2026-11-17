@@ -69,6 +69,9 @@ const RetrieveBudget = () => {
     if (!budget) return;
 
     const bud = budget;
+    setBudgets(prev => prev.filter(t => t.budgetId !== bud.budgetId));
+    setModal(false);
+    setBudget(null);
     try {
       await refreshClient.delete(`/deleteBudget/${bud?.budgetId}`);
       toast.success("Budget deleted successfully.", {
