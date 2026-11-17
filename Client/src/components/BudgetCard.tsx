@@ -8,7 +8,6 @@ interface BudgetCardProps {
   amount: number;
   budgetted: number;
   remains: number;
-  // onDelete = () => 
   onDelete?: () => void;
 }
 
@@ -17,15 +16,14 @@ const BudgetCard = ({
   amount,
   budgetted,
   remains,
-  onDelete
+  onDelete,
 }: BudgetCardProps) => {
-  const normalizedKey = Object.keys(CATEGORY_COLORS).find(
-    key => key.toLowerCase() === category.toLowerCase(),
-  );
+  const normalizedCategory = category.trim().toLowerCase();
+  const accentColor =
+    (Object.entries(CATEGORY_COLORS) as [string, string][]).find(
+      ([key]) => key.toLowerCase() === normalizedCategory,
+    )?.[1] ?? "#10b981";
 
-  const accentColor = normalizedKey
-    ? CATEGORY_COLORS[normalizedKey]
-    : "#10b981";
   const safeProgress = Math.max(0, Math.min(remains, 100));
   const remainingAmount = Math.max(0, budgetted - amount);
 
@@ -39,7 +37,7 @@ const BudgetCard = ({
               background: `linear-gradient(135deg, ${accentColor}, rgba(255,255,255,0.18))`,
             }}
           >
-            {category.charAt(0).toUpperCase()}
+            {category.charAt(0).toUpperCase() || "B"}
           </div>
 
           <div>
@@ -50,25 +48,29 @@ const BudgetCard = ({
           </div>
         </div>
 
-        <div className="text-right">
-          <p className="text-sm font-semibold text-slate-900">
-            ₦{amount.toFixed(2)} / ₦{budgetted.toFixed(2)}
-          </p>
-          <p className="text-xs font-medium text-slate-500">
-            {safeProgress.toFixed(1)}% used 
+        <div className="flex flex-col items-end gap-2">
+          <div className="text-right">
+            <p className="text-sm font-semibold text-slate-900">
+              ₦{amount.toFixed(2)} / ₦{budgetted.toFixed(2)}
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-medium text-slate-500">
+              {safeProgress.toFixed(1)}% used
+            </span>
 
             {onDelete && (
               <button
                 type="button"
                 onClick={onDelete}
-                className="inline-flex items-center gap-0.5 rounded-md border border-red-200 bg-red-50 px-1.5 py-1 text-[10px] font-medium text-red-600 transition hover:border-red-300 hover:bg-red-100 sm:px-2 sm:py-1 sm:text-[11px] lg:px-1.5 lg:py-0.5 lg:text-[10px] cursor-pointer"
+                className="inline-flex items-center gap-1 rounded-md border border-red-200 bg-red-50 px-2 py-1 text-[10px] font-medium text-red-600 transition hover:border-red-300 hover:bg-red-100"
               >
-                <Trash2 size={11} className="sm:size-3 lg:size-2.5" />
-                <span className="hidden sm:inline lg:hidden">Delete</span>
+                <Trash2 size={11} />
+                <span>Delete</span>
               </button>
             )}
-          </p>
-
+          </div>
         </div>
       </div>
 
@@ -98,7 +100,7 @@ const BudgetCard = ({
 
         <span className="font-semibold text-slate-700">
           {safeProgress > 100
-            ? `₦${Math.abs(remainingAmount).toFixed(2)} over`
+            ? `₦${Math.abs(budgetted - amount).toFixed(2)} over`
             : `₦${remainingAmount.toFixed(2)} left`}
         </span>
       </div>
